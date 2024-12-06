@@ -125,7 +125,7 @@ define('EVENT_PRIORITY_HIGH', 10);
 
 //////////////////////////////////////////////__URL
 // defined('BASE_URL') || define('BASE_URL', 'https://candyflow.in/' );
-defined('BASE_URL') || define('BASE_URL', 'http://localhost/Candy-Flow');
+defined('BASE_URL') || define('BASE_URL', 'http://localhost/Candyflow/');
 
 
 //////////////////////////////////////////////__DATABASE

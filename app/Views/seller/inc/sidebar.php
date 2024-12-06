@@ -18,6 +18,33 @@
             console.log(err)
         },
     })
+    isAuthSeller();
+
+    function isAuthSeller() {
+
+        $.ajax({
+            url: "<?= base_url('/api/user') ?>",
+            type: "GET",
+            success: function (resp) {
+                // console.log(resp)
+                if (resp.status) {
+                    console.log(resp)
+                    if (resp.user_data.is_auth == 'true') {
+                        $('.auth').show()
+                    } else {
+                        $('.auth').hide()
+                    }
+
+                } else {
+                    console.log(resp)
+                }
+            },
+            error: function (err) {
+                console.log(err)
+            },
+        })
+    }
+
 
 </script>
 <!-- ========== App Menu ========== -->
@@ -113,7 +140,8 @@
 
 
 
-                <li class="nav-item">
+
+                <li class="nav-item auth">
                     <a class="nav-link menu-link <?= isset($sidebar['products']) ? 'active' : '' ?>"
                         href="#sidebarProduct" data-bs-toggle="collapse" role="button"
                         aria-expanded="<?= isset($sidebar['products']) ? 'true' : 'false' ?>"
@@ -137,7 +165,7 @@
                     </div>
 
                 </li>
-                <li class="nav-item">
+                <li class="nav-item auth">
                     <a class="nav-link menu-link <?= isset($sidebar['orders']) ? 'active' : '' ?>" href="#sidebarOrder"
                         data-bs-toggle="collapse" role="button"
                         aria-expanded="<?= isset($sidebar['orders']) ? 'true' : 'false' ?>"
@@ -161,7 +189,7 @@
 
                 </li>
 
-                <li class="nav-item ">
+                <li class="nav-item auth">
                     <a class="nav-link menu-link <?= isset($sidebar['wallet']) ? 'active' : '' ?>"
                         href="<?= base_url('seller/wallet') ?>">
                         <i class="fa-solid fa-wallet"></i> <span data-key="t-widgets">wallet</span>

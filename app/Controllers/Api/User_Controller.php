@@ -253,7 +253,7 @@ class User_Controller extends Api_Controller
 
     private function get_user()
     {
-        $user_id = $this->is_logedin();
+        $user_id = !empty($this->is_logedin()) ? $this->is_logedin() : $_SESSION[SES_SELLER_USER_ID];
         // echo $user_id;
         $resp = [
             "status" => false,
@@ -1898,6 +1898,7 @@ class User_Controller extends Api_Controller
             // $this->prd($data);
 
             $VendorBankModel = new VendorBankModel();
+            $UsersModel = new UsersModel();
 
             // Check if the bank record exists for the given user ID
             $existingBank = $VendorBankModel->where('user_id', $data['user_id'])->first();
@@ -1913,7 +1914,12 @@ class User_Controller extends Api_Controller
                 'account_number' => $data['account_number']
             ];
 
-            // Update the bank details
+            $userUpdateData = [
+                'is_auth' => 'true'
+            ];
+
+
+            $UsersModel->where('uid', $data['user_id'])->update(null ,$userUpdateData);
             $VendorBankModel->where('user_id', $data['user_id'])->update(null, $updateData);
 
             if ($VendorBankModel->db->affectedRows() > 0) {

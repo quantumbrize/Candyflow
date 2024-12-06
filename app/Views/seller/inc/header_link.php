@@ -20,14 +20,19 @@
     <link href="<?= base_url() ?>public/assets_admin/css/bootstrap.min.css" rel="stylesheet" type="text/css">
     <!-- Icons Css -->
     <link href="<?= base_url() ?>public/assets_admin/css/icons.min.css" rel="stylesheet" type="text/css">
-     <!-- Font Awesome CDN -->
-     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <!-- App Css-->
     <link href="<?= base_url() ?>public/assets_admin/css/app.min.css" rel="stylesheet" type="text/css">
     <link href="<?= base_url() ?>public/assets_admin/css/custom.min.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="https://cdn.datatables.net/2.0.2/css/dataTables.dataTables.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Toastify CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <!-- Toastify JS -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
     <script>
         $.ajax({
             url: "<?= base_url('/api/about') ?>",
@@ -35,11 +40,11 @@
             success: function (resp) {
                 // console.log(resp)
                 if (resp.status) {
-                let newLogoSrc = `<?=base_url()?>public/uploads/logo/${resp.data.logo}`;
-                $('#daltonus_logo_meta').attr('href', newLogoSrc);
+                    let newLogoSrc = `<?= base_url() ?>public/uploads/logo/${resp.data.logo}`;
+                    $('#daltonus_logo_meta').attr('href', newLogoSrc);
 
 
-                }else{
+                } else {
                     console.log(resp)
                 }
             },
@@ -58,7 +63,7 @@
 
     if (!empty($header_link)) {
         foreach ($header_link as $link) {
-            require_once ('css/' . $link);
+            require_once('css/' . $link);
         }
     }
     ?>
@@ -137,7 +142,7 @@
             display: none;
         }
     </style>
-  
+
 </head>
 
 <body>
