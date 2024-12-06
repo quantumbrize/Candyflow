@@ -79,14 +79,14 @@ class Product_Controller extends Main_Controller
         $data = [
             'data_page' => [],
             'data_header' => [
-                'header_link' => [],
+                'header_link' => ['products_category_css.php'],
                 'title' => 'Category',
                 'header' => [],
                 'sidebar' => [],
                 'site' => 'frontend'
             ],
             'data_footer' => [
-                'footer_link' => [],
+                'footer_link' => ['products_category_js.php'],
                 'footer' => [],
                 'site' => 'frontend'
             ]
