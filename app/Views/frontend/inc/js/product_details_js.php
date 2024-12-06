@@ -15,7 +15,7 @@
     let price_list = "";
     function setActive(element, stock,tax,price) {
         console.log(this)
-        $('#product_price').html(`${price} ₹ (+${tax}% Tax)`)
+        // $('#product_price').html(`${price} ₹ (+${tax}% Tax)`)
         if (parseInt(stock, 10) > 0) {
             document.querySelectorAll('#product_size .size').forEach(function (size) {
                 size.classList.remove('active');
@@ -76,22 +76,26 @@
                                             onclick="wishlist('<?= $_GET['id'] ?>')">
                                         </a>`)
 
-                    if (resp.data.product_stock >= 1) {
-                        // $('#product_stock').append(`<li class=""><i class="bi bi-check2-circle me-2 align-middle text-success"></i>In stock</li>`);
-                        // $('#product_add_to_cart_button').append(`<button type="button" onclick="add_to_cart()" class="btn btn-success btn-hover w-100"><i class="bi bi-basket2 me-2"></i> Add To Cart</button>`);
+                    // if (resp.data.product_stock >= 1) {
+                    //     $('#product_stock').append(`<li class=""><i class="bi bi-check2-circle me-2 align-middle text-success"></i>In stock</li>`);
+                    //     $('#product_add_to_cart_button').append(`<button type="button" onclick="add_to_cart()" class="btn btn-success btn-hover w-100"><i class="bi bi-basket2 me-2"></i> Add To Cart</button>`);
 
-                    } else {
-                        // $('#product_stock').append(`<li class="out-of-stock"><i class="bi bi-x-circle me-2 align-middle text-danger"></i>Out of stock</li>`);
-                        // $('#product_add_to_cart_button').append(`<button type="button" class="btn w-100 out_of_stock"><i class="bi bi-basket2 me-2"></i> Add To Cart</button>`);
+                    // } else {
+                    //     $('#product_stock').append(`<li class="out-of-stock"><i class="bi bi-x-circle me-2 align-middle text-danger"></i>Out of stock</li>`);
+                    //     $('#product_add_to_cart_button').append(`<button type="button" class="btn w-100 out_of_stock"><i class="bi bi-basket2 me-2"></i> Add To Cart</button>`);
 
-                    }
+                    // }
+
+                    $('#quantity-section').append(`
+                                                <button class="quantity-plus w-icon-plus"
+                                                    onclick="quantity_increase('${resp.data.tax}')"></button>
+                                                <button class="quantity-minus w-icon-minus"
+                                                    onclick="quantity_decrease('${resp.data.tax}')"></button>`)
 
                     let html_price = ``;
 
-                    // Sort the product_prices array based on min_qty in ascending order
                     resp.data.product_prices.sort((a, b) => parseInt(a.min_qty) - parseInt(b.min_qty));
 
-                    // Loop through the sorted array to generate HTML
                     $.each(resp.data.product_prices, function (index, p_prices) {
                         html_price += `<div class="cart-price-item">
                         <div class="cart-quantity">
@@ -102,8 +106,6 @@
                         </div>
                     </div>`;
                     });
-
-                    // Set the sorted and formatted HTML content to the container
                     $('#price_lists').html(html_price);
 
 
@@ -111,6 +113,7 @@
                     var base_price = resp.data.base_discount ? resp.data.base_price : "";
                     var base_discount = resp.data.base_discount ? resp.data.base_discount : "";
                     price_list = resp.data.product_prices
+                    $('#product_price').html('₹' + parseInt(resp.data.product_prices[0].price).toFixed(2) + ' +' + resp.data.tax + '% Tax')
                     let product_img = resp.data.product_img.length > 0 ? '<?= base_url('public/uploads/product_images/') ?>' + resp.data.product_img[0]['src'] : '<?= base_url('public/assets/images/product_demo.png') ?>'
                     $('#all_varient_img').append(`<img class="varient_img" src="${product_img}" onclick="view_image('${encodeURIComponent(JSON.stringify(resp.data.product_img))}', '${var_id = ""}', '${resp.data.product_stock}', '${encodeURIComponent(JSON.stringify(resp.data.product_sizes))}', 'main')" alt="Image 1">`);
                     let html1 = ``;
@@ -164,7 +167,6 @@
                         watchSlidesVisibility: true,
                         watchSlidesProgress: true,
                     });
-                    // console.log('sizes',resp.data.product_sizes);
 
                     // let allSizes = JSON.parse(resp.data.size_list);
                     let html_size = '';
@@ -363,7 +365,7 @@
     //     }
     // }
 
-    function quantity_increase() {
+    function quantity_increase(tax) {
         console.log(price_list);
         let product_quantity = parseInt($('.quantity').val());
         const lastMaxQty = parseInt(price_list[price_list.length - 1].max_qty); // Get the max_qty of the last index
@@ -375,11 +377,11 @@
 
             // Find the corresponding price based on the updated quantity
             let currentPrice = getPriceForQuantity(product_quantity);
-            $('#product_price').html('₹' + currentPrice.toFixed(2)); // Update the displayed price
+            $('#product_price').html('₹' + currentPrice.toFixed(2) + ' +' + tax + '% Tax'); // Update the displayed price
         }
     }
 
-    function quantity_decrease() {
+    function quantity_decrease(tax) {
         console.log(price_list);
         let product_quantity = parseInt($('.quantity').val());
 
@@ -390,7 +392,7 @@
 
             // Find the corresponding price based on the updated quantity
             let currentPrice = getPriceForQuantity(product_quantity);
-            $('#product_price').html('₹' + currentPrice.toFixed(2)); // Update the displayed price
+            $('#product_price').html('₹' + currentPrice.toFixed(2) + ' +' + tax + '% Tax'); // Update the displayed price
         }
     }
 
@@ -556,7 +558,7 @@
         let isavailable = false
         $.each(sizes, function (index, size) {
             if (parseInt(size.stocks, 10) > 0) {
-                html_size += `<a href="javascript:void(0)" class="size" data-size="${size.uid}" style="font-weight:bold;" onclick="setActive(this, '${size.stocks}')">${size.sizes}</a>`;
+                html_size += `<a href="javascript:void(0)" class="size active-size" data-size="${size.uid}" style="font-weight:bold;" onclick="setActive(this, '${size.stocks}')">${size.sizes}</a>`;
                 isavailable = true
             } else {
                 html_size += `<a href="javascript:void(0)" class="size" data-size="${size.uid}" onclick="setActive(this, '${size.stocks}')">${size.sizes}</a>`;
@@ -568,6 +570,7 @@
 
         let html1 = ``;
         let html2 = ``;
+        let sticky_product_img = '<?= base_url('public/assets/images/product_demo.png') ?>'
         if (type === 'varient') {
             // html = `<div class="carousel-item active">
             //             <img class="d-block w-100 fixed-size-image" src="<?= base_url() ?>${product_img}" alt="" style="width: 300px;">
@@ -580,6 +583,7 @@
             html2 += `<div class="product-thumb swiper-slide">
                         <img src="<?= base_url() ?>${product_img}" alt="Product Thumb" width="800" height="900">
                     </div>`
+            sticky_product_img = '<?= base_url() ?>' + product_img
 
         } else if (type === 'main') {
             product_img = JSON.parse(decodeURIComponent(product_img));
@@ -597,6 +601,7 @@
                             <img src="<?= base_url() ?>public/uploads/product_images/${p_img.src}" alt="Product Thumb" width="800" height="900">
                         </div>`;
                 });
+                sticky_product_img = '<?= base_url() ?>public/uploads/product_images/' + product_img[0].src
             } else {
                 html1 += `<div class="swiper-slide">
                                         <figure class="product-image">
@@ -614,6 +619,7 @@
         }
         $('#main_image').html(html1);
         $('#all_slider_image').html(html2);
+        $('#sticky-product-img').attr('src', sticky_product_img);
         const productSingleSwiper = new Swiper('.product-single-swiper', {
             navigation: {
                 nextEl: '.swiper-button-next',
@@ -641,7 +647,7 @@
             // url: "<?= base_url('/api/product?v_id=') ?>" + v_id,
             url: "<?= base_url('/api/product') ?>",
             type: "GET",
-            data: { v_id: v_id },
+            data: { vendor_id: v_id },
             success: function (resp) {
 
                 console.log('vendor', resp)

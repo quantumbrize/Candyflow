@@ -765,14 +765,14 @@ class Product_Controller extends Api_Controller
             $sql .= " GROUP BY product.uid;";
 
             $products = $CommonModel->customQuery($sql);
+           
         }
         
 
 
 
+        
 
-
-        // $this->prd($products);
         if (count($products) > 0) {
             $ProductImagesModel = new ProductImagesModel();
             foreach ($products as $key => $product) {

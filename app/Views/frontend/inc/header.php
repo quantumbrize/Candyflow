@@ -1044,7 +1044,7 @@
                                 // Construct main category HTML for both desktop and mobile
                                 var main_html = `
                             <li id="catalog_subCategory${index1}" class="right-angle-parent">
-                                <a href="<?= base_url('product/list?c_id=') ?>${parent.uid}">
+                                <a href="<?= base_url('product/category?c_id=') ?>${parent.uid}">
                                     <img class="cat-img-size" src="<?= base_url('public/uploads/category_images/') ?>${parent.img_path}" alt=""><b> ${parent.name}</b>
                                 </a>
                             </li>`;
@@ -1076,7 +1076,7 @@
                                         // Subcategory structure for desktop
                                         var html_sub = `
                                     <li>
-                                        <a href="<?= base_url('product/list?c_id=') ?>${subCat.uid}">
+                                        <a href="<?= base_url('product/category?c_id=') ?>${subCat.uid}">
                                             <h4 class="menu-title">${subCat.name}</h4>
                                         </a>
                                         <hr class="divider">
@@ -1099,8 +1099,8 @@
                                             let html2_mob = '';
 
                                             $.each(subCat.subCategories, function (index3, childSubCat) {
-                                                html2 += `<li><a href="<?= base_url('product/list?c_id=') ?>${childSubCat.uid}">${childSubCat.name}</a></li>`;
-                                                html2_mob += `<li><a href="<?= base_url('product/list?c_id=') ?>${childSubCat.uid}">${childSubCat.name}</a></li>`;
+                                                html2 += `<li><a href="<?= base_url('product/category?c_id=') ?>${childSubCat.uid}">${childSubCat.name}</a></li>`;
+                                                html2_mob += `<li><a href="<?= base_url('product/category?c_id=') ?>${childSubCat.uid}">${childSubCat.name}</a></li>`;
                                             });
 
                                             $('#child_sub_cat_' + index1 + '_' + index2).html(html2);
