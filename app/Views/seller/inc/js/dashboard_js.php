@@ -1,13 +1,14 @@
 <script>
 
-    $(document).ready(function() {
+
+    $(document).ready(function () {
         total_product()
         total_order()
         total_erning()
         // total_customer()
         best_selling()
         revenue()
-        
+
     });
 
     function total_product() {
@@ -25,7 +26,7 @@
                 // console.log(resp)
                 if (resp.status) {
                     document.getElementById('product_counter').setAttribute('data-target', resp.data);
-                }else{
+                } else {
                     document.getElementById('product_counter').setAttribute('data-target', resp.data);
                 }
 
@@ -34,7 +35,7 @@
                 console.log(err)
             },
             complete: function () {
-               
+
             }
         })
     }
@@ -54,7 +55,7 @@
                 console.log(resp.data['COUNT(*)'])
                 if (resp.status) {
                     document.getElementById('order_counter').setAttribute('data-target', resp.data['COUNT(*)']);
-                }else{
+                } else {
                     document.getElementById('order_counter').setAttribute('data-target', resp.data['COUNT(*)']);
                 }
 
@@ -63,7 +64,7 @@
                 console.log(err)
             },
             complete: function () {
-               
+
             }
         })
     }
@@ -84,7 +85,7 @@
                 if (resp.status) {
                     document.getElementById('customer_counter').setAttribute('data-target', "");
                     document.getElementById('customer_counter').setAttribute('data-target', resp.data);
-                }else{
+                } else {
                     document.getElementById('customer_counter').setAttribute('data-target', resp.data);
                 }
 
@@ -93,7 +94,7 @@
                 console.log(err)
             },
             complete: function () {
-               
+
             }
         })
     }
@@ -114,7 +115,7 @@
                 if (resp.status) {
                     document.getElementById('erning_counter').setAttribute('data-target', "");
                     document.getElementById('erning_counter').setAttribute('data-target', resp.data);
-                }else{
+                } else {
                     document.getElementById('erning_counter').setAttribute('data-target', resp.data);
                 }
 
@@ -123,7 +124,7 @@
                 console.log(err)
             },
             complete: function () {
-               
+
             }
         })
     }
@@ -141,18 +142,18 @@
             },
             success: function (resp) {
                 if (resp.status) {
-                        let html = ''
-                        console.log(resp)
-                        $.each(resp.data, function (index, item) {
-                            
-                            if(item.product_data != null){
-                                var original_price = item.product_data.base_discount ? (item.product_data.base_price - (item.product_data.base_price * item.product_data.base_discount / 100)).toFixed(2) : item.product_data.base_price.toFixed(2);
-                                var base_price = item.product_data.base_discount ? item.product_data.base_discount : "";
-                                var image = `https://usercontent.one/wp/www.vocaleurope.eu/wp-content/uploads/no-image.jpg?media=1642546813`
-                                if(item.product_data.product_img != null){
-                                    image = `<?= base_url('public/uploads/product_images/') ?>${item.product_data.product_img[0].src}`
-                                }
-                                html += `<tr>
+                    let html = ''
+                    console.log(resp)
+                    $.each(resp.data, function (index, item) {
+
+                        if (item.product_data != null) {
+                            var original_price = item.product_data.base_discount ? (item.product_data.base_price - (item.product_data.base_price * item.product_data.base_discount / 100)).toFixed(2) : item.product_data.base_price.toFixed(2);
+                            var base_price = item.product_data.base_discount ? item.product_data.base_discount : "";
+                            var image = `https://usercontent.one/wp/www.vocaleurope.eu/wp-content/uploads/no-image.jpg?media=1642546813`
+                            if (item.product_data.product_img != null) {
+                                image = `<?= base_url('public/uploads/product_images/') ?>${item.product_data.product_img[0].src}`
+                            }
+                            html += `<tr>
                                             <td style="text-align: center;">
                                                 <div class="d-flex align-items-center">
                                                     <div class="avatar-sm bg-light rounded p-1 me-2">
@@ -176,16 +177,16 @@
                                                 ${item.product_data.product_stock}
                                             </td>
                                             <td style="text-align: center;">
-                                                ${(original_price*item.total_qty).toFixed(2)}
+                                                ${(original_price * item.total_qty).toFixed(2)}
                                             </td>
                                             
                                         </tr>`
-                            }
+                        }
 
-                        })
+                    })
 
-                        $('#table-best-selling-list-all-body').html(html)
-                        $('#table-best-selling-list-all').DataTable();
+                    $('#table-best-selling-list-all-body').html(html)
+                    $('#table-best-selling-list-all').DataTable();
                 } else {
                     $('#table-best-selling-list-all-body').html(`<tr >
                         <td>
@@ -207,246 +208,249 @@
             url: '<?= base_url('/api/seller/revenue') ?>',
             type: "GET",
             beforeSend: function () {
-                $('#table-best-selling-list-all-body').html(`<tr >
-                        <td colspan="7"  style="text-align:center;">
-                            <div class="spinner-border" role="status"></div>
-                        </td>
-                    </tr>`)
+                $('#table-best-selling-list-all-body').html(`
+                <tr>
+                    <td colspan="7" style="text-align:center;">
+                        <div class="spinner-border" role="status"></div>
+                    </td>
+                </tr>
+            `);
             },
             success: function (resp) {
-                console.log(resp)
+                console.log(resp);
                 if (resp.status) {
-                    console.log(resp);
-                    var delivered_orders = resp.data.delivered_orders.length
-                    var cancelled_orders = resp.data.cancelled_orders.length
-                    var erning = 0;
-                    var chart_orders = []
+                    const deliveredOrders = resp.data.delivered_orders;
+                    const cancelledOrders = resp.data.cancelled_orders;
 
+                    let earning = 0;
+                    const monthlyOrder = Array(12).fill(0);
+                    const monthlyEarning = Array(12).fill(0);
+                    const monthlyRefunds = Array(12).fill(0);
 
-
-                    var monthly_order = {jan: 0, feb: 0, mar: 0, apr: 0, may: 0, jun: 0, jul: 0, aug: 0, sep: 0, oct: 0, nov: 0, dec: 0}
-                    var monthly_erning = {jan: 0, feb: 0, mar: 0, apr: 0, may: 0, jun: 0, jul: 0, aug: 0, sep: 0, oct: 0, nov: 0, dec: 0}
-                    var monthly_refunds = {jan: 0, feb: 0, mar: 0, apr: 0, may: 0, jun: 0, jul: 0, aug: 0, sep: 0, oct: 0, nov: 0, dec: 0}
-                    $.each(resp.data.delivered_orders, function (index, item) {
-                        erning += parseFloat(item.total);
-
-
-                        var dateString = item.created_at;
-                        var date = new Date(dateString);
-                        var month = date.getMonth() + 1;
-                        var year = date.getFullYear();
-                        var formattedDate = `${month < 10 ? '0' + month : month}-${year}`;
-                        var monthPart = formattedDate.split("-")[0];
-
-                    
-                        if(monthPart == '01'){
-                            monthly_order.jan += 1
-                            monthly_erning.jan += parseFloat(item.total);
-                        } else if(monthPart == '02'){
-                            monthly_order.feb += 1
-                            monthly_erning.feb += parseFloat(item.total);
-                        } else if(monthPart == '03'){
-                            monthly_order.mar += 1
-                            monthly_erning.mar += parseFloat(item.total);
-                        } else if(monthPart == '04'){
-                            monthly_order.apr += 1
-                            monthly_erning.apr += parseFloat(item.total);
-                        } else if(monthPart == '05'){
-                            monthly_order.may += 1
-                            monthly_erning.may += parseFloat(item.total);
-                        } else if(monthPart == '06'){
-                            monthly_order.jun += 1
-                            monthly_erning.jun += parseFloat(item.total);
-                        } else if(monthPart == '07'){
-                            monthly_order.jul += 1
-                            monthly_erning.jul += parseFloat(item.total);
-                        } else if(monthPart == '08'){
-                            monthly_order.aug += 1
-                            monthly_erning.aug += parseFloat(item.total);
-                        } else if(monthPart == '09'){
-                            monthly_order.sep += 1
-                            monthly_erning.sep += parseFloat(item.total);
-                        } else if(monthPart == '10'){
-                            monthly_order.oct += 1
-                            monthly_erning.oct += parseFloat(item.total);
-                        } else if(monthPart == '11'){
-                            monthly_order.nov += 1
-                            monthly_erning.nov += parseFloat(item.total);
-                        } else if(monthPart == '12'){
-                            monthly_order.dec += 1
-                            monthly_erning.dec += parseFloat(item.total);
-                        }
-                    })
-                    $.each(resp.data.cancelled_orders, function (index, item) {
-                        erning += parseFloat(item.total);
-
-
-                        var dateString = item.created_at;
-                        var date = new Date(dateString);
-                        var month = date.getMonth() + 1;
-                        var year = date.getFullYear();
-                        var formattedDate = `${month < 10 ? '0' + month : month}-${year}`;
-                        var monthPart = formattedDate.split("-")[0];
-
-                    
-                        if(monthPart == '01'){
-                            monthly_refunds.jan += 1
-                        } else if(monthPart == '02'){
-                            monthly_refunds.feb += 1
-                        } else if(monthPart == '03'){
-                            monthly_refunds.mar += 1
-                        } else if(monthPart == '04'){
-                            monthly_refunds.apr += 1
-                        } else if(monthPart == '05'){
-                            monthly_refunds.may += 1
-                        } else if(monthPart == '06'){
-                            monthly_refunds.jun += 1
-                        } else if(monthPart == '07'){
-                            monthly_refunds.jul += 1
-                        } else if(monthPart == '08'){
-                            monthly_refunds.aug += 1
-                        } else if(monthPart == '09'){
-                            monthly_refunds.sep += 1
-                        } else if(monthPart == '10'){
-                            monthly_refunds.oct += 1
-                        } else if(monthPart == '11'){
-                            monthly_refunds.nov += 1
-                        } else if(monthPart == '12'){
-                            monthly_refunds.dec += 1
-                        }
-                    })
-                    console.log(monthly_order.aug);
-                     
-                    const xValues = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
-
-                    new Chart("myChart", {
-                    type: "line",
-                    data: {
-                        labels: xValues,
-                        datasets: [{ 
-                        data: [monthly_order.jan, monthly_order.feb, monthly_order.mar, monthly_order.apr, monthly_order.may, monthly_order.jun, monthly_order.jul, monthly_order.aug, monthly_order.sep, monthly_order.oct, monthly_order.nov, monthly_order.dec],
-                        borderColor: "red",
-                        fill: false
-                        }, 
-                        // { 
-                        // data: [monthly_erning.jan, monthly_erning.feb, monthly_erning.mar, monthly_erning.apr, monthly_erning.may, monthly_erning.jun, monthly_erning.jul, monthly_erning.aug, monthly_erning.sep, monthly_erning.oct, monthly_erning.nov, monthly_erning.dec],
-                        // borderColor: "green",
-                        // fill: false
-                        // }, 
-                        { 
-                        data: [monthly_refunds.jan, monthly_refunds.feb, monthly_refunds.mar, monthly_refunds.apr, monthly_refunds.may, monthly_refunds.jun, monthly_refunds.jul, monthly_refunds.aug, monthly_refunds.sep, monthly_refunds.oct, monthly_refunds.nov, monthly_refunds.dec],
-                        borderColor: "blue",
-                        fill: false
-                        }]
-                    },
-                    options: {
-                        legend: {display: false}
-                    }
+                    // Process delivered orders
+                    deliveredOrders.forEach(item => {
+                        earning += parseFloat(item.total);
+                        const month = new Date(item.created_at).getMonth(); // 0-11
+                        monthlyOrder[month] += 1;
+                        monthlyEarning[month] += parseFloat(item.total);
                     });
-                    
-                    
-                    const delivered_ordersElement = document.getElementById('delivered_orders');
-                    delivered_ordersElement.textContent = delivered_orders;
-                    const cancelled_ordersElement = document.getElementById('cancelled_orders');
-                    cancelled_ordersElement.textContent = cancelled_orders;
-                    const totalEarningElement = document.getElementById('total_erning');
-                    totalEarningElement.textContent = erning.toFixed(2);
-                    // console.log(erning);
-                    document.getElementById('erning_counter').setAttribute('data-target', total_erning);
 
-                    
+                    // Process cancelled orders
+                    cancelledOrders.forEach(item => {
+                        const month = new Date(item.created_at).getMonth(); // 0-11
+                        monthlyRefunds[month] += 1; // Count refunds per month
+                    });
 
+                    // Chart data setup
+                    const xValues = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+                    new Chart("myChart", {
+                        type: "line",
+                        data: {
+                            labels: xValues,
+                            datasets: [
+                                {
+                                    label: "Delivered Orders",
+                                    data: monthlyOrder,
+                                    borderColor: "red",
+                                    fill: false
+                                },
+                                {
+                                    label: "Refunds",
+                                    data: monthlyRefunds,
+                                    borderColor: "blue",
+                                    fill: false
+                                }
+                            ]
+                        },
+                        options: {
+                            legend: { display: true }
+                        }
+                    });
+
+                    // Update DOM elements
+                    document.getElementById('delivered_orders').textContent = deliveredOrders.length;
+                    document.getElementById('cancelled_orders').textContent = cancelledOrders.length;
+                    document.getElementById('total_earning').textContent = earning.toFixed(2);
+                    document.getElementById('earning_counter').setAttribute('data-target', earning.toFixed(2));
                 } else {
-                    // $('#table-best-selling-list-all-body').html(`<tr >
-                    //     <td>
-                    //         DATA NOT FOUND!
-                    //     </td>
-                    // </tr>`)
+                    console.error("Response status is false:", resp);
                 }
             },
             error: function (err) {
-                console.log(err)
+                console.error("Error fetching revenue data:", err);
             }
-
-        })
-
+        });
     }
-    // JavaScript to handle form submission
-// document.getElementById('authorizationForm').addEventListener('submit', function (e) {
-//     e.preventDefault();  // Prevent the default form submission
 
-//     // Get the image and description values
-//     var imageInput = document.getElementById('authImage').files[0];
-//     var descriptionInput = document.getElementById('authDescription').value;
+    $(document).ready(function () {
+        // Initially show only Step 1
+        $('#step1').show();
+        $('#step2, #step3').hide();
 
-//     if (imageInput && descriptionInput) {
-//         // Handle the form data (e.g., send it to the server, show a preview, etc.)
-//         console.log('Image:', imageInput);
-//         console.log('Description:', descriptionInput);
+        // Navigate to Step 2
+        $('#goToStep2').on('click', function () {
+            const name = $('#name_val').val().trim();
+            const ifsc = $('#ifsc_val').val().trim();
+            const account_number = $('#acc_val').val().trim();
 
-//         // Optionally close the modal after submission
-//         $('#authorizationLetterModal').modal('hide');
-//     } else {
-//         alert('Please fill in both the image and description!');
-//     }
-// });
-
-    $('#submit_authorization').on('click', function () {
-        let user_id='<?= !empty($_SESSION[SES_SELLER_USER_ID]) ? $_SESSION[SES_SELLER_USER_ID] : '' ?>';
-        var formData = new FormData();
-
-        formData.append('authDescription', $('#authDescription').val());
-        formData.append('user_id', user_id);
-        
-        
-
-        $.each($('#authImage')[0].files, function (index, file) {
-            formData.append('authImage[]', file);
-        })
-
-        $.ajax({
-            url: "<?= base_url('/api/add/vendor-authorization') ?>",
-            type: "POST",
-            data: formData,
-            contentType: false,
-            processData: false,
-            beforeSend: function () {
-                $('#submit_authorization').html(`<div class="spinner-border" role="status"></div>`)
-                $('#submit_authorization').attr('disabled', true)
-
-            },
-            success: function (resp) {
-                let html = ''
-
-                if (resp.status) {
-                    html += `<div class="alert alert-success alert-dismissible alert-label-icon label-arrow fade show material-shadow" role="alert">
-                            <i class="ri-checkbox-circle-fill label-icon"></i>${resp.message}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>`
-                    $('#authImage').val(``)
-                    $('#authDescription').val(``)
-                    $('#authorizationLetterModal').modal('hide')
-
-                   
-                } else {
-                    html += `<div class="alert alert-warning alert-dismissible alert-label-icon label-arrow fade show material-shadow" role="alert">
-                            <i class="ri-alert-line label-icon"></i><strong>Warning</strong> - ${resp.message}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>`
-                }
-
-
-                $('#alert').html(html)
-                console.log(resp)
-            },
-            error: function (err) {
-                console.log(err)
-            },
-            complete: function () {
-                $('#submit_authorization').html(`submit`)
-                $('#submit_authorization').attr('disabled', false)
+            if (!name || !ifsc || !account_number) {
+                Toastify({
+                    text: 'Please fill all details.'.toUpperCase(),
+                    duration: 2000,
+                    position: "center",
+                    stopOnFocus: true,
+                    style: {
+                        background: 'red',
+                    },
+                }).showToast();
+                return;
             }
-        })
-    })
+
+            $('#step1').hide();
+            $('#step2').show();
+        });
+
+        // Navigate to Step 3
+        $('#goToStep3').on('click', function () {
+            if (!$('#authImage').val()) {
+                Toastify({
+                    text: 'Please upload an image.'.toUpperCase(),
+                    duration: 2000,
+                    position: "center",
+                    stopOnFocus: true,
+                    style: {
+                        background: 'red',
+                    },
+                }).showToast();
+                return;
+            }
+
+            $('#step2').hide();
+            $('#step3').show();
+        });
+
+        // Enable Finish Button on Terms Acceptance
+        $('#termsCheck').on('change', function () {
+            $('#finishProcess').prop('disabled', !$(this).is(':checked'));
+        });
+
+        // Reset the entire form and steps
+        function resetForm() {
+            $('#step1').show();
+            $('#step2, #step3').hide();
+            $('#name_val, #ifsc_val, #acc_val, #authDescription').val('');
+            $('#authImage').val('');
+            $('#termsCheck').prop('checked', false);
+            $('#finishProcess').prop('disabled', true).text('Finish');
+        }
+
+        // Final Submission After Terms and Conditions
+        $('#finishProcess').on('click', function () {
+            let user_id = '<?= !empty($_SESSION[SES_SELLER_USER_ID]) ? $_SESSION[SES_SELLER_USER_ID] : '' ?>';
+            const name = $('#name_val').val();
+            const ifsc = $('#ifsc_val').val();
+            const account_number = $('#acc_val').val();
+            const formData = new FormData();
+            $.each($('#authImage')[0].files, function (index, file) {
+                formData.append('authImage[]', file);
+            });
+
+            formData.append('authDescription', $('#authDescription').val());
+            formData.append('user_id', user_id);
+
+            // Validate inputs for bank details
+            if (!name || !ifsc || !account_number) {
+                Toastify({
+                    text: 'Please fill in all bank details.'.toUpperCase(),
+                    duration: 2000,
+                    position: "center",
+                    stopOnFocus: true,
+                    style: {
+                        background: 'red',
+                    },
+                }).showToast();
+                return;
+            }
+
+            // Validate inputs for authorization letter
+            if (!$('#authImage').val()) {
+                Toastify({
+                    text: 'Please upload an authorization image.'.toUpperCase(),
+                    duration: 2000,
+                    position: "center",
+                    stopOnFocus: true,
+                    style: {
+                        background: 'red',
+                    },
+                }).showToast();
+                return;
+            }
+
+            // Step 1: Update Bank Details
+            $.ajax({
+                url: "<?= base_url('api/seller/bank/update') ?>",
+                type: "POST",
+                data: {
+                    user_id: user_id,
+                    user_name: name,
+                    ifsc: ifsc,
+                    account_number: account_number
+                },
+                beforeSend: function () {
+                    $('#finishProcess').text('Updating Bank Details...').attr('disabled', true);
+                },
+                success: function (resp) {
+                    if (resp.status) {
+                        console.log("Bank details updated successfully!");
+
+                        // Step 2: Upload Authorization Letter
+                        $.ajax({
+                            url: "<?= base_url('/api/add/vendor-authorization') ?>",
+                            type: "POST",
+                            data: formData,
+                            contentType: false,
+                            processData: false,
+                            beforeSend: function () {
+                                $('#finishProcess').text('Uploading Authorization Letter...');
+                            },
+                            success: function (resp) {
+                                if (resp.status) {
+                                    Toastify({
+                                        text: 'Process completed successfully!'.toUpperCase(),
+                                        duration: 2000,
+                                        position: "center",
+                                        stopOnFocus: true,
+                                        style: {
+                                            background: 'green',
+                                        },
+                                    }).showToast();
+                                    // Reset the form and steps
+                                    resetForm();
+                                    $('#authorizationLetterModal').modal('hide');
+                                    isAuthSeller();
+                                } else {
+                                    alert(`Failed to upload authorization letter: ${resp.message}`);
+                                }
+                            },
+                            error: function (err) {
+                                console.error("Error uploading authorization letter:", err);
+                                alert("An error occurred while uploading the authorization letter.");
+                            }
+                        });
+                    } else {
+                        alert(`Failed to update bank details: ${resp.message}`);
+                    }
+                },
+                error: function (err) {
+                    console.error("Error updating bank details:", err);
+                    alert("An error occurred while updating bank details.");
+                },
+                complete: function () {
+                    $('#finishProcess').text('Finish').attr('disabled', false);
+                }
+            });
+        });
+    });
+
 
 </script>
