@@ -159,13 +159,13 @@
                                 <div class="fix-bottom product-sticky-content sticky-content">
                                     <div class="product-form container" id="product_add_to_cart_button">
                                         <div class="product-qty-form">
-                                            <div class="input-group">
+                                            <div class="input-group" id="quantity-section">
                                                 <input class="quantity form-control" type="number" min="1"
                                                     max="10000000">
-                                                <button class="quantity-plus w-icon-plus"
+                                                <!-- <button class="quantity-plus w-icon-plus"
                                                     onclick="quantity_increase()"></button>
                                                 <button class="quantity-minus w-icon-minus"
-                                                    onclick="quantity_decrease()"></button>
+                                                    onclick="quantity_decrease()"></button> -->
                                             </div>
                                         </div>
                                     </div>
