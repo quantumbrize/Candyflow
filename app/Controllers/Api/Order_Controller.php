@@ -209,17 +209,16 @@ class Order_Controller extends Main_Controller
                 if (!defined('VENDOR_COMMISSION_PERCENTAGE')) {
                     throw new \Exception("Vendor commission percentage not defined");
                 }
-                $vendorCut = (VENDOR_COMMISSION_PERCENTAGE / 100) * $price;
+                $vendorCut = $price - (($price * VENDOR_COMMISSION_PERCENTAGE) / 100);
 
                 // Update wallet balance
                 $newBalance = $currentWalletBalance + $vendorCut;
-               
                 $sql = "UPDATE 
                             vendor_wallet
                         SET 
-                            balance = '".floatval($newBalance)."',
-                            updated_at = '".date('Y-m-d H:i:s')."' 
-                        WHERE user_id = '".$venUser_id."'";
+                            balance = '" . floatval($newBalance) . "',
+                            updated_at = '" . date('Y-m-d H:i:s') . "' 
+                        WHERE user_id = '" . $venUser_id . "'";
                 $CommonModel->customQuery($sql);
 
                 $historyData = [

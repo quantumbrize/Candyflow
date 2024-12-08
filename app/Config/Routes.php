@@ -277,5 +277,6 @@ $routes->get('/api/seller/wallet/history',          'Api\User_Controller::GET_ve
 $routes->get('/api/seller/withdrawal/history',      'Api\User_Controller::GET_vendor_withdrawal_history');
 $routes->get('/api/seller/withdrawal/history/delete','Api\User_Controller::GET_vendor_withdrawal_history_delete');
 $routes->post('/api/seller/withdrawal/request',     'Api\User_Controller::POST_vendor_withdrawal_request');
-$routes->get('/api/seller/bank',                     'Api\User_Controller::GET_seller_bank');
-$routes->post('/api/seller/bank/update',             'Api\User_Controller::POST_seller_bank_update');
+$routes->get('/api/seller/bank',                    'Api\User_Controller::GET_seller_bank');
+$routes->post('/api/seller/bank/update',            'Api\User_Controller::POST_seller_bank_update');
+$routes->post('/api/seller/withdrawal/send',        'Api\User_Controller::POST_seller_withdrawal_send');

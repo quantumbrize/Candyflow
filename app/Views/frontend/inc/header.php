@@ -809,73 +809,91 @@
             let user_id = '<?= isset($_SESSION['USER_user_id']) ? $_SESSION['USER_user_id'] : '' ?>'
             get_user();
             function get_user() {
-
                 $.ajax({
                     url: "<?= base_url('api/user') ?>",
                     type: "GET",
                     success: function (resp) {
-                        // resp = JSON.parse(resp)
-                        // console.log(resp.user_data.number)
-                        if (resp.status) {
-                            //    console.log(resp.number)
-                            var image_url = `https://cdn-icons-png.flaticon.com/512/8847/8847419.png`
-                            if (resp.user_img != null) {
-                                image_url = `<?= base_url('public/uploads/user_images/') ?>${resp.user_img.img}`
-                            }
-                            html = `<a href="<?= base_url('wishlist') ?>" class="icon-link">
-                                    ${resp.wishlists ? `<span id="wishlist_count">${resp.wishlists.length}</span>` : ''}
-                                    <i class="fas fa-heart"></i> Wishlist
-                                </a>
-                                <a href="javascript:void(0)" class="icon-link" onclick="redirect_cart_page()">
-                                <span id="cart_count" class="cart-count-badge"></span>    
-                                <i class="fas fa-shopping-cart cart-icon"></i> 
-                                    Cart
-                                </a>
-                                <a href="<?= base_url('user/account') ?>" class="icon-link">
-                                    <i class="fas fa-user"></i> Account
-                                </a>
-                                <a href="javascript:void(0)" class="signup-btn" onclick="logout()" style="text-decoration: none;">Logout</a>`
-                            $('#authorised_account').html(html)
+                        let html = '';
+                        let htmllF = '';
 
-                            htmllF = `<a id="cart-icon-f" class="sticky-icon cart-icon"onclick="redirect_cart_page()">
-                                            <i class="fas fa-shopping-cart"></i>
-                                            <div id="cartCountBx">
-                                                
-                                            </div>
-                                        </a>
-                                        <a id="wishlist-icon-f" class="sticky-icon wishlist-icon" href="<?= base_url('wishlist') ?>">
-                                            <i class="fas fa-heart"></i>
-                                            ${resp.wishlists ? `<span class="badge" id="wishlist-count">${resp.wishlists.length}</span>`  : ''}
-                                        </a>
-                                        <a id="whatsapp-icon-f" class="sticky-icon whatsapp-icon" href="https://wa.me/9667938288" target="_blank">
-                                            <i class="fa-brands fa-whatsapp"></i>
-                                        </a>`
-                            $('#sticky-icons').html(htmllF)
+                        if (resp.status) {
+                            var image_url = `https://cdn-icons-png.flaticon.com/512/8847/8847419.png`;
+                            if (resp.user_img != null) {
+                                image_url = `<?= base_url('public/uploads/user_images/') ?>${resp.user_img.img}`;
+                            }
+
+                            // Logged in state
+                            html = `
+                                    <a href="<?= base_url('wishlist') ?>" class="icon-link" id="wishlist-link">
+                                        ${resp.wishlists ? `<span id="wishlist_count">${resp.wishlists.length}</span>` : ''}
+                                        <i class="fas fa-heart"></i> Wishlist
+                                    </a>
+                                    <a href="javascript:void(0)" class="icon-link" onclick="redirect_cart_page()" id="cart-link">
+                                        <span id="cart_count" class="cart-count-badge"></span>    
+                                        <i class="fas fa-shopping-cart cart-icon"></i> 
+                                        Cart
+                                    </a>
+                                    <a href="<?= base_url('user/account') ?>" class="icon-link">
+                                        <i class="fas fa-user"></i> Account
+                                    </a>
+                                    <a href="javascript:void(0)" class="signup-btn" onclick="logout()" style="text-decoration: none;">Logout</a>`;
+
+                                            // Sticky icons for logged-in user
+                                            htmllF = `
+                                    <a id="cart-icon-f" class="sticky-icon cart-icon" onclick="redirect_cart_page()">
+                                        <i class="fas fa-shopping-cart"></i>
+                                        <div id="cartCountBx"></div>
+                                    </a>
+                                    <a id="wishlist-icon-f" class="sticky-icon wishlist-icon" href="<?= base_url('wishlist') ?>">
+                                        <i class="fas fa-heart"></i>
+                                        ${resp.wishlists ? `<span class="badge" id="wishlist-count">${resp.wishlists.length}</span>` : ''}
+                                    </a>
+                                    <a id="whatsapp-icon-f" class="sticky-icon whatsapp-icon" href="https://wa.me/9667938288" target="_blank">
+                                        <i class="fa-brands fa-whatsapp"></i>
+                                    </a>`;
+
+                            // Enable links
+                            $('#wishlist-link').removeClass('disabled').css('pointer-events', 'auto');
+                            $('#cart-link').removeClass('disabled').css('pointer-events', 'auto');
+                            $('#wishlist-icon-f').removeClass('disabled').css('pointer-events', 'auto');
                         } else {
-                            html = `<a href="<?= base_url('wishlist') ?>" class="icon-link">
+                            // Not logged in state
+                            html = `
+                                <a href="<?= base_url('wishlist') ?>" class="icon-link" id="wishlist-link" style="pointer-events: none;">
                                     <i class="fas fa-heart"></i> Wishlist
                                 </a>
-                                <a href="javascript:void(0)" class="icon-link" onclick="redirect_cart_page()">
-                                <span id="wishlist_count" >${resp.wishlists ? resp.wishlists.length : ''}</span> 
-    
-                                <i class="fas fa-shopping-cart cart-icon">
-                                        
-                                    </i> 
-                                    Cart
-                                   
+                                <a href="javascript:void(0)" class="icon-link" id="cart-link" style="pointer-events: none;">
+                                    <span id="cart_count" >${resp.wishlists ? resp.wishlists.length : ''}</span> 
+                                    <i class="fas fa-shopping-cart cart-icon"></i> Cart
                                 </a>
                                 <a href="<?= base_url('login') ?>" class="icon-link">
                                     <i class="fas fa-user"></i> SignIn
                                 </a>
-                                <a href="<?= base_url('sign-up') ?>" class="signup-btn" style="text-decoration: none;">SignUp</a>`
-                            $('#authorised_account').html(html)
+                                <a href="<?= base_url('sign-up') ?>" class="signup-btn" style="text-decoration: none;">SignUp</a>`;
+
+                            // Sticky icons for not logged-in user
+                            htmllF = `
+                            <a id="cart-icon-f" class="sticky-icon cart-icon" style="pointer-events: none;">
+                                <i class="fas fa-shopping-cart"></i>
+                            </a>
+                            <a id="wishlist-icon-f" class="sticky-icon wishlist-icon" href="<?= base_url('wishlist') ?>" style="pointer-events: none;">
+                                <i class="fas fa-heart"></i>
+                            </a>
+                            <a id="whatsapp-icon-f" class="sticky-icon whatsapp-icon" href="https://wa.me/9667938288" target="_blank">
+                                <i class="fa-brands fa-whatsapp"></i>
+                            </a>`;
                         }
+
+                        // Update HTML
+                        $('#authorised_account').html(html);
+                        $('#sticky-icons').html(htmllF);
                     },
                     error: function (err) {
-                        console.log(err)
+                        console.log(err);
                     },
-                })
+                });
             }
+
 
             $(document).ready(function () {
                 catalog()

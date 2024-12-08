@@ -13,9 +13,11 @@
     let variation_id = "";
     let c_id = "";
     let price_list = "";
-    function setActive(element, stock,tax,price) {
-        console.log(this)
-        $('#product_price').html(`${price} ₹ (+${tax}% Tax)`)
+    let firstMinValue = 0
+    let lastMaxValue = 0
+    function setActive(element, stock, tax, price) {
+        // console.log(this)
+        $('#product_price').html(`${price} ₹ <span id="gst">+${tax}% GST</span>`)
         if (parseInt(stock, 10) > 0) {
             document.querySelectorAll('#product_size .size').forEach(function (size) {
                 size.classList.remove('active');
@@ -55,7 +57,7 @@
             success: function (resp) {
 
                 if (resp.status) {
-                    console.log(resp)
+                    // console.log(resp)
                     product_id = resp.data.product_id;
                     get_all_reviews(resp.data.product_id)
                     var var_id = ""
@@ -90,6 +92,12 @@
 
                     // Sort the product_prices array based on min_qty in ascending order
                     resp.data.product_prices.sort((a, b) => parseInt(a.min_qty) - parseInt(b.min_qty));
+
+                    if (resp.data.product_prices && resp.data.product_prices.length > 0) {
+                        $('.quantity').val(resp.data.product_prices[0].min_qty)
+                        firstMinValue = resp.data.product_prices[0].min_qty;
+                        lastMaxValue = resp.data.product_prices[resp.data.product_prices.length - 1].max_qty;
+                    }
 
                     // Loop through the sorted array to generate HTML
                     $.each(resp.data.product_prices, function (index, p_prices) {
@@ -169,7 +177,7 @@
                     // let allSizes = JSON.parse(resp.data.size_list);
                     let html_size = '';
                     let isavailable = false
-                    console.log(resp.data.product_sizes);
+                    // console.log(resp.data.product_sizes);
                     $.each(resp.data.product_sizes, function (index, size) {
                         if (parseInt(size.stocks, 10) > 0) {
                             html_size += `<a href="javascript:void(0)" 
@@ -204,7 +212,7 @@
                     }
                     $('#product_add_to_cart_button').append(qty_add_to_cart_btn);
                 } else {
-                    console.log(resp)
+                    // console.log(resp)
 
                 }
                 // console.log(resp)
@@ -216,6 +224,47 @@
 
         get_varient(id)
 
+        $('.quantity').on('input', function () {
+            let product_quantity = parseInt($(this).val());
+
+            // Check if the quantity is within valid range (min-max bounds)
+            if (product_quantity < firstMinValue) {
+                product_quantity = firstMinValue; // Set to minimum allowed value
+                $(this).val(product_quantity); // Update the input value
+            } else if (product_quantity > lastMaxValue) {
+                product_quantity = lastMaxValue; // Set to maximum allowed value
+                $(this).val(product_quantity); // Update the input value
+            }
+
+            // Find the corresponding price based on the updated quantity
+            let currentPrice = getPriceForQuantity(product_quantity);
+            $('#product_price').html('₹' + currentPrice.toFixed(2)); // Update the displayed price
+        });
+
+        // Price calculation function
+        function getPriceForQuantity(quantity) {
+            let price = 0;
+
+            // Ensure the quantity is within the valid range
+            if (quantity < firstMinValue || quantity > lastMaxValue) {
+                return price;  // Return 0 or some other indicator that the quantity is out of bounds
+            }
+
+            // Iterate over the price list to find the applicable price for the given quantity
+            for (let i = 0; i < price_list.length; i++) {
+                const item = price_list[i];
+                const minQty = parseInt(item.min_qty);
+                const maxQty = parseInt(item.max_qty);
+
+                // Check if the quantity falls within the current item's range
+                if (quantity >= minQty && quantity <= maxQty) {
+                    price = parseFloat(item.price);
+                    break; // Stop checking once we've found the applicable price
+                }
+            }
+
+            return price;
+        }
 
 
 
@@ -261,14 +310,14 @@
         if (activeSize) {
             var product_quantity = $('.quantity').val()
             const sizeValue = activeSize.getAttribute('data-size');
-            console.log(product_quantity)
-            console.log(sizeValue)
+            // console.log(product_quantity)
+            // console.log(sizeValue)
             $.ajax({
                 url: "<?= base_url('/api/user/id') ?>",
                 type: "GET",
                 success: function (resp) {
                     if (resp.status) {
-                        console.log(resp.data)
+                        // console.log(resp.data)
                         if (sizeValue == "") {
                             Toastify({
                                 text: 'Size Not Found'.toUpperCase(),
@@ -364,7 +413,7 @@
     // }
 
     function quantity_increase() {
-        console.log(price_list);
+        // console.log(price_list);
         let product_quantity = parseInt($('.quantity').val());
         const lastMaxQty = parseInt(price_list[price_list.length - 1].max_qty); // Get the max_qty of the last index
 
@@ -379,12 +428,13 @@
         }
     }
 
+
+
     function quantity_decrease() {
-        console.log(price_list);
         let product_quantity = parseInt($('.quantity').val());
 
         // Check if the quantity can be decreased
-        if (product_quantity > 1) {
+        if (product_quantity > firstMinValue) {
             product_quantity -= 1; // Decrement quantity
             $('.quantity').val(product_quantity);
 
@@ -397,6 +447,12 @@
     function getPriceForQuantity(quantity) {
         let price = 0;
 
+        // Ensure the quantity is within the valid range
+        if (quantity < firstMinValue || quantity > lastMaxValue) {
+            return price;  // Return 0 or some other indicator that the quantity is out of bounds
+        }
+
+        // Iterate over the price list to find the applicable price for the given quantity
         for (let i = 0; i < price_list.length; i++) {
             const item = price_list[i];
             const minQty = parseInt(item.min_qty);
@@ -426,7 +482,7 @@
             url: "<?= base_url('/api/product?c_id=') ?>" + c_id,
             type: "GET",
             success: function (resp) {
-                console.log('sim', resp)
+                // console.log('sim', resp)
                 if (resp.status) {
 
                     $.each(resp.data, function (index, products) {
@@ -487,7 +543,7 @@
                     })
 
                 } else {
-                    console.log(resp)
+                    // console.log(resp)
 
                 }
                 // console.log(resp)
@@ -503,7 +559,7 @@
             url: "<?= base_url('/api/product/variant?p_id=') ?>" + id,
             type: "GET",
             success: function (resp) {
-                console.log('var', resp)
+                // console.log('var', resp)
                 if (resp.status) {
 
                     // var html_size = ``
@@ -583,7 +639,7 @@
 
         } else if (type === 'main') {
             product_img = JSON.parse(decodeURIComponent(product_img));
-            console.log('img', product_img)
+            // console.log('img', product_img)
             if (product_img.length > 0) {
                 $.each(product_img, function (index, p_img) {
                     html1 += `<div class="swiper-slide">
@@ -644,7 +700,7 @@
             data: { v_id: v_id },
             success: function (resp) {
 
-                console.log('vendor', resp)
+                // console.log('vendor', resp)
                 if (resp.status) {
                     $.each(resp.data, function (index, products) {
                         // console.log('vendor', products)

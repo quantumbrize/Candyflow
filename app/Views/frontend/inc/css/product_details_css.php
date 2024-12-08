@@ -12,6 +12,10 @@
         /* Maintain aspect ratio and crop image if needed */
     }
 
+    #gst{
+        font-size: 15px;
+        font-weight: 500;
+    }
     .image-row {
         display: flex;
         justify-content: center;

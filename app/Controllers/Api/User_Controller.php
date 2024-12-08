@@ -1723,6 +1723,7 @@ class User_Controller extends Api_Controller
             $VendorWithdrawalHistoryModel = new VendorWithdrawalHistoryModel();
             $VendorWalletModel = new VendorWalletModel;
             $UsersModel = new UsersModel();
+            $VendorBankModel = new VendorBankModel();
             $history = null;
             if ($data['s']) {
                 $status = $data['s'];
@@ -1744,7 +1745,13 @@ class User_Controller extends Api_Controller
                         $user = $UsersModel->where('uid', $record['user_id'])->first();
                         if ($user) {
                             $record['user_details'] = $user; // Add user details if required
+                            $userBank = $VendorBankModel->where('user_id', $record['user_id'])->first();
+                            if ($userBank) {
+                                $record['user_details']['bank'] = $userBank;
+                            }
                         }
+
+
                     }
                 }
 
@@ -1919,7 +1926,7 @@ class User_Controller extends Api_Controller
             ];
 
 
-            $UsersModel->where('uid', $data['user_id'])->update(null ,$userUpdateData);
+            $UsersModel->where('uid', $data['user_id'])->update(null, $userUpdateData);
             $VendorBankModel->where('user_id', $data['user_id'])->update(null, $updateData);
 
             if ($VendorBankModel->db->affectedRows() > 0) {
@@ -1936,6 +1943,169 @@ class User_Controller extends Api_Controller
 
     }
 
+    private function seller_withdrawal_send($data)
+    {
+        $resp = [
+            'status' => false,
+            'message' => 'Failed to process payout',
+            'data' => []
+        ];
+
+        try {
+            $VendorBankModel = new VendorBankModel();
+            $VendorWalletModel = new VendorWalletModel();
+            $VendorWalletHistoryModel = new VendorWalletHistoryModel();
+            $VendorWithdrawalHistoryModel = new VendorWithdrawalHistoryModel();
+
+            // Fetch user ID from withdrawal history
+            $userIdRecord = $VendorWithdrawalHistoryModel->where('uid', $data['request_id'])->first('user_id');
+            $userId = $userIdRecord ? $userIdRecord['user_id'] : null;
+
+            if (!$userId) {
+                throw new \Exception("User ID not found for the given request ID.");
+            }
+
+            // Fetch bank details
+            $bankDetails = $VendorBankModel->where('user_id', $userId)->first();
+            if (!$bankDetails) {
+                throw new \Exception("Bank details not found for the user.");
+            }
+
+            // Fetch wallet details
+            $walletDetails = $VendorWalletModel->where('user_id', $userId)->first();
+            if (!$walletDetails) {
+                throw new \Exception("Wallet details not found for the user.");
+            }
+
+            // Ensure sufficient balance in wallet
+            $amountToWithdraw = $data['amount'];
+            if ($walletDetails['balance'] < $amountToWithdraw) {
+                throw new \Exception("Insufficient wallet balance.");
+            }
+
+            // Razorpay API Integration
+            $payoutResult = $this->createRazorpayPayout($bankDetails, $amountToWithdraw);
+
+            if (!$payoutResult['status']) {
+                throw new \Exception($payoutResult['message']);
+            }
+
+            // Update wallet balance
+            $newBalance = $walletDetails['balance'] - $amountToWithdraw;
+            $VendorWalletModel->update($walletDetails['id'], ['balance' => $newBalance]);
+
+            // Log wallet transaction history
+            $VendorWalletHistoryModel->insert([
+                'uid' => $this->generate_uid('VWH'),
+                'user_id' => $userId,
+                'debited' => $amountToWithdraw,
+                'credited' => 0,
+                'closing_balance' => $newBalance
+            ]);
+
+            // Update withdrawal history status
+            $VendorWithdrawalHistoryModel->update($data['request_id'], [
+                'status' => 'completed',
+                'amount' => $amountToWithdraw
+            ]);
+
+            // Success response
+            $resp['status'] = true;
+            $resp['message'] = 'Payout processed successfully';
+            $resp['data'] = $payoutResult['data'];
+
+        } catch (\Exception $e) {
+            // Catch any exceptions and return the error message
+            $resp['message'] = $e->getMessage();
+        }
+
+        return $resp;
+    }
+
+    /**
+     * Create Razorpay Payout
+     */
+    private function createRazorpayPayout($bank, $amount)
+    {
+        // Define Razorpay credentials and endpoint
+        $keyId = RAZORPAY_KEY_LIVE_ID;
+        $keySecret = RAZORPAY_KEY_LIVE_SECRET;
+        $url = "https://api.razorpay.com/v2/payouts";
+
+        // Prepare payout data
+        $data = [
+            "fund_account" => [
+                "account_type" => $bank['account_number'],
+                "bank_account" => [
+                    "name" => $bank['user_name'],
+                    "ifsc" => $bank['ifsc'],
+                    "account_number" => $bank['account_number']
+                ]
+            ],
+            "amount" => intval($amount * 100), // Convert to paise
+            "currency" => "INR",
+            "mode" => "IMPS",  // Choose IMPS, NEFT, or RTGS
+            "purpose" => "payout",
+            "queue_if_low_balance" => true,
+            "reference_id" => "TXN" . uniqid(),
+            "narration" => "Vendor Payout"
+        ];
+
+        // Initialize cURL session to make API request
+        try {
+            $ch = curl_init();
+
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+            // Set headers and authentication
+            curl_setopt($ch, CURLOPT_HTTPHEADER, ["Content-Type: application/json"]);
+            curl_setopt($ch, CURLOPT_USERPWD, "$keyId:$keySecret");
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+            curl_setopt($ch, CURLOPT_VERBOSE, true); // Enable cURL debugging
+
+            $response = curl_exec($ch);
+            $httpStatus = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+
+            $this->prd($response);
+
+            if ($httpStatus === 200 || $httpStatus === 201) {
+                $responseData = json_decode($response, true);
+                return [
+                    "status" => true,
+                    "message" => "Payout created successfully",
+                    "data" => $responseData
+                ];
+            } else {
+                // Log the raw response for debugging
+                // $errorResponse = json_decode($response, true);
+                return [
+                    "status" => false,
+                    "message" => '',
+                    "data" => $response 
+                ];
+            }
+        } catch (\Exception $e) {
+            // Log exception error for debugging
+            return [
+                "status" => false,
+                "message" => "Curl error: " . $e->getMessage()
+            ];
+        }
+    }
+
+
+
+
+    public function POST_seller_withdrawal_send()
+    {
+        $data = $this->request->getPost();
+        $resp = $this->seller_withdrawal_send($data);
+        return $this->response->setJSON($resp);
+
+    }
 
 
     public function POST_seller_bank_update()

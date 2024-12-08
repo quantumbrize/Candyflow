@@ -20,9 +20,9 @@
                                 <td class="inpBx">
                                     <input type="number" class="form-control update-amount" 
                                         value="${item.amount}" min="1" style="width: 100px;" 
-                                        data-request-id="${item.id}" />
+                                        data-request-id="${item.uid}" />
                                     <button class="btn btn-primary btn-sm send-btn" 
-                                        data-request-id="${item.id}">
+                                        data-request-id="${item.uid}">
                                         Send
                                     </button>
                                 </td>
@@ -95,11 +95,11 @@
             },
             success: function (resp) {
                 if (resp.status) {
-                    alert("Amount successfully sent to the vendor.");
+                    // alert("Amount successfully sent to the vendor.");
                     // Optionally reload the wallet history table
                     load_wallet_history();
                 } else {
-                    alert(resp.message || "Failed to send amount.");
+                    // alert(resp.message || "Failed to send amount.");
                 }
             },
             error: function (err) {
