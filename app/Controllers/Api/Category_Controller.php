@@ -30,6 +30,7 @@ class Category_Controller extends Api_Controller
                     'uid' => $category['uid'],
                     'name' => $category['name'],
                     'img_path' => $category['img_path'],
+                    'banner_img_path' => $category['banner_img_path'],
                     'subCategories' => $subcategories,
                 ];
             } else if ($parent_id !== null) {
@@ -37,6 +38,7 @@ class Category_Controller extends Api_Controller
                     'uid' => $category['uid'],
                     'name' => $category['name'],
                     'img_path' => $category['img_path'],
+                    'banner_img_path' => $category['banner_img_path'],
                     'subCategories' => $subcategories,
                 ];
             }
@@ -62,7 +64,8 @@ class Category_Controller extends Api_Controller
             'uid' => $this->generate_uid(UID_CATEGORY),
             'name' => $category_name,
             'parent_id' => !empty($parent_id) ? $parent_id : '',
-            'img_path' => $this->single_upload($uploadedFiles['images'][0], PATH_CATEGORY_IMG)
+            'img_path' => $this->single_upload($uploadedFiles['images'][0], PATH_CATEGORY_IMG),
+            'banner_img_path' => $this->single_upload($uploadedFiles['banner_images'][0], PATH_CATEGORY_BANNER_IMG)
         ];
         $categoriesModel = new CategoriesModel();
         $add = $categoriesModel->insert($data);
@@ -95,6 +98,10 @@ class Category_Controller extends Api_Controller
             $uploadedFiles = $this->request->getFiles();
             if(!empty($uploadedFiles['images'][0])){
                 $category['img_path'] = $this->single_upload($uploadedFiles['images'][0], PATH_CATEGORY_IMG);
+            }
+
+            if(!empty($uploadedFiles['banner_images'][0])){
+                $category['banner_img_path'] = $this->single_upload($uploadedFiles['banner_images'][0], PATH_CATEGORY_BANNER_IMG);
             }
             // Update the properties of the loaded record
             $category['name'] = $name;
