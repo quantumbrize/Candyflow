@@ -245,7 +245,7 @@ defined('PATH_USER_DOC')            || define('PATH_USER_DOC', ROOTPATH  . 'publ
 defined('PATH_BANNER_IMG')          || define('PATH_BANNER_IMG', ROOTPATH  . 'public/uploads/banner_images');
 defined('PATH_LOGO')                || define('PATH_LOGO', ROOTPATH  . 'public/uploads/logo');
 defined('PATH_PROMOTION_CARD_IMG')  || define('PATH_PROMOTION_CARD_IMG', ROOTPATH  . 'public/uploads/promotion_card_images');
-
+defined('PATH_CATEGORY_BANNER_IMG') || define('PATH_CATEGORY_BANNER_IMG', ROOTPATH  . 'public/uploads/category_banner_images');
 
 //////////////////////////////////////////////__PAGEDATA
 define(
