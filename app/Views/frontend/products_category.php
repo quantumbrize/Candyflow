@@ -51,8 +51,7 @@
     <div class="page-content">
         <div class="container">
             <!-- Start of Shop Banner -->
-            <div class="shop-default-banner banner d-flex align-items-center mb-5 br-xs"
-                style="background-image: url(<?= base_url() ?>public/assets/images/shop/banner1.jpg); background-color: #FFC74E;">
+            <div class="shop-default-banner banner d-flex align-items-center mb-5 br-xs" id="cat_banner">
                 <div class="banner-content">
                     <!-- <h4 class="banner-subtitle font-weight-bold">Accessories Collection</h4> -->
                     <h3 class="banner-title text-white text-uppercase font-weight-bolder ls-normal" id="cat_name"></h3>
