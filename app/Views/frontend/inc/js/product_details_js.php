@@ -13,17 +13,11 @@
     let variation_id = "";
     let c_id = "";
     let price_list = "";
-<<<<<<< HEAD
     let firstMinValue = 0
     let lastMaxValue = 0
     function setActive(element, stock, tax, price) {
         // console.log(this)
-        $('#product_price').html(`${price} ₹ <span id="gst">+${tax}% GST</span>`)
-=======
-    function setActive(element, stock,tax,price) {
-        console.log(this)
-        // $('#product_price').html(`${price} ₹ (+${tax}% Tax)`)
->>>>>>> b17e013c3a19de952b0007867197950bf003b6f7
+        $('#product_price').html(`₹ ${price}<span id="gst">+Gst</span>`)
         if (parseInt(stock, 10) > 0) {
             document.querySelectorAll('#product_size .size').forEach(function (size) {
                 size.classList.remove('active');
@@ -104,7 +98,6 @@
 
                     resp.data.product_prices.sort((a, b) => parseInt(a.min_qty) - parseInt(b.min_qty));
 
-<<<<<<< HEAD
                     if (resp.data.product_prices && resp.data.product_prices.length > 0) {
                         $('.quantity').val(resp.data.product_prices[0].min_qty)
                         firstMinValue = resp.data.product_prices[0].min_qty;
@@ -112,8 +105,7 @@
                     }
 
                     // Loop through the sorted array to generate HTML
-=======
->>>>>>> b17e013c3a19de952b0007867197950bf003b6f7
+
                     $.each(resp.data.product_prices, function (index, p_prices) {
                         html_price += `<div class="cart-price-item">
                         <div class="cart-quantity">
@@ -131,7 +123,7 @@
                     var base_price = resp.data.base_discount ? resp.data.base_price : "";
                     var base_discount = resp.data.base_discount ? resp.data.base_discount : "";
                     price_list = resp.data.product_prices
-                    $('#product_price').html('₹' + parseInt(resp.data.product_prices[0].price).toFixed(2) + ' +' + resp.data.tax + '% Tax')
+                    $('#product_price').html('₹ ' + parseInt(resp.data.product_prices[0].price).toFixed(2) + '<span id="gst">+Gst</span>')
                     let product_img = resp.data.product_img.length > 0 ? '<?= base_url('public/uploads/product_images/') ?>' + resp.data.product_img[0]['src'] : '<?= base_url('public/assets/images/product_demo.png') ?>'
                     $('#all_varient_img').append(`<img class="varient_img" src="${product_img}" onclick="view_image('${encodeURIComponent(JSON.stringify(resp.data.product_img))}', '${var_id = ""}', '${resp.data.product_stock}', '${encodeURIComponent(JSON.stringify(resp.data.product_sizes))}', 'main')" alt="Image 1">`);
                     let html1 = ``;
@@ -250,7 +242,7 @@
 
             // Find the corresponding price based on the updated quantity
             let currentPrice = getPriceForQuantity(product_quantity);
-            $('#product_price').html('₹' + currentPrice.toFixed(2)); // Update the displayed price
+            $('#product_price').html('₹ ' + currentPrice.toFixed(2) + '<span id="gst">+Gst</span>'); // Update the displayed price
         });
 
         // Price calculation function
@@ -424,13 +416,8 @@
     //     }
     // }
 
-<<<<<<< HEAD
-    function quantity_increase() {
-        // console.log(price_list);
-=======
     function quantity_increase(tax) {
         console.log(price_list);
->>>>>>> b17e013c3a19de952b0007867197950bf003b6f7
         let product_quantity = parseInt($('.quantity').val());
         const lastMaxQty = parseInt(price_list[price_list.length - 1].max_qty); // Get the max_qty of the last index
 
@@ -441,18 +428,13 @@
 
             // Find the corresponding price based on the updated quantity
             let currentPrice = getPriceForQuantity(product_quantity);
-            $('#product_price').html('₹' + currentPrice.toFixed(2) + ' +' + tax + '% Tax'); // Update the displayed price
+            $('#product_price').html('₹ ' + currentPrice.toFixed(2) + '<span id="gst">+Gst</span>'); // Update the displayed price
         }
     }
 
-<<<<<<< HEAD
 
-
-    function quantity_decrease() {
-=======
     function quantity_decrease(tax) {
         console.log(price_list);
->>>>>>> b17e013c3a19de952b0007867197950bf003b6f7
         let product_quantity = parseInt($('.quantity').val());
 
         // Check if the quantity can be decreased
@@ -462,7 +444,7 @@
 
             // Find the corresponding price based on the updated quantity
             let currentPrice = getPriceForQuantity(product_quantity);
-            $('#product_price').html('₹' + currentPrice.toFixed(2) + ' +' + tax + '% Tax'); // Update the displayed price
+            $('#product_price').html('₹ ' + currentPrice.toFixed(2)  +  '<span id="gst">+Gst</span>'); // Update the displayed price
         }
     }
 

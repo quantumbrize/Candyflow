@@ -38,6 +38,9 @@
     /* .active-size:hover {
         border: 2px solid #000000 !important;
     } */
+     .quantity {
+        background-color: transparent !important;
+     }
 </style>
 <!-- Start of Main -->
 <main class="main mb-10 pb-1">
