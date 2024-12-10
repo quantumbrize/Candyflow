@@ -124,7 +124,7 @@
                     $('#cat_name').html(cat.name)
 
                     if (cat.banner_img_path != '') {
-                        $('#cat_banner').hide().css('background', `url(<?= base_url('/public/uploads/category_images/') ?>${cat.banner_img_path})`).slideDown('100')
+                        $('#cat_banner').hide().css('background', `url(<?= base_url('/public/uploads/category_banner_images/') ?>${cat.banner_img_path})`).slideDown('100')
                     } else {
                         $('#cat_banner').hide().css('background', `url(https://www.t-mobile.com/news/_admin/uploads/2020/04/placeholder.jpeg)`).slideDown('100')
                     }
