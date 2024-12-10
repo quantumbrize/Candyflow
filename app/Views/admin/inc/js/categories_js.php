@@ -49,17 +49,23 @@
                                             <div id="${category.uid}-img-con">
                                                 <img class="cat-img" src="<?= base_url('public/uploads/category_images/') ?>${category.img_path}" />
                                             </div>
+                                            
+                                            <input type="file" id="file-input-banner-${category.uid}" class="file-input-cat-image" onChange="preview('file-input-banner-${category.uid}','${category.uid}-img-con-banner')">
+                                            <label for="file-input-banner-${category.uid}" id="btn_upload_banner_${category.uid}" class="btn btn-info btn-uplode-img file-input-cat-image-btn hide-cat-img">update Banner Image</label>
+                                            <div id="${category.uid}-img-con-banner">
+                                                <img class="cat-img" src="<?= base_url('public/uploads/category_banner_images/') ?>${category.banner_img_path}" />
+                                            </div>
                                             <button 
                                                 class="btn btn-success" 
                                                 id="${category.uid}-save-category-btn" 
-                                                onclick="save_category('${category.uid}','${category.uid}-category-input','${category.uid}-save-category-btn','btn_upload_${category.uid}','file-input-${category.uid}','${category.uid}-img-con')" 
+                                                onclick="save_category('${category.uid}','${category.uid}-category-input','${category.uid}-save-category-btn','btn_upload_${category.uid}','file-input-${category.uid}','${category.uid}-img-con', 'btn_upload_banner_${category.uid}', 'file-input-banner-${category.uid}', '${category.uid}-img-con-banner')" 
                                                 hidden>
                                                 <i class="ri-save-line fs-15"></i>
                                             </button>
                                             <button 
                                                 class="btn btn-info" 
                                                 id="${category.uid}-update-category-btn" 
-                                                onclick="update_category('${category.uid}-category-input','${category.uid}-save-category-btn','btn_upload_${category.uid}')">
+                                                onclick="update_category('${category.uid}-category-input','${category.uid}-save-category-btn','btn_upload_${category.uid}', 'btn_upload_banner_${category.uid}')">
                                                 <i class="ri-edit-line fs-15"></i>
                                             </button>
                                             <button 
@@ -101,7 +107,12 @@
                                 <input type="file" id="file-input-new" class="file-input-cat-image"  onChange="preview('file-input-new','images-con-new')">
                                 <label for="file-input-new" id="btn_upload" class="btn btn-info file-input-cat-image-btn">Select Image</label>
                                 <div id="images-con-new"></div>
-                                <button class="btn btn-success" id="new-category-btn" onclick="add_category('null','new-category-input','new-category-btn','new-category-bx','file-input-new','images-con-new')">
+
+                                <input type="file" id="file-input-new-banner-img" class="file-input-cat-image"  onChange="preview('file-input-new-banner-img','images-con-new-banner-img')">
+                                <label for="file-input-new-banner-img" id="btn_upload_banner_img" class="btn btn-info file-input-cat-image-btn">Select Banner Image</label>
+                                <div id="images-con-new-banner-img"></div>
+
+                                <button class="btn btn-success" id="new-category-btn" onclick="add_category('null','new-category-input','new-category-btn','new-category-bx','file-input-new','images-con-new','file-input-new-banner-img','images-con-new-banner-img')">
                                     <i class="ri-add-fill fs-15"></i>
                                 </button>
                             </h2>
@@ -148,17 +159,22 @@
                                             <div id="${category.uid}-img-con">
                                                 <img class="cat-img" src="<?= base_url('public/uploads/category_images/') ?>${category.img_path}" />
                                             </div>
+                                            <input type="file" id="file-input-banner-${category.uid}" class="file-input-cat-image" onChange="preview('file-input-banner-${category.uid}','${category.uid}-banner-img-con')">
+                                            <label for="file-input-banner-${category.uid}" id="btn_upload_banner_${category.uid}" class="btn btn-info btn-uplode-img file-input-cat-image-btn hide-cat-img">update Banner Image</label>
+                                            <div id="${category.uid}-banner-img-con">
+                                                <img class="cat-img" src="<?= base_url('public/uploads/category_banner_images/') ?>${category.banner_img_path}" />
+                                            </div>
                                             <button 
                                                 class="btn btn-success" 
                                                 id="${category.uid}-save-category-btn" 
-                                                onclick="save_category('${category.uid}','${category.uid}-category-input','${category.uid}-save-category-btn','btn_upload_${category.uid}','file-input-${category.uid}','${category.uid}-img-con')" 
+                                                onclick="save_category('${category.uid}','${category.uid}-category-input','${category.uid}-save-category-btn','btn_upload_${category.uid}','file-input-${category.uid}','${category.uid}-img-con', 'btn_upload_banner_${category.uid}', 'file-input-banner-${category.uid}', '${category.uid}-banner-img-con')" 
                                                 hidden>
                                                 <i class="ri-save-line fs-15"></i>
                                             </button>
                                             <button 
                                                 class="btn btn-info" 
                                                 id="${category.uid}-update-category-btn" 
-                                                onclick="update_category('${category.uid}-category-input','${category.uid}-save-category-btn','btn_upload_${category.uid}')">
+                                                onclick="update_category('${category.uid}-category-input','${category.uid}-save-category-btn','btn_upload_${category.uid}', 'btn_upload_banner_${category.uid}')">
                                                 <i class="ri-edit-line fs-15"></i>
                                             </button>
                                             <button 
@@ -200,7 +216,12 @@
                                 <input type="file" id="file-input-sub-${category_id}" class="file-input-cat-image"  onChange="preview('file-input-sub-${category_id}','images-con-sub-${category_id}')">
                                 <label for="file-input-sub-${category_id}" id="btn_upload" class="btn btn-info file-input-cat-image-btn">Select Image</label>
                                 <div id="images-con-sub-${category_id}"></div>
-                                <button class="btn btn-success" id="${category_id}-new-category-btn" onclick="add_category('${category_id}','${category_id}-new-category-input','${category_id}-new-category-btn','${category_id}-new-category-bx','file-input-sub-${category_id}','images-con-sub-${category_id}')">
+
+                                <input type="file" id="file-input-sub-banner-${category_id}" class="file-input-cat-image"  onChange="preview('file-input-sub-banner-${category_id}','images-con-sub-banner-${category_id}')">
+                                <label for="file-input-sub-banner-${category_id}" id="btn_upload" class="btn btn-info file-input-cat-image-btn">Select Banner Image</label>
+                                <div id="images-con-sub-banner-${category_id}"></div>
+
+                                <button class="btn btn-success" id="${category_id}-new-category-btn" onclick="add_category('${category_id}','${category_id}-new-category-input','${category_id}-new-category-btn','${category_id}-new-category-bx','file-input-sub-${category_id}','images-con-sub-${category_id}','file-input-sub-banner-${category_id}','images-con-sub-banner-${category_id}')">
                                     <i class="ri-add-fill fs-15"></i>
                                 </button>
                             </h2>
@@ -264,7 +285,7 @@
         $('#delete_cat_bx').val('')
     }
 
-    function add_category(parent_id, input_id, btn_id, bx, file_id, images_con) {
+    function add_category(parent_id, input_id, btn_id, bx, file_id, images_con, file_id_banner, images_con_banner) {
 
         if ($(`#${file_id}`)[0].files.length == 0) {
             html = `<div class="alert alert-warning alert-dismissible alert-label-icon label-arrow fade show material-shadow" role="alert">
@@ -278,11 +299,20 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                             </div>`
             $('#alert').html(html)
+        } else if ($(`#${file_id_banner}`)[0].files.length == 0) {
+            html = `<div class="alert alert-warning alert-dismissible alert-label-icon label-arrow fade show material-shadow" role="alert">
+                                <i class="ri-alert-line label-icon"></i><strong>Warning</strong> - Please Select Category Banner Image
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>`
+            $('#alert').html(html)
         } else {
             var formData = new FormData();
             let category_name = $(`#${input_id}`).val()
             $.each($(`#${file_id}`)[0].files, function (index, file) {
                 formData.append('images[]', file);
+            })
+            $.each($(`#${file_id_banner}`)[0].files, function (index, file) {
+                formData.append('banner_images[]', file);
             })
             formData.append('parent_id', parent_id);
             formData.append('category_name', category_name);
@@ -315,17 +345,23 @@
                                                 <div id="${category.uid}-img-con">
                                                     <img class="cat-img" src="<?= base_url('public/uploads/category_images/') ?>${category.img_path}" />
                                                 </div>
+
+                                                <input type="file" id="file-input-banner-${category.uid}" class="file-input-cat-image" onChange="preview('file-input-banner-${category.uid}','${category.uid}-banner-img-con')">
+                                                <label for="file-input-banner-${category.uid}" id="btn_upload_banner_${category.uid}" class="btn btn-info btn-uplode-img file-input-cat-image-btn hide-cat-img">update Banner Image</label>
+                                                <div id="${category.uid}-banner-img-con">
+                                                    <img class="cat-img" src="<?= base_url('public/uploads/category_banner_images/') ?>${category.banner_img_path}" />
+                                                </div>
                                                 <button 
                                                     class="btn btn-success" 
                                                     id="${category.uid}-save-category-btn" 
-                                                    onclick="save_category('${category.parent_id}','${category.uid}-category-input','${category.uid}-save-category-btn','btn_upload_${category.uid}','file-input-${category.uid}','${category.uid}-img-con')" 
+                                                    onclick="save_category('${category.parent_id}','${category.uid}-category-input','${category.uid}-save-category-btn','btn_upload_${category.uid}','file-input-${category.uid}','${category.uid}-img-con', 'btn_upload_banner_${category.uid}', 'file-input-banner-${category.uid}', '${category.uid}-banner-img-con')" 
                                                     hidden>
                                                     <i class="ri-save-line fs-15"></i>
                                                 </button>
                                                 <button 
                                                     class="btn btn-info" 
                                                     id="${category.uid}-update-category-btn" 
-                                                    onclick="update_category('${category.uid}-category-input','${category.uid}-save-category-btn','btn_upload_${category.uid}')">
+                                                    onclick="update_category('${category.uid}-category-input','${category.uid}-save-category-btn','btn_upload_${category.uid}', btn_upload_banner_${category.uid})">
                                                     <i class="ri-edit-line fs-15"></i>
                                                 </button>
                                                 <button 
@@ -372,14 +408,15 @@
 
     }
 
-    function update_category(input_id, save_btn_id, update_btn_id) {
+    function update_category(input_id, save_btn_id, update_btn_id, update_banner_btn_id) {
         $('#' + input_id).attr('disabled', false);
         $('#' + input_id).focus();
         $('#' + save_btn_id).attr('hidden', false);
         $('#' + update_btn_id).removeClass('hide-cat-img')
+        $('#' + update_banner_btn_id).removeClass('hide-cat-img')
     }
 
-    function save_category(category_id, input_id, save_btn_id, img_btn_id, file_input_id, img_con) {
+    function save_category(category_id, input_id, save_btn_id, img_btn_id, file_input_id, img_con, banner_img_btn_id, file__banner_input_id, img_con_banner) {
 
         console.log(category_id)
         console.log(input_id)
@@ -407,6 +444,12 @@
                 })
             }
 
+            if ($(`#${file__banner_input_id}`)[0].files.length != 0) {
+                $.each($(`#${file__banner_input_id}`)[0].files, function (index, file) {
+                    formData.append('banner_images[]', file);
+                })
+            }
+
             $.ajax({
                 url: '<?= base_url('/api/category/update') ?>',
                 type: 'POST',
@@ -423,6 +466,7 @@
                     $('#' + save_btn_id).attr('hidden', true);
                     $('#' + save_btn_id).attr('disabled', false);
                     $('#' + img_btn_id).addClass('hide-cat-img')
+                    $('#' + banner_img_btn_id).addClass('hide-cat-img')
                 },
                 error: function (err) {
                     console.log(err);
@@ -431,6 +475,7 @@
                     $('#' + save_btn_id).attr('hidden', true);
                     $('#' + save_btn_id).attr('disabled', false);
                     $('#' + img_btn_id).addClass('hide-cat-img')
+                    $('#' + banner_img_btn_id).addClass('hide-cat-img')
                 }
 
             })
