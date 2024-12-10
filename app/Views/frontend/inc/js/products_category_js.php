@@ -123,11 +123,14 @@
                     let cat = resp.data
                     $('#cat_name').html(cat.name)
 
-                    if (cat.banner_img_path != '') {
-                        $('#cat_banner').hide().css('background', `url(<?= base_url('/public/uploads/category_banner_images/') ?>${cat.banner_img_path})`).slideDown('100')
-                    } else {
-                        $('#cat_banner').hide().css('background', `url(https://www.t-mobile.com/news/_admin/uploads/2020/04/placeholder.jpeg)`).slideDown('100')
-                    }
+                    const bannerImgPath = cat.banner_img_path
+                        ? `<?= base_url('/public/uploads/category_banner_images/') ?>${cat.banner_img_path}`
+                        : 'https://www.t-mobile.com/news/_admin/uploads/2020/04/placeholder.jpeg';
+
+                    $('#cat_banner')
+                        .css('background', `url(${bannerImgPath})`)
+                        .slideDown(100);
+
                 }
             }
         })
@@ -423,7 +426,7 @@
                 if (resp.status) {
                     // console.log(resp)
                     html = ``
-                    html2 = `<li><a  href="<?=base_url()?>/product/category?c_id=${c_id}">All</a></li>`
+                    html2 = `<li><a  href="<?= base_url() ?>product/category?c_id=${c_id}">All</a></li>`
                     $.each(resp.data, function (index, item) {
                         html2 += `<li><a href="javascript:void(0)" onClick="load_products('${item.uid}')">${item.name}</a></li>`
                         html += `<div class="swiper-slide category-wrap">
@@ -484,7 +487,7 @@
     function call_category_functions(cc_id) {
         // get_sub_categories(c_id)
         // get_main_categories(c_id)
-        window.location.href = `<?= base_url() ?>/product/category?c_id=${c_id}&sc_id=${cc_id}`; // Redirects to a new page
+        window.location.href = `<?= base_url() ?>product/category?c_id=${c_id}&sc_id=${cc_id}`; // Redirects to a new page
     }
 
 
@@ -507,13 +510,13 @@
                     html1 = `<div class="swiper-slide category-wrap">
                                         <div class="category category-ellipse">
                                             <figure class="category-media">
-                                                <a href="<?=base_url()?>/product/category?c_id=${c_id}">
+                                                <a href="<?= base_url() ?>product/category?c_id=${c_id}">
                                                     <img src="<?= base_url('public/uploads/category_images/') ?>" alt="Categroy" width="190" height="190" style="background-color: #5C92C0;">
                                                 </a>
                                             </figure>
                                             <div class="category-content">
                                                 <h4 class="category-name">
-                                                    <a href="<?=base_url()?>/product/category?c_id=${c_id}">All</a>
+                                                    <a href="<?= base_url() ?>product/category?c_id=${c_id}">All</a>
                                                 </h4>
                                             </div>
                                         </div>
@@ -775,7 +778,7 @@
                 success: function (resp) {
                     if (resp.status) {
                         // console.log(resp)
-                        html = `<li><a href="<?=base_url()?>/product/category?c_id=${c_id}" >All</a></li>`
+                        html = `<li><a href="<?= base_url() ?>product/category?c_id=${c_id}" >All</a></li>`
                         $.each(resp.data, function (index, item) {
                             html += `<li><a href="javascript:void(0)" onClick="load_products('${item.uid}')">${item.name}</a></li>`
 
