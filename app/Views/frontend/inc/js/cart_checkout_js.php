@@ -511,7 +511,7 @@
 
         var options = {
             "key": "<?=RAZORPAY_KEY_LIVE_ID?>", // Enter the Key ID generated from the Dashboard
-            "amount": amount.toFixed() * 100, // Amount is in currency subunits. Default currency is INR. Hence, 10 refers to 1000 paise
+            "amount": (amount * 100).toFixed(2), // Amount is in currency subunits. Default currency is INR. Hence, 10 refers to 1000 paise
             "name": "Candy-Flow",
             "description": 'Candy flow payment',
             "image": "<?= base_url('public/assets/images/logo.png')?>",

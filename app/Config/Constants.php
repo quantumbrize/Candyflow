@@ -131,17 +131,17 @@ defined('BASE_URL') || define('BASE_URL', 'https://candyflow.in/' );
 
 
 //////////////////////////////////////////////__DATABASE
-// defined('DB_TEST_hostname') || define('DB_TEST_hostname', 'localhost');
-// defined('DB_TEST_username') || define('DB_TEST_username', 'u865002673_candyuser');
-// defined('DB_TEST_password') || define('DB_TEST_password', '@er)@kdw10Q');
-// defined('DB_TEST_database') || define('DB_TEST_database', 'u865002673_candydb');
-// defined('DB_TEST_DBDriver') || define('DB_TEST_DBDriver', 'MySQLi');
-
-defined('DB_TEST_hostname') || define('DB_TEST_hostname', '103.92.235.18');
-defined('DB_TEST_username') || define('DB_TEST_username', 'jungleef');
-defined('DB_TEST_password') || define('DB_TEST_password', '!2maASwe@seQ');
-defined('DB_TEST_database') || define('DB_TEST_database', 'jungleef_candy_flow');
+defined('DB_TEST_hostname') || define('DB_TEST_hostname', 'localhost');
+defined('DB_TEST_username') || define('DB_TEST_username', 'u865002673_candy_user');
+defined('DB_TEST_password') || define('DB_TEST_password', '@er)@kdw10Q');
+defined('DB_TEST_database') || define('DB_TEST_database', 'u865002673_candy_db');
 defined('DB_TEST_DBDriver') || define('DB_TEST_DBDriver', 'MySQLi');
+
+// defined('DB_TEST_hostname') || define('DB_TEST_hostname', '103.92.235.18');
+// defined('DB_TEST_username') || define('DB_TEST_username', 'jungleef');
+// defined('DB_TEST_password') || define('DB_TEST_password', '!2maASwe@seQ');
+// defined('DB_TEST_database') || define('DB_TEST_database', 'jungleef_candy_flow');
+// defined('DB_TEST_DBDriver') || define('DB_TEST_DBDriver', 'MySQLi');
 
 // defined('DB_TEST_hostname') || define('DB_TEST_hostname', 'localhost');
 // defined('DB_TEST_username') || define('DB_TEST_username', 'root');
