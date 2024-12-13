@@ -384,7 +384,8 @@
                         html += `<div class="swiper-slide category-wrap">
                                     <div class="category category-ellipse">
                                         <figure class="category-media">
-                                            <a href="javascript:void(0)" onclick="call_category_functions('${item.uid}')">
+                                            <!-- <a href="javascript:void(0)" onclick="call_category_functions('${item.uid}')"> -->
+                                            <a href="<?= base_url('product/category?c_id=') ?>${item.uid}">
                                                 <img src="<?= base_url('public/uploads/category_images/') ?>${item.img_path}" alt="Categroy" width="190" height="190" style="background-color: #5C92C0;">
                                             </a>
                                         </figure>
@@ -476,7 +477,8 @@
                             html1 += `<div class="swiper-slide category-wrap">
                                         <div class="category category-ellipse">
                                             <figure class="category-media">
-                                                <a href="javascript:void(0)" onclick="call_category_functions('${item.uid}')">
+                                                <!-- <a href="javascript:void(0)" onclick="call_category_functions('${item.uid}')"> -->
+                                                <a href="<?= base_url('product/category?c_id=') ?>${item.uid}">
                                                     <img src="<?= base_url('public/uploads/category_images/') ?>${item.img_path}" alt="Categroy" width="190" height="190" style="background-color: #5C92C0;">
                                                 </a>
                                             </figure>
