@@ -510,13 +510,15 @@
                     html1 = `<div class="swiper-slide category-wrap">
                                         <div class="category category-ellipse">
                                             <figure class="category-media">
-                                                <a href="<?= base_url() ?>product/category?c_id=${c_id}">
+                                               <!-- <a href="<?= base_url() ?>product/category?c_id=${c_id}"> -->
+                                                <a href="<?= base_url() ?>product/list">
                                                     <img src="<?= base_url('public/uploads/category_images/') ?>" alt="Categroy" width="190" height="190" style="background-color: #5C92C0;">
                                                 </a>
                                             </figure>
                                             <div class="category-content">
                                                 <h4 class="category-name">
-                                                    <a href="<?= base_url() ?>product/category?c_id=${c_id}">All</a>
+                                                    <!-- <a href="<?= base_url() ?>product/category?c_id=${c_id}">All</a> -->
+                                                    <a href="<?= base_url() ?>product/list">All</a>
                                                 </h4>
                                             </div>
                                         </div>
