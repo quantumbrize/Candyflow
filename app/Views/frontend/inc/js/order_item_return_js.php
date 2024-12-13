@@ -77,7 +77,7 @@
                         </div>
                         <div class="col-lg-3 col-6">
                             <p class="text-muted mb-2 text-uppercase fw-medium fs-12">Payment Status</p>
-                            <span class="badge bg-warning-subtle text-warning  fs-11" id="payment-status">${order.payment.status}</span>
+                            <span class="badge bg-warning-subtle text-warning  fs-11 status" id="payment-status">${order.payment.status}</span>
                         </div>
                         <div class="col-lg-3 col-6">
                             <p class="text-muted mb-2 text-uppercase fw-medium fs-12">Total Amount</p>

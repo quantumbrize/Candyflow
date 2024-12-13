@@ -494,6 +494,78 @@ class Order_Controller extends Main_Controller
         ];
 
         try {
+            $OrdersModel = new OrdersModel();
+            $AddressModel = new AddressModel();
+            $UsersModel = new UsersModel();
+            $OrderItemsModel = new OrderItemsModel();
+            $orderData = $OrdersModel->where('uid', $data['o_id'])->first();
+            $address = $AddressModel->where('user_id', $orderData['user_id'])->first();
+            $user = $UsersModel->where('uid', $orderData['user_id'])->first();
+            $OrderItems = $OrderItemsModel->where('order_id', $data['o_id'])->findAll();
+
+            // $this->pr($user);
+            // $this->pr($address);
+            // $this->prd($orderData);
+
+
+
+
+            $shiprocketToken = $this->authenticateShiprocket(SHIPROCKET_EMAIL, SHIPROCKET_PASS);
+            $returnDetails = [
+                "order_id" => $data['o_id'], // Replace with your dynamic order ID
+                "order_date" => date('Y-m-d'), // Current date or your order date
+                //"channel_id" => "27202", // Replace with the appropriate channel ID
+                "pickup_customer_name" =>  $user['user_name'], // Replace with your dynamic data
+                "pickup_last_name" => "",
+                "pickup_address" =>  ($address['locality'] ?? '') . ', ' . ($address['city'] ?? '') . ', ' . ($address['state'] ?? '') . ', pin -' . ($address['zipcode'] ?? ''), // Replace with actual pickup address
+                "pickup_address_2" => "",
+                "pickup_city" =>  $address['city'], // Replace with dynamic city data
+                "pickup_state" => $address['state'],
+                "pickup_country" => "India",
+                "pickup_pincode" => $address['zipcode'],
+                "pickup_email" => $user['email'], // Replace with actual pickup email
+                "pickup_phone" => $user['number'], // Replace with actual phone
+                "pickup_isd_code" => "91",
+                "shipping_customer_name" => $user['user_name'], // Replace with actual shipping customer name
+                "shipping_last_name" => "",
+                "shipping_address" =>($address['locality'] ?? '') . ', ' . ($address['city'] ?? '') . ', ' . ($address['state'] ?? '') . ', pin -' . ($address['zipcode'] ?? ''), // Replace with actual shipping address
+                "shipping_address_2" => "",
+                "shipping_city" => $address['city'], // Replace with dynamic data
+                "shipping_country" => "India",
+                "shipping_pincode" => $address['zipcode'],
+                "shipping_state" => $address['state'],
+                "shipping_email" => $user['email'], // Replace dynamically
+                "shipping_isd_code" => "91",
+                "shipping_phone" => $user['number'], // Replace dynamically
+                "order_items" => [
+                    [
+                        "sku" => "WSH234",
+                        "name" => "shoes",
+                        "units" => 2,
+                        "selling_price" => 100,
+                        "discount" => 0,
+                        "qc_enable" => false, // Explicitly disabling QC
+                        "hsn" => "123", // HSN code if required
+                        "brand" => "" // Include if mandatory
+                    ]
+                ],
+                "payment_method" => "PREPAID", // "COD" or "PREPAID"
+                "total_discount" => $orderData['sub_total'], // Total discount for the order
+                "sub_total" => 400, // Replace with actual subtotal
+                "length" => 11, // Static value for package dimensions
+                "breadth" => 11,
+                "height" => 11,
+                "weight" => 0.5 // Static value for package weight in kg
+            ];
+
+
+            $returnRes = $this->createReturnOrder($shiprocketToken, $data['o_id'], $returnDetails);
+
+            // $res = $this->getReturns($shiprocketToken);
+            // $this->prd($returnRes);
+            $this->logoutShiprocket($shiprocketToken);
+
+
             date_default_timezone_set('Asia/Kolkata');
             $OrdersReturnModel = new OrdersReturnModel();
             $return_data = [
@@ -506,6 +578,7 @@ class Order_Controller extends Main_Controller
                 "created_at" => date('Y-m-d H:i:s'),
             ];
             $isInserted = $OrdersReturnModel->insert($return_data);
+
 
             // Check if insertion was successful
             if ($isInserted) {

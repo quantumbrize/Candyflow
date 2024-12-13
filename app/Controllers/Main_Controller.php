@@ -215,19 +215,7 @@ class Main_Controller extends BaseController
 		$url = "https://apiv2.shiprocket.in/v1/external/orders/create/return";
 
 		// Prepare the return order data
-		$data = [
-			"order_id" => $orderId,
-			"reason" => $returnDetails['reason'],
-			"pickup_address" => [
-				"pickup_location" => $returnDetails['pickup_location'],
-				"address" => $returnDetails['address'],
-				"city" => $returnDetails['city'],
-				"state" => $returnDetails['state'],
-				"pincode" => $returnDetails['pincode'],
-				"country" => "India"
-			],
-			"items" => $returnDetails['items']
-		];
+		$data = $returnDetails;
 
 		// Headers for authorization and content type
 		$headers = [
@@ -250,10 +238,68 @@ class Main_Controller extends BaseController
 		return json_decode($response, true);
 	}
 
+	function getOrderDetails($token, $orderId) {
+		// Construct the API URL with the given order ID
+		$url = "https://apiv2.shiprocket.in/v1/external/orders/show/" . $orderId;
+	
+		// Headers for authorization and content type
+		$headers = [
+			"Content-Type: application/json",
+			"Authorization: Bearer $token"
+		];
+	
+		// Initialize cURL
+		$ch = curl_init($url);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); // Get the response as a string
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers); // Set headers
+	
+		// Execute the cURL request
+		$response = curl_exec($ch);
+	
+		// Handle errors
+		if ($response === false) {
+			$error = curl_error($ch);
+			curl_close($ch);
+			return ["error" => "Curl error: $error"];
+		}
+	
+		curl_close($ch);
+	
+		// Return the response as an associative array
+		return json_decode($response, true);
+	}
 
-
-
-
+	
+	function getReturns($token) {
+		// Construct the API URL
+		$url = "https://apiv2.shiprocket.in/v1/external/orders/processing/return";
+	
+		// Headers for authorization and content type
+		$headers = [
+			"Content-Type: application/json",
+			"Authorization: Bearer $token" // Include the Bearer token for authentication
+		];
+	
+		// Initialize cURL
+		$ch = curl_init($url);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); // Get the response as a string
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headers); // Set headers
+	
+		// Execute the cURL request
+		$response = curl_exec($ch);
+	
+		// Handle errors
+		if ($response === false) {
+			$error = curl_error($ch);
+			curl_close($ch);
+			return ["error" => "Curl error: $error"];
+		}
+	
+		curl_close($ch);
+	
+		// Return the response as an associative array
+		return json_decode($response, true);
+	}
 
 
 	public function logoutShiprocket($token)
