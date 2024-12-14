@@ -43,7 +43,7 @@
                                     <td><span class="text-muted">${formattedDate}</span></td>
                                     <td class="fw-medium">₹ ${item.total}</td>
                                     <td>
-                                        <span class="badge bg-info-subtle text-info ">${item.order_status.toUpperCase()}</span>
+                                        <span class="bg-info-subtle text-info ">${item.order_status.toUpperCase()}</span>
                                     </td>
                                     <td>
                                         <a href="#invoiceModal" data-bs-toggle="modal" class="btn btn-secondary btn-sm">Invoice</a>
