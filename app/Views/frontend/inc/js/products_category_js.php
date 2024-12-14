@@ -654,6 +654,50 @@
                     }
 
                 } else {
+                    $('#main-category-tab').html(`<div class="swiper-slide category-wrap">
+                                        <div class="category category-ellipse">
+                                            <figure class="category-media">
+                                               <!-- <a href="<?= base_url() ?>product/category?c_id=${c_id}"> -->
+                                                <a href="<?= base_url() ?>product/list">
+                                                    <img src="<?= base_url('public/uploads/category_images/') ?>" alt="Categroy" width="190" height="190" style="background-color: #5C92C0;">
+                                                </a>
+                                            </figure>
+                                            <div class="category-content">
+                                                <h4 class="category-name">
+                                                    <!-- <a href="<?= base_url() ?>product/category?c_id=${c_id}">All</a> -->
+                                                    <a href="<?= base_url() ?>product/list">All</a>
+                                                </h4>
+                                            </div>
+                                        </div>
+                                    </div>`)
+                    if (swiperCat) {
+                        swiperCat.update();
+                    } else {
+                        var swiperOptions = {
+                            spaceBetween: 20,
+                            slidesPerView: 2,
+                            breakpoints: {
+                                480: {
+                                    slidesPerView: 3
+                                },
+                                576: {
+                                    slidesPerView: 4
+                                },
+                                768: {
+                                    slidesPerView: 6
+                                },
+                                992: {
+                                    slidesPerView: 7
+                                },
+                                1200: {
+                                    slidesPerView: 8,
+                                    spaceBetween: 30
+                                }
+                            }
+                        };
+
+                        swiperCat = new Swiper('.swiper-container.swiper-theme.shadow-swiper', swiperOptions);
+                    }
                     // $('#category-tab').html(`<li><a href="javascript:void(0)"style="color:red;">Sub-Category Not Found!</a></li>`)
                     // $.ajax({
                     //     url: "<?= base_url('/api/category/product/list') ?>",
@@ -757,15 +801,17 @@
                 success: function (resp) {
                     if (resp.status) {
                         // console.log(resp)
-                        html1 = `<li><a href="javascript:void(0)" onclick="get_sub_categories(${parent_id = null})">All Category</a></li>`
+                        html1 = `<li><a href="<?= base_url('product/list') ?>">All Category</a></li>`
                         $.each(resp.data, function (index, item) {
-                            html1 += `<li><a href="javascript:void(0)" onClick="load_products('${item.uid}')">${item.name}</a></li>`
+                            html1 += `<li><a href="<?= base_url('product/category?c_id=') ?>${item.uid}">${item.name}</a></li>`
 
                         })
                         $('#category-tab').html(html1)
 
                     } else {
-                        $('#category-tab').html(`<li><a href="javascript:void(0)"style="color:red;">Sub-Category Not Found!</a></li>`)
+                        $('#category-tab').html(`
+                        <li><a href="<?= base_url('product/list') ?>">All Category</a></li>
+                        <li><a href="javascript:void(0)"style="color:red;">Sub-Category Not Found!</a></li>`)
                     }
                 },
                 error: function (err) {
@@ -780,9 +826,9 @@
                 success: function (resp) {
                     if (resp.status) {
                         // console.log(resp)
-                        html = `<li><a href="<?= base_url() ?>product/category?c_id=${c_id}" >All</a></li>`
+                        html = `<li><a href="<?= base_url() ?>product/list" >All</a></li>`
                         $.each(resp.data, function (index, item) {
-                            html += `<li><a href="javascript:void(0)" onClick="load_products('${item.uid}')">${item.name}</a></li>`
+                            html += `<li><a href="<?= base_url('product/category?c_id=') ?>${item.uid}">${item.name}</a></li>`
 
                         })
                         $('#category-tab').html(html)

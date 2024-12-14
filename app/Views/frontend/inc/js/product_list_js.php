@@ -380,7 +380,7 @@
                     html = ``
                     html2 = `<li><a href="javascript:void(0)" onclick="load_product(${c_id = null})">All</a></li>`
                     $.each(resp.data, function (index, item) {
-                        html2 += `<li><a href="javascript:void(0)" onClick="load_products('${item.uid}')">${item.name}</a></li>`
+                        html2 += `<li><a href="<?= base_url('product/category?c_id=') ?>${item.uid}">${item.name}</a></li>`
                         html += `<div class="swiper-slide category-wrap">
                                     <div class="category category-ellipse">
                                         <figure class="category-media">
@@ -709,7 +709,8 @@
                         console.log(resp)
                         html1 = `<li><a href="javascript:void(0)" onclick="get_sub_categories(${parent_id = null})">All Category</a></li>`
                         $.each(resp.data, function (index, item) {
-                            html1 += `<li><a href="javascript:void(0)" onClick="load_products('${item.uid}')">${item.name}</a></li>`
+                            // html1 += `<li><a href="javascript:void(0)" onClick="load_products('${item.uid}')">${item.name}</a></li>`
+                            html1 += `<li><a href="<?= base_url('product/category?c_id=') ?>${item.uid}">${item.name}</a></li>`
                             
                         })
                         $('#category-tab').html(html1)
@@ -732,7 +733,7 @@
                         console.log(resp)
                         html = `<li><a href="javascript:void(0)" onclick="load_product(${c_id = null})">All</a></li>`
                         $.each(resp.data, function (index, item) {
-                            html += `<li><a href="javascript:void(0)" onClick="load_products('${item.uid}')">${item.name}</a></li>`
+                            html += `<li><a href="<?= base_url('product/category?c_id=') ?>${item.uid}">${item.name}</a></li>`
                             
                         })
                         $('#category-tab').html(html)
