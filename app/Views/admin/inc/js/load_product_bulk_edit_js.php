@@ -948,6 +948,7 @@
                                             class="stock_number btn-number" 
                                             value="${p_size.stocks}" 
                                             id="input-stock-${p_size.uid}"
+                                            onkeyup="updateStock_by_input(this.value, '${p_size.uid}')"
                                             >
                                         <span class="input-group-btn btn-number">
                                             <button 
@@ -985,6 +986,45 @@
                 data: {
                     item_stock_id: product_id,
                     stock: stock
+                },
+                beforeSend: function () {
+                    $(`#btn-stock-add-${product_id}`).attr('disabled', true)
+                    $(`#btn-stock-sub-${product_id}`).attr('disabled', true)
+                },
+                success: function (resp) {
+                    $(`#btn-stock-add-${product_id}`).attr('disabled', false)
+                    $(`#btn-stock-sub-${product_id}`).attr('disabled', false)
+                    if (resp.status) {
+                        $(`#input-stock-${product_id}`).val(stock)
+                        $('#alert').html(`<div class="alert alert-success alert-dismissible alert-label-icon label-arrow fade show material-shadow" role="alert">
+                                                            <i class="ri-checkbox-circle-fill label-icon"></i><strong>${resp.message}</strong>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                        </div>`)
+                    }
+                },
+                error: function (err) {
+                    console.log(err)
+                    $(`#btn-stock-add-${product_id}`).attr('disabled', false)
+                    $(`#btn-stock-sub-${product_id}`).attr('disabled', false)
+                    $('#alert').html(`<div class="alert alert-warning alert-dismissible alert-label-icon label-arrow fade show material-shadow" role="alert">
+                                                        <i class="ri-alert-line label-icon"></i><strong>Warning</strong> - Internal Server Error
+                                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                    </div>`)
+                }
+            })
+        }
+            
+
+    }
+
+    function updateStock_by_input(value, product_id) {
+        if(value >= 0 && value != ""){
+            $.ajax({
+                url: "<?= base_url('/api/product/variant/stock/update') ?>",
+                type: "GET",
+                data: {
+                    item_stock_id: product_id,
+                    stock: value
                 },
                 beforeSend: function () {
                     $(`#btn-stock-add-${product_id}`).attr('disabled', true)
