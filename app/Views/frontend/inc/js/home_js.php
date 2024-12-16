@@ -1485,17 +1485,11 @@
                                                     </div>
                                                 </figure>
                                                 <div class="product-details">
-                                                    <h4 class="product-name"><a href="<?= base_url('product/details?id=') ?>${product.product_id}" onclick="increase_click_count('${product.product_id}')">${product.name}
-                                                        </a></h4>
-                                                            <!-- Product Description -->
-                                                            <p class="product-description" style="font-size: 14px; color: #666;">${truncatedDescription}</p>
-                                                    <!-- <div class="ratings-container">
-                                                        <div class="ratings-full">
-                                                            <span class="ratings" style="width: 60%;"></span>
-                                                            <span class="tooltiptext tooltip-top"></span>
-                                                        </div>
-                                                        <a href="product-details.html" class="rating-reviews">(3 reviews)</a>
-                                                    </div> -->
+                                                    <h4 class="product-name">
+                                                        <a href="<?= base_url('product/details?id=') ?>${product.product_id}" onclick="increase_click_count('${product.product_id}')">
+                                                            ${product.name}
+                                                        </a>
+                                                    </h4>
                                                     <div class="product-price">
                                                         <span class="price">
                                                             ₹${product.product_prices != "" ? product.product_prices[0].price : ''} - ₹${product.product_prices != "" ? product.product_prices[product.product_prices.length - 1].price : ''}
@@ -1543,24 +1537,17 @@
                                                                 alt="Product" width="300" height="338">
                                                         </a>
                                                         <div class="product-action-vertical">
-                                                            <!-- <a href="#" class="btn-product-icon btn-cart w-icon-cart" title="Add to cart"></a> -->
                                                             <a href="javascript:void(0)" class="btn-product-icon btn-wishlist w-icon-heart${product.is_wishlisted ? '-full' : ''}" data-product-id="${product.product_id}" onclick="wishlist('${product.product_id}')"
                                                                 title="Add to wishlist"></a>
                                                             
                                                         </div>
                                                     </figure>
                                                     <div class="product-details">
-                                                        <h4 class="product-name"><a href="<?= base_url('product/details?id=') ?>${product.product_id}" onclick="increase_click_count('${product.product_id}')">${product.name}</a>
-                                                        </h4>
-                                                         <!-- Product Description -->
-                                                            <p class="product-description" style="font-size: 14px; color: #666;">${truncatedDescription}</p>
-                                                        <!-- <div class="ratings-container">
-                                                            <div class="ratings-full">
-                                                                <span class="ratings" style="width: 100%;"></span>
-                                                                <span class="tooltiptext tooltip-top"></span>
-                                                            </div>
-                                                            <a href="product-details.html" class="rating-reviews">(8 reviews)</a>
-                                                        </div> -->
+                                                        <h4 class="product-name">
+                                                            <a href="<?= base_url('product/details?id=') ?>${product.product_id}" onclick="increase_click_count('${product.product_id}')">
+                                                                ${product.name}
+                                                            </a>
+                                                        </h4>                                                      
                                                         <div class="product-price">
                                                             <ins class="new-price">₹${product.product_prices != "" ? product.product_prices[0].price : ''} - ₹${product.product_prices != "" ? product.product_prices[product.product_prices.length - 1].price : ''}</ins>
                                                         </div>

@@ -136,7 +136,7 @@
 
     .product-wrap{
         /* border: 1px solid #336699; */
-        margin: 0px 10px 0px 10px;
+        margin: 0px 10px 10px 10px;
         padding: 10px !important;
         box-shadow: rgba(0, 0, 0, 0.2) 0px 7px 29px 0px;
         transition: 100ms;
@@ -144,9 +144,23 @@
     }
 
     .product-wrap:hover{
-        scale: 1.1;
+        scale: 1.05 ;
     }
     #latest_arriva{
         padding: 20px;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+    .product-name{
+        font-size: 20px;
+        color: #336699;
+    }
+    .product-name a{
+        text-decoration: none;
+    }
+    .product-media img{
+        /* height: 100%; */
+        /* width: 400px; */
     }
 </style>
