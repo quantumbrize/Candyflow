@@ -1008,13 +1008,25 @@
 
             // Show icons only when scrolling
             if (window.scrollY > 200) {
-                wishlistIcon.style.display = "flex";
-                cartIcon.style.display = "flex";
-                whatsappIcon.style.display = "flex";
+                if(wishlistIcon){
+                    wishlistIcon.style.display = "flex";
+                }
+                if(cartIcon){
+                    cartIcon.style.display = "flex";
+                }
+                if(whatsappIcon){
+                    whatsappIcon.style.display = "flex";
+                }
             } else {
-                wishlistIcon.style.display = "none";
-                cartIcon.style.display = "none";
-                whatsappIcon.style.display = "none";
+                if(wishlistIcon){
+                    wishlistIcon.style.display = "none";
+                }
+                if(cartIcon){
+                    cartIcon.style.display = "none";
+                }
+                if(whatsappIcon){
+                    whatsappIcon.style.display = "none";
+                }
             }
         });
     });

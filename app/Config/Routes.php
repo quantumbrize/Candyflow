@@ -226,14 +226,14 @@ $routes->get('/api/seller',                         'Api\User_Controller::GET_a_
 $routes->get('/api/delete/seller',                  'Api\User_Controller::GET_seller_delete');// Seller Delete
 $routes->post('/api/update/seller',                 'Api\User_Controller::POST_update_seller'); // Update seller
 $routes->get('/api/get/admin',                      'Api\User_Controller::GET_get_admin');  // GET Admin Update
-$routes->post('/api/update/admin',                   'Api\User_Controller::POST_update_admin');  // POST Admin Data
-$routes->post('/api/change/admin/password',          'Api\User_Controller::POST_change_admin_password');  // POST Change Admin Password
+$routes->post('/api/update/admin',                  'Api\User_Controller::POST_update_admin');  // POST Admin Data
+$routes->post('/api/change/admin/password',         'Api\User_Controller::POST_change_admin_password');  // POST Change Admin Password
 $routes->post('/api/update/user/status',            'Api\User_Controller::POST_update_user_status'); // Update User Status
 $routes->post('/api/link/admin',                    'Api\User_Controller::POST_insert_sociallink');
-$routes->get('/api/get/social',                      'Api\User_Controller::GET_sociallink');
-$routes->get('/api/get/notice',                      'Api\User_Controller::GET_noticebar');
-$routes->post('/api/notice/admin',                     'Api\User_Controller::POST_insert_noticelink');
-$routes->post('/api/email/admin',                     'Api\User_Controller::POST_insert_newsletteremail');
+$routes->get('/api/get/social',                     'Api\User_Controller::GET_sociallink');
+$routes->get('/api/get/notice',                     'Api\User_Controller::GET_noticebar');
+$routes->post('/api/notice/admin',                  'Api\User_Controller::POST_insert_noticelink');
+$routes->post('/api/email/admin',                   'Api\User_Controller::POST_insert_newsletteremail');
 
 
 

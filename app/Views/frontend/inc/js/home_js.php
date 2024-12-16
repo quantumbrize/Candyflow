@@ -1,40 +1,39 @@
-
 <script>
 
 
 
-// Set countdown time to 24 hours (in seconds)
+    // Set countdown time to 24 hours (in seconds)
     let countdownTime = 24 * 60 * 60;
 
     function updateCountdown() {
-      // Calculate hours, minutes, and seconds
-      const hours = Math.floor(countdownTime / 3600);
-      const minutes = Math.floor((countdownTime % 3600) / 60);
-      const seconds = countdownTime % 60;
+        // Calculate hours, minutes, and seconds
+        const hours = Math.floor(countdownTime / 3600);
+        const minutes = Math.floor((countdownTime % 3600) / 60);
+        const seconds = countdownTime % 60;
 
-      // Display the time
-      document.getElementById('hours').textContent = String(hours).padStart(2, '0');
-      document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
-      document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+        // Display the time
+        document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+        document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+        document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
 
-      // Decrement countdown time
-      countdownTime--;
+        // Decrement countdown time
+        countdownTime--;
 
-      // Stop countdown at zero
-      if (countdownTime < 0) {
-        clearInterval(timerInterval);
-        document.getElementById('hours').textContent = '00';
-        document.getElementById('minutes').textContent = '00';
-        document.getElementById('seconds').textContent = '00';
-      }
+        // Stop countdown at zero
+        if (countdownTime < 0) {
+            clearInterval(timerInterval);
+            document.getElementById('hours').textContent = '00';
+            document.getElementById('minutes').textContent = '00';
+            document.getElementById('seconds').textContent = '00';
+        }
     }
 
     // Start the countdown timer
     const timerInterval = setInterval(updateCountdown, 1000);
     //End Timer
-    
-    
-     window.onscroll = function() {
+
+
+    window.onscroll = function () {
         applyHeaderSearchClass();
     };
 
@@ -47,74 +46,74 @@
     }
 
     function mobileShowSuggestions() {
-    const input = document.getElementById("mobileSearchInput").value.toLowerCase();
-    const suggestionBox = document.getElementById("mobileSuggestionBox");
-    suggestionBox.innerHTML = ""; // Clear previous suggestions
+        const input = document.getElementById("mobileSearchInput").value.toLowerCase();
+        const suggestionBox = document.getElementById("mobileSuggestionBox");
+        suggestionBox.innerHTML = ""; // Clear previous suggestions
 
-    if (input) {
-        const filteredSuggestions = suggestions.filter((item) =>
-            item.name.toLowerCase().includes(input)
-        );
+        if (input) {
+            const filteredSuggestions = suggestions.filter((item) =>
+                item.name.toLowerCase().includes(input)
+            );
 
-        filteredSuggestions.forEach((item) => {
-            const li = document.createElement("li");
-            li.innerHTML = `
+            filteredSuggestions.forEach((item) => {
+                const li = document.createElement("li");
+                li.innerHTML = `
                 <i class="fas fa-search"></i>
                 ${item.name}
                 ${item.category ? `<span class="suggestion-category">${item.category}</span>` : ""}
             `;
-            li.addEventListener("click", () => {
-                if (item.product_id) {
-                    // Redirect to the page using product_id
-                    window.location.href = `<?= base_url('product/details?id=')?>${item.product_id}`;
-                } else {
-                    document.getElementById("mobileSearchInput").value = item.name;
-                    suggestionBox.innerHTML = ""; // Hide suggestions
-                }
+                li.addEventListener("click", () => {
+                    if (item.product_id) {
+                        // Redirect to the page using product_id
+                        window.location.href = `<?= base_url('product/details?id=') ?>${item.product_id}`;
+                    } else {
+                        document.getElementById("mobileSearchInput").value = item.name;
+                        suggestionBox.innerHTML = ""; // Hide suggestions
+                    }
+                });
+                suggestionBox.appendChild(li);
             });
-            suggestionBox.appendChild(li);
+        }
+    }
+
+    function mobileProductSearch() {
+        const alphabet = $('#mobileSearchInput').val();
+        $.ajax({
+            url: "<?= base_url('/api/search/product') ?>",
+            type: "GET",
+            data: {
+                alph: alphabet
+            },
+            beforeSend: function () {
+            },
+            success: function (resp) {
+                console.log(resp);
+                if (resp.status == true) {
+                    suggestions = [];
+                    if (resp.data.length > 0) {
+                        $.each(resp.data, function (index, product) {
+                            suggestions.push({
+                                name: product.name,
+                                category: product.category,
+                                product_id: product.product_id // Add product_id to suggestions
+                            });
+                        });
+                    } else {
+                        suggestions.push({
+                            name: 'No Product Found',
+                            category: 'N/A',
+                            product_id: null // No redirection for this case
+                        });
+                    }
+                }
+                mobileShowSuggestions();
+            },
+            error: function (err) {
+                console.error(err);
+            },
+            complete: function () { }
         });
     }
-}
-
-function mobileProductSearch() {
-    const alphabet = $('#mobileSearchInput').val();
-    $.ajax({
-        url: "<?= base_url('/api/search/product') ?>",
-        type: "GET",
-        data: {
-            alph: alphabet
-        },
-        beforeSend: function () {
-        },
-        success: function (resp) {
-            console.log(resp);
-            if (resp.status == true) {
-                suggestions = [];
-                if (resp.data.length > 0) {
-                    $.each(resp.data, function (index, product) {
-                        suggestions.push({
-                            name: product.name,
-                            category: product.category,
-                            product_id: product.product_id // Add product_id to suggestions
-                        });
-                    });
-                } else {
-                    suggestions.push({
-                        name: 'No Product Found',
-                        category: 'N/A',
-                        product_id: null // No redirection for this case
-                    });
-                }
-            }
-            mobileShowSuggestions();
-        },
-        error: function (err) {
-            console.error(err);
-        },
-        complete: function () { }
-    });
-}
 
     $(document).ready(function () {
 
@@ -182,7 +181,7 @@ function mobileProductSearch() {
                                     // message = `<span style="color:red;">Currently unavailable</span>`
 
                                 }
-                                let product_img = product.product_img.length > 0 ? '<?= base_url('public/uploads/product_images/') ?>'+product.product_img[0]['src'] : '<?= base_url('public/assets/images/product_demo.png') ?>'
+                                let product_img = product.product_img.length > 0 ? '<?= base_url('public/uploads/product_images/') ?>' + product.product_img[0]['src'] : '<?= base_url('public/assets/images/product_demo.png') ?>'
                                 html = `<div class="element-item col-xxl-3 col-xl-4 col-sm-6 seller hot arrival" data-category="hot arrival">
                                             <div class="card overflow-hidden">
                                                 <a href="<?= base_url('product/details?id=') ?>${product.product_id}">
@@ -235,7 +234,7 @@ function mobileProductSearch() {
                                     } else if (window.innerWidth <= 768) {
                                         margin_top_mobile = margin_top_mobile + 350
                                         element.style.marginTop = margin_top_mobile + "px";
-                                    }else if(window.innerWidth <= 991.98){
+                                    } else if (window.innerWidth <= 991.98) {
                                         margin_top_tab = margin_top_tab + 200
                                         element.style.marginTop = margin_top_tab + "px";
                                     }
@@ -429,9 +428,9 @@ function mobileProductSearch() {
             },
             success: function (resp) {
                 if (resp.status) {
-                    console.log('letest',resp)
+                    console.log('letest', resp)
                     $.each(resp.data, function (index, product) {
-                        console.log('price',product.product_prices)
+                        console.log('price', product.product_prices)
                         var add_to_cart_button = ` <div class="mt-3">
                                                         <a  onclick="add_to_cart('${product.product_id}')" class="btn btn-primary btn-sm"><i
                                                                 class="mdi mdi-cart me-1"></i> Add to cart</a>
@@ -442,43 +441,29 @@ function mobileProductSearch() {
                         }
 
                         // if (new Date(product.created_at) > oneWeekAgo && new Date(product.created_at) <= currentDate) {
-                            var original_price = product.base_discount ? (product.base_price - (product.base_price * product.base_discount / 100)) : product.base_price;
-                            var base_price = product.base_discount ? product.base_discount : "";
-                            var truncatedDescription = truncateText(product.description, 100);
-                            let product_img = product.product_img.length > 0 ? '<?= base_url('public/uploads/product_images/') ?>'+product.product_img[0]['src'] : '<?= base_url('public/assets/images/product_demo.png') ?>'
-                                    html = `<div class="product-wrap">
-                                                <div class="product text-center">
-                                                    <figure class="product-media">
-                                                        <a href="<?= base_url('product/details?id=') ?>${product.product_id}" onclick="increase_click_count('${product.product_id}')">
-                                                            <img src="${product_img}" alt="Product" width="300" height="338">
-                                                            <img src="${product_img}" alt="Product" width="300" height="338">
-                                                        </a>
-                                                        <div class="product-action-vertical">
-                                                            <!-- <a href="#" class="btn-product-icon btn-cart w-icon-cart" title="Add to cart"></a> -->
-                                                            <a href="javascript:void(0)" class="btn-product-icon btn-wishlist w-icon-heart${product.is_wishlisted ? '-full' : ''}" data-product-id="${product.product_id}" title="Add to wishlist" onclick="wishlist('${product.product_id}')"></a>
-                                                            <!-- <a href="#" class="btn-product-icon btn-quickview w-icon-search" title="Quickview"></a> -->
-                                                            <!-- <a href="#" class="btn-product-icon btn-compare w-icon-compare" title="Add to Compare"></a> -->
-                                                        </div>
-                                                    </figure>
-                                                    <div class="product-details">
-                                                        <h4 class="product-name"><a href="<?= base_url('product/details?id=') ?>${product.product_id}" style="font-weight: bold;" onclick="increase_click_count('${product.product_id}')">${product.name}</a></h4>
-                                                        <!-- Product Description -->
-                                                            <p class="product-description" style="font-size: 14px; color: #666;">${truncatedDescription}</p>
-                                                        <!-- <div class="ratings-container">
-                                                        
-                                                            <div class="ratings-full">
-                                                                <span class="ratings" style="width: 60%;"></span>
-                                                                <span class="tooltiptext tooltip-top"></span>
-                                                            </div>
-                                                            <a href="product-details.html" class="rating-reviews">(1 Reviews)</a>
-                                                        </div> -->
-                                                        <div class="product-price">
-                                                            <ins class="new-price">₹${product.product_prices != "" ? product.product_prices[0].price : ''} - ₹${product.product_prices != "" ? product.product_prices[product.product_prices.length-1].price : ''}</ins>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>`
-                            $('#latest_arriva').append(html);
+                        var original_price = product.base_discount ? (product.base_price - (product.base_price * product.base_discount / 100)) : product.base_price;
+                        var base_price = product.base_discount ? product.base_discount : "";
+                        var truncatedDescription = truncateText(product.description, 100);
+                        let product_img = product.product_img.length > 0 ? '<?= base_url('public/uploads/product_images/') ?>' + product.product_img[0]['src'] : '<?= base_url('public/assets/images/product_demo.png') ?>'
+                        html = `<div class="product-wrap">
+                                    <div class="product text-center">
+                                        <figure class="product-media">
+                                            <a href="<?= base_url('product/details?id=') ?>${product.product_id}" onclick="increase_click_count('${product.product_id}')" class="img-con">
+                                                <img src="${product_img}" alt="Product" width="300" height="338">
+                                            </a>
+                                            <div class="product-action-vertical">
+                                                <a href="javascript:void(0)" class="btn-product-icon btn-wishlist w-icon-heart${product.is_wishlisted ? '-full' : ''}" data-product-id="${product.product_id}" title="Add to wishlist" onclick="wishlist('${product.product_id}')"></a>
+                                            </div>
+                                        </figure>
+                                        <div class="product-details">
+                                            <h4 class="product-name"><a href="<?= base_url('product/details?id=') ?>${product.product_id}" style="font-weight: bold;" onclick="increase_click_count('${product.product_id}')">${product.name}</a></h4>
+                                            <div class="product-price">
+                                                <ins class="new-price">₹${product.product_prices != "" ? product.product_prices[0].price : ''} - ₹${product.product_prices != "" ? product.product_prices[product.product_prices.length - 1].price : ''}</ins>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>`
+                        $('#latest_arriva').append(html);
                         // }
                     })
                 } else {
@@ -532,10 +517,10 @@ function mobileProductSearch() {
                     //     </div>`
                     let colSize = 6
                     let screenWidth = window.innerWidth;
-                    if(screenWidth < 768){
+                    if (screenWidth < 768) {
                         colSize = 12
                     }
-                        html = `<div class="col-md-${colSize} mb-4">
+                    html = `<div class="col-md-${colSize} mb-4">
                                     <div class="banner banner-fixed category-banner-1 br-xs">
                                           
                                         <figure>
@@ -555,7 +540,7 @@ function mobileProductSearch() {
                                         </figure>
                                     </div>
                                 </div>`
-                        html2 = `<div class="col-md-6 mb-4">
+                    html2 = `<div class="col-md-6 mb-4">
                                     <div class="banner banner-fixed category-banner-1 br-xs">
                                         <figure>
                                             <a href="${resp.data.link3}" target="_blank">
@@ -600,7 +585,7 @@ function mobileProductSearch() {
     }
 
     function load_category_fashion() {
-        var c_id= 'CATEAD0BFF320241112' 
+        var c_id = 'CATEAD0BFF320241112'
         $.ajax({
             url: "<?= base_url('/api/category/product/list') ?>",
             type: "GET",
@@ -619,18 +604,18 @@ function mobileProductSearch() {
                         let html = ''
                         let str = ` <div class="swiper-wrapper row cols-xl-4 cols-lg-3 cols-2">`
                         // console.log(resp.data.length)
-                        for (let i = 0; i < resp.data.length; i += 2) { 
+                        for (let i = 0; i < resp.data.length; i += 2) {
                             // console.log(i)
                             str += `<div class="swiper-slide product-col">`
                             let row = "";
                             for (let j = i; j < i + 2; j++) {
-                                if(resp.data[j] == null || resp.data[j] == ""){
-                                   str += ''
-                                } else{
-                                     let product_img = resp.data[j].product_img.length > 0 ? '<?= base_url('public/uploads/product_images/') ?>'+resp.data[j].product_img[0]['src'] : '<?= base_url('public/assets/images/product_demo.png') ?>'
+                                if (resp.data[j] == null || resp.data[j] == "") {
+                                    str += ''
+                                } else {
+                                    let product_img = resp.data[j].product_img.length > 0 ? '<?= base_url('public/uploads/product_images/') ?>' + resp.data[j].product_img[0]['src'] : '<?= base_url('public/assets/images/product_demo.png') ?>'
                                     str += `<div class="product-wrap product text-center">
                                                 <figure class="product-media">
-                                                    <a href="<?= base_url('product/details?id=')?>${resp.data[j].product_id}" onclick="increase_click_count('${resp.data[j].product_id}')">
+                                                    <a href="<?= base_url('product/details?id=') ?>${resp.data[j].product_id}" onclick="increase_click_count('${resp.data[j].product_id}')">
                                                         <img src="${product_img}" alt="Product" width="216" height="243">
                                                     </a>
                                                     <div class="product-action-vertical">
@@ -641,23 +626,23 @@ function mobileProductSearch() {
                                                     </div>
                                                 </figure>
                                                 <div class="product-details">
-                                                    <h4 class="product-name"><a href="<?= base_url('product/details?id=')?>${resp.data[j].product_id}" onclick="increase_click_count('${resp.data[j].product_id}')">${resp.data[j].name}</a>
+                                                    <h4 class="product-name"><a href="<?= base_url('product/details?id=') ?>${resp.data[j].product_id}" onclick="increase_click_count('${resp.data[j].product_id}')">${resp.data[j].name}</a>
                                                     </h4>
                                                     <!-- <div class="ratings-container">
                                                         <div class="ratings-full">
                                                             <span class="ratings" style="width: 60%;"></span>
                                                             <span class="tooltiptext tooltip-top"></span>
                                                         </div>
-                                                        <a href="<?= base_url('product/details?id=')?>${resp.data[j].product_id}" class="rating-reviews">(3
+                                                        <a href="<?= base_url('product/details?id=') ?>${resp.data[j].product_id}" class="rating-reviews">(3
                                                             reviews)</a>
                                                     </div> -->
                                                     <div class="product-price">
-                                                        <ins class="new-price">₹${resp.data[j].product_prices != "" ? resp.data[j].product_prices[0].price : ''} - ₹${resp.data[j].product_prices != "" ? resp.data[j].product_prices[resp.data[j].product_prices.length-1].price : ''}</ins>
+                                                        <ins class="new-price">₹${resp.data[j].product_prices != "" ? resp.data[j].product_prices[0].price : ''} - ₹${resp.data[j].product_prices != "" ? resp.data[j].product_prices[resp.data[j].product_prices.length - 1].price : ''}</ins>
                                                     </div>
                                                 </div>
                                             </div>`
                                 }
-                    
+
                             }
                             str += `</div>`
                         }
@@ -681,7 +666,7 @@ function mobileProductSearch() {
                         });
 
                         // $('#table-best-selling-list-all-body').html(html)
-                        
+
                     } else {
                         $('#fashion_category').html(`<h3 class="text-danger">No Products Found</h3>`);
                     }
@@ -698,7 +683,7 @@ function mobileProductSearch() {
     }
 
     function load_category_home_garden() {
-        var c_id= 'CAT5862435920241112' 
+        var c_id = 'CAT5862435920241112'
         $.ajax({
             url: "<?= base_url('/api/category/product/list') ?>",
             type: "GET",
@@ -717,18 +702,18 @@ function mobileProductSearch() {
                         let html = ''
                         let str = ` <div class="swiper-wrapper row cols-xl-4 cols-lg-3 cols-2">`
                         // console.log(resp.data.length)
-                        for (let i = 0; i < resp.data.length; i += 2) { 
+                        for (let i = 0; i < resp.data.length; i += 2) {
                             // console.log(i)
                             str += `<div class="swiper-slide product-col">`
                             let row = "";
                             for (let j = i; j < i + 2; j++) {
-                                if(resp.data[j] == null || resp.data[j] == ""){
-                                   str += ''
-                                } else{
-                                    let product_img = resp.data[j].product_img.length > 0 ? '<?= base_url('public/uploads/product_images/') ?>'+resp.data[j].product_img[0]['src'] : '<?= base_url('public/assets/images/product_demo.png') ?>'
+                                if (resp.data[j] == null || resp.data[j] == "") {
+                                    str += ''
+                                } else {
+                                    let product_img = resp.data[j].product_img.length > 0 ? '<?= base_url('public/uploads/product_images/') ?>' + resp.data[j].product_img[0]['src'] : '<?= base_url('public/assets/images/product_demo.png') ?>'
                                     str += `<div class="product-wrap product text-center">
                                                 <figure class="product-media">
-                                                    <a href="<?= base_url('product/details?id=')?>${resp.data[j].product_id}" onclick="increase_click_count('${resp.data[j].product_id}')">
+                                                    <a href="<?= base_url('product/details?id=') ?>${resp.data[j].product_id}" onclick="increase_click_count('${resp.data[j].product_id}')">
                                                         <img src="${product_img}" alt="Product" width="216" height="243">
                                                     </a>
                                                     <div class="product-action-vertical">
@@ -739,23 +724,23 @@ function mobileProductSearch() {
                                                     </div>
                                                 </figure>
                                                 <div class="product-details">
-                                                    <h4 class="product-name"><a href="<?= base_url('product/details?id=')?>${resp.data[j].product_id}" onclick="increase_click_count('${resp.data[j].product_id}')">${resp.data[j].name}</a>
+                                                    <h4 class="product-name"><a href="<?= base_url('product/details?id=') ?>${resp.data[j].product_id}" onclick="increase_click_count('${resp.data[j].product_id}')">${resp.data[j].name}</a>
                                                     </h4>
                                                     <!-- <div class="ratings-container">
                                                         <div class="ratings-full">
                                                             <span class="ratings" style="width: 60%;"></span>
                                                             <span class="tooltiptext tooltip-top"></span>
                                                         </div>
-                                                        <a href="<?= base_url('product/details?id=')?>${resp.data[j].product_id}" class="rating-reviews">(3
+                                                        <a href="<?= base_url('product/details?id=') ?>${resp.data[j].product_id}" class="rating-reviews">(3
                                                             reviews)</a>
                                                     </div> -->
                                                     <div class="product-price">
-                                                        <ins class="new-price">₹${resp.data[j].product_prices != "" ? resp.data[j].product_prices[0].price : ''} - ₹${resp.data[j].product_prices != "" ? resp.data[j].product_prices[resp.data[j].product_prices.length-1].price : ''}</ins>
+                                                        <ins class="new-price">₹${resp.data[j].product_prices != "" ? resp.data[j].product_prices[0].price : ''} - ₹${resp.data[j].product_prices != "" ? resp.data[j].product_prices[resp.data[j].product_prices.length - 1].price : ''}</ins>
                                                     </div>
                                                 </div>
                                             </div>`
                                 }
-                    
+
                             }
                             str += `</div>`
                         }
@@ -779,7 +764,7 @@ function mobileProductSearch() {
                         });
 
                         // $('#table-best-selling-list-all-body').html(html)
-                        
+
                     } else {
                         $('#home_garden_category').html(`<h3 class="text-danger">No Products Found</h3>`);
                     }
@@ -796,7 +781,7 @@ function mobileProductSearch() {
     }
 
     function load_category_smart_phones() {
-        var c_id= 'CAT5548EEE620241112' 
+        var c_id = 'CAT5548EEE620241112'
         $.ajax({
             url: "<?= base_url('/api/category/product/list') ?>",
             type: "GET",
@@ -815,18 +800,18 @@ function mobileProductSearch() {
                         let html = ''
                         let str = ` <div class="swiper-wrapper row cols-xl-4 cols-lg-3 cols-2">`
                         // console.log(resp.data.length)
-                        for (let i = 0; i < resp.data.length; i += 2) { 
+                        for (let i = 0; i < resp.data.length; i += 2) {
                             // console.log(i)
                             str += `<div class="swiper-slide product-col">`
                             let row = "";
                             for (let j = i; j < i + 2; j++) {
-                                if(resp.data[j] == null || resp.data[j] == ""){
-                                   str += ''
-                                } else{
-                                    let product_img = resp.data[j].product_img.length > 0 ? '<?= base_url('public/uploads/product_images/') ?>'+resp.data[j].product_img[0]['src'] : '<?= base_url('public/assets/images/product_demo.png') ?>'
+                                if (resp.data[j] == null || resp.data[j] == "") {
+                                    str += ''
+                                } else {
+                                    let product_img = resp.data[j].product_img.length > 0 ? '<?= base_url('public/uploads/product_images/') ?>' + resp.data[j].product_img[0]['src'] : '<?= base_url('public/assets/images/product_demo.png') ?>'
                                     str += `<div class="product-wrap product text-center">
                                                 <figure class="product-media">
-                                                    <a href="<?= base_url('product/details?id=')?>${resp.data[j].product_id}" onclick="increase_click_count('${resp.data[j].product_id}')">
+                                                    <a href="<?= base_url('product/details?id=') ?>${resp.data[j].product_id}" onclick="increase_click_count('${resp.data[j].product_id}')">
                                                         <img src="${product_img}" alt="Product" width="216" height="243">
                                                     </a>
                                                     <div class="product-action-vertical">
@@ -837,23 +822,23 @@ function mobileProductSearch() {
                                                     </div>
                                                 </figure>
                                                 <div class="product-details">
-                                                    <h4 class="product-name"><a href="<?= base_url('product/details?id=')?>${resp.data[j].product_id}" onclick="increase_click_count('${resp.data[j].product_id}')">${resp.data[j].name}</a>
+                                                    <h4 class="product-name"><a href="<?= base_url('product/details?id=') ?>${resp.data[j].product_id}" onclick="increase_click_count('${resp.data[j].product_id}')">${resp.data[j].name}</a>
                                                     </h4>
                                                     <!-- <div class="ratings-container">
                                                         <div class="ratings-full">
                                                             <span class="ratings" style="width: 60%;"></span>
                                                             <span class="tooltiptext tooltip-top"></span>
                                                         </div>
-                                                        <a href="<?= base_url('product/details?id=')?>${resp.data[j].product_id}" class="rating-reviews">(3
+                                                        <a href="<?= base_url('product/details?id=') ?>${resp.data[j].product_id}" class="rating-reviews">(3
                                                             reviews)</a>
                                                     </div> -->
                                                     <div class="product-price">
-                                                        <ins class="new-price">₹${resp.data[j].product_prices != "" ? resp.data[j].product_prices[0].price : ''} - ₹${resp.data[j].product_prices != "" ? resp.data[j].product_prices[resp.data[j].product_prices.length-1].price : ''}</ins>
+                                                        <ins class="new-price">₹${resp.data[j].product_prices != "" ? resp.data[j].product_prices[0].price : ''} - ₹${resp.data[j].product_prices != "" ? resp.data[j].product_prices[resp.data[j].product_prices.length - 1].price : ''}</ins>
                                                     </div>
                                                 </div>
                                             </div>`
                                 }
-                    
+
                             }
                             str += `</div>`
                         }
@@ -877,7 +862,7 @@ function mobileProductSearch() {
                         });
 
                         // $('#table-best-selling-list-all-body').html(html)
-                        
+
                     } else {
                         $('#smart_phones_category').html(`<h3 class="text-danger">No Products Found</h3>`);
                     }
@@ -894,7 +879,7 @@ function mobileProductSearch() {
     }
 
     function load_category_accessories() {
-        var c_id= 'CAT1572090220241112' 
+        var c_id = 'CAT1572090220241112'
         $.ajax({
             url: "<?= base_url('/api/category/product/list') ?>",
             type: "GET",
@@ -913,18 +898,18 @@ function mobileProductSearch() {
                         let html = ''
                         let str = ` <div class="swiper-wrapper row cols-xl-4 cols-lg-3 cols-2">`
                         // console.log(resp.data.length)
-                        for (let i = 0; i < resp.data.length; i += 2) { 
+                        for (let i = 0; i < resp.data.length; i += 2) {
                             // console.log(i)
                             str += `<div class="swiper-slide product-col">`
                             let row = "";
                             for (let j = i; j < i + 2; j++) {
-                                if(resp.data[j] == null || resp.data[j] == ""){
-                                   str += ''
-                                } else{
-                                    let product_img = resp.data[j].product_img.length > 0 ? '<?= base_url('public/uploads/product_images/') ?>'+resp.data[j].product_img[0]['src'] : '<?= base_url('public/assets/images/product_demo.png') ?>'
+                                if (resp.data[j] == null || resp.data[j] == "") {
+                                    str += ''
+                                } else {
+                                    let product_img = resp.data[j].product_img.length > 0 ? '<?= base_url('public/uploads/product_images/') ?>' + resp.data[j].product_img[0]['src'] : '<?= base_url('public/assets/images/product_demo.png') ?>'
                                     str += `<div class="product-wrap product text-center">
                                                 <figure class="product-media">
-                                                    <a href="<?= base_url('product/details?id=')?>${resp.data[j].product_id}" onclick="increase_click_count('${resp.data[j].product_id}')">
+                                                    <a href="<?= base_url('product/details?id=') ?>${resp.data[j].product_id}" onclick="increase_click_count('${resp.data[j].product_id}')">
                                                         <img src="${product_img}" alt="Product" width="216" height="243">
                                                     </a>
                                                     <div class="product-action-vertical">
@@ -935,23 +920,23 @@ function mobileProductSearch() {
                                                     </div>
                                                 </figure>
                                                 <div class="product-details">
-                                                    <h4 class="product-name"><a href="<?= base_url('product/details?id=')?>${resp.data[j].product_id}" onclick="increase_click_count('${resp.data[j].product_id}')">${resp.data[j].name}</a>
+                                                    <h4 class="product-name"><a href="<?= base_url('product/details?id=') ?>${resp.data[j].product_id}" onclick="increase_click_count('${resp.data[j].product_id}')">${resp.data[j].name}</a>
                                                     </h4>
                                                     <!-- <div class="ratings-container">
                                                         <div class="ratings-full">
                                                             <span class="ratings" style="width: 60%;"></span>
                                                             <span class="tooltiptext tooltip-top"></span>
                                                         </div>
-                                                        <a href="<?= base_url('product/details?id=')?>${resp.data[j].product_id}" class="rating-reviews">(3
+                                                        <a href="<?= base_url('product/details?id=') ?>${resp.data[j].product_id}" class="rating-reviews">(3
                                                             reviews)</a>
                                                     </div> -->
                                                     <div class="product-price">
-                                                        <ins class="new-price">₹${resp.data[j].product_prices != "" ? resp.data[j].product_prices[0].price : ''} - ₹${resp.data[j].product_prices != "" ? resp.data[j].product_prices[resp.data[j].product_prices.length-1].price : ''}</ins>
+                                                        <ins class="new-price">₹${resp.data[j].product_prices != "" ? resp.data[j].product_prices[0].price : ''} - ₹${resp.data[j].product_prices != "" ? resp.data[j].product_prices[resp.data[j].product_prices.length - 1].price : ''}</ins>
                                                     </div>
                                                 </div>
                                             </div>`
                                 }
-                    
+
                             }
                             str += `</div>`
                         }
@@ -975,7 +960,7 @@ function mobileProductSearch() {
                         });
 
                         // $('#table-best-selling-list-all-body').html(html)
-                        
+
                     } else {
                         $('#accessories_category').html(`<h3 class="text-danger">No Products Found</h3>`);
                     }
@@ -1002,7 +987,7 @@ function mobileProductSearch() {
                     // console.log(resp)
                     html = ``
                     $.each(resp.data, function (index, item) {
-                        // html_desktop += `<div class="category-card large" onclick="window.location.href = '<?= base_url()?>product/list?c_id=${item.uid}'">
+                        // html_desktop += `<div class="category-card large" onclick="window.location.href = '<?= base_url() ?>product/list?c_id=${item.uid}'">
                         //                     <img
                         //                     class="large-category-img"
                         //                     src="<?= base_url('public/uploads/category_images/') ?>${item.img_path}"
@@ -1068,88 +1053,88 @@ function mobileProductSearch() {
             success: function (resp) {
                 console.log('hot', resp)
                 if (resp.status) {
-                        var add_to_cart_button = ` <div class="mt-3">
+                    var add_to_cart_button = ` <div class="mt-3">
                                                         <a  onclick="add_to_cart('${resp.data[0].product_id}')" class="btn btn-primary btn-sm"><i
                                                                 class="mdi mdi-cart me-1"></i> Add to cart</a>
                                                     </div>`
-                        if (resp.data[0].product_stock < 1) {
-                            add_to_cart_button = `<span style="color:red;">Currently unavailable</span>`
+                    if (resp.data[0].product_stock < 1) {
+                        add_to_cart_button = `<span style="color:red;">Currently unavailable</span>`
 
-                        }
+                    }
 
-                        // if (new Date(product.created_at) > oneWeekAgo && new Date(product.created_at) <= currentDate) {
-                            var original_price = resp.data[0].base_discount ? (resp.data[0].base_price - (resp.data[0].base_price * resp.data[0].base_discount / 100)).toFixed(2) : resp.data[0].base_price.toFixed(2);
-                            var base_price = resp.data[0].base_discount ? resp.data[0].base_discount : "";
-                            let html_main_imgs = ''
-                            let html_imgs = ''
-                            let sizes = ''
-                            if(resp.data[0].product_img.length > 0){
-                                $.each(resp.data[0].product_img, function (index, imgs) {
-                                    html_main_imgs += `<div class="swiper-slide">
+                    // if (new Date(product.created_at) > oneWeekAgo && new Date(product.created_at) <= currentDate) {
+                    var original_price = resp.data[0].base_discount ? (resp.data[0].base_price - (resp.data[0].base_price * resp.data[0].base_discount / 100)).toFixed(2) : resp.data[0].base_price.toFixed(2);
+                    var base_price = resp.data[0].base_discount ? resp.data[0].base_discount : "";
+                    let html_main_imgs = ''
+                    let html_imgs = ''
+                    let sizes = ''
+                    if (resp.data[0].product_img.length > 0) {
+                        $.each(resp.data[0].product_img, function (index, imgs) {
+                            html_main_imgs += `<div class="swiper-slide">
                                                 <figure class="product-image">
                                                     <img src="<?= base_url() ?>public/uploads/product_images/${imgs.src}" alt="Product Image" width="800" height="900">
                                                 </figure>
                                                 </div>`
-                                    html_imgs += `<div class="product-thumb swiper-slide">
+                            html_imgs += `<div class="product-thumb swiper-slide">
                                                         <img src="<?= base_url() ?>public/uploads/product_images/${imgs.src}"alt="Product thumb" width="60" height="68">
                                                     </div>`
-                                })
-                            } else {
-                                html_main_imgs += `<div class="swiper-slide">
+                        })
+                    } else {
+                        html_main_imgs += `<div class="swiper-slide">
                                                 <figure class="product-image">
                                                     <img src="<?= base_url('public/assets/images/product_demo.png') ?>" alt="Product Image" width="800" height="900">
                                                 </figure>
                                                 </div>`
-                                html_imgs += `<div class="product-thumb swiper-slide">
+                        html_imgs += `<div class="product-thumb swiper-slide">
                                                     <img src="<?= base_url('public/assets/images/product_demo.png') ?>"alt="Product thumb" width="60" height="68">
                                                 </div>`
-                            }
-                           
-                            $('#img_list').html(html_main_imgs);
-                            $('#all_img_list').html(html_imgs);
-                            $('#hot_deals_product_name').html(`<a href="<?= base_url('product/details?id=') ?>${resp.data[0].product_id}">${resp.data[0].name}</a>`);
-                            $('#hot_deal_price').html(`₹${resp.data[0].product_prices != "" ? resp.data[0].product_prices[0].price : ''} - ₹${resp.data[0].product_prices != "" ? resp.data[0].product_prices[resp.data[0].product_prices.length-1].price : ''}`);
-                            
-                            $('#wishlist-icon').html(`<a href="javascript:void(0)" class="btn-product-icon btn-wishlist w-icon-heart${resp.data[0].is_wishlisted ? '-full' : ''}" data-product-id="${resp.data[0].product_id}" onclick="wishlist('${resp.data[0].product_id}')"></a>`);
-                            let html_size = '';
-                            let isavailable = false
-                            // console.log(resp[0].data.product_sizes);
-                            
-                            $.each(resp.data[0].product_sizes, function (index, size) {
-                                if(parseInt(size.stocks, 10) > 0){
-                                    html_size += `<a href="javascript:void(0)" class="size active-size" data-size="${size.uid}" style="font-weight:bold;" onclick="setActive(this, '${size.stocks}')">${size.sizes}</a>`;
-                                    isavailable = true
-                                } else {
-                                    html_size += `<a href="javascript:void(0)" class="size" data-size="${size.uid}" onclick="setActive(this, '${size.stocks}')">${size.sizes}</a>`; 
-                                }
-                                
-                            });
-                            $('#hot_deal_product_sizes').html(html_size);
-                            $('#view_btn_hot_deal').html(`<button class="btn btn-primary" onclick="window.location.href='<?= base_url('product/details?id=') ?>${resp.data[0].product_id}'">
+                    }
+
+                    $('#img_list').html(html_main_imgs);
+                    $('#all_img_list').html(html_imgs);
+                    $('#hot_deals_product_name').html(`<a href="<?= base_url('product/details?id=') ?>${resp.data[0].product_id}">${resp.data[0].name}</a>`);
+                    $('#hot_deal_price').html(`₹${resp.data[0].product_prices != "" ? resp.data[0].product_prices[0].price : ''} - ₹${resp.data[0].product_prices != "" ? resp.data[0].product_prices[resp.data[0].product_prices.length - 1].price : ''}`);
+
+                    $('#wishlist-icon').html(`<a href="javascript:void(0)" class="btn-product-icon btn-wishlist w-icon-heart${resp.data[0].is_wishlisted ? '-full' : ''}" data-product-id="${resp.data[0].product_id}" onclick="wishlist('${resp.data[0].product_id}')"></a>`);
+                    let html_size = '';
+                    let isavailable = false
+                    // console.log(resp[0].data.product_sizes);
+
+                    $.each(resp.data[0].product_sizes, function (index, size) {
+                        if (parseInt(size.stocks, 10) > 0) {
+                            html_size += `<a href="javascript:void(0)" class="size active-size" data-size="${size.uid}" style="font-weight:bold;" onclick="setActive(this, '${size.stocks}')">${size.sizes}</a>`;
+                            isavailable = true
+                        } else {
+                            html_size += `<a href="javascript:void(0)" class="size" data-size="${size.uid}" onclick="setActive(this, '${size.stocks}')">${size.sizes}</a>`;
+                        }
+
+                    });
+                    $('#hot_deal_product_sizes').html(html_size);
+                    $('#view_btn_hot_deal').html(`<button class="btn btn-primary" onclick="window.location.href='<?= base_url('product/details?id=') ?>${resp.data[0].product_id}'">
                                                                 <span>View</span>
                                                             </button>
                                                             <button class="btn btn-primary ml-2" onclick="add_to_cart('${resp.data[0].product_id}')">
                                                                 <i class="w-icon-cart"></i>
                                                                 <span>Add to cart</span>
                                                             </button>`);
-                            if (swiperHotDeal) {
-                                swiperHotDeal.update(); 
-                            } else {
-                                swiperHotDeal = new Swiper('.product-thumbs-wrap.swiper-container-hot-deals', {
-                                    breakpoints: {
-                                        0: {
-                                            direction: 'horizontal', 
-                                            slidesPerView: resp.data[0].product_img.length 
-                                        },
-                                        992: {
-                                            direction: 'vertical', 
-                                            slidesPerView: 'auto'   
-                                        }
-                                    }
-                                });
+                    if (swiperHotDeal) {
+                        swiperHotDeal.update();
+                    } else {
+                        swiperHotDeal = new Swiper('.product-thumbs-wrap.swiper-container-hot-deals', {
+                            breakpoints: {
+                                0: {
+                                    direction: 'horizontal',
+                                    slidesPerView: resp.data[0].product_img.length
+                                },
+                                992: {
+                                    direction: 'vertical',
+                                    slidesPerView: 'auto'
+                                }
                             }
+                        });
+                    }
 
-                        // }
+                    // }
                 } else {
                 }
 
@@ -1169,7 +1154,7 @@ function mobileProductSearch() {
             document.querySelectorAll('#hot_deal_product_sizes .size').forEach(function (size) {
                 size.classList.remove('active');
             });
-            
+
             // Add the 'active' class to the clicked element
             element.classList.add('active');
         }
@@ -1189,17 +1174,17 @@ function mobileProductSearch() {
                 success: function (resp) {
                     if (resp.status) {
                         console.log(resp.data)
-                        if(sizeValue == ""){
+                        if (sizeValue == "") {
                             Toastify({
                                 text: 'Size Not Found'.toUpperCase(),
                                 duration: 3000,
                                 position: "center",
                                 stopOnFocus: true,
                                 style: {
-                                    background:'darkred',
+                                    background: 'darkred',
                                 },
                             }).showToast();
-                        } else{
+                        } else {
                             $.ajax({
                                 url: "<?= base_url('/api/user/cart/add') ?>",
                                 type: "POST",
@@ -1265,7 +1250,7 @@ function mobileProductSearch() {
                 position: "center",
                 stopOnFocus: true,
                 style: {
-                    background:'darkred',
+                    background: 'darkred',
                 },
             }).showToast();
         }
@@ -1285,36 +1270,36 @@ function mobileProductSearch() {
             },
             success: function (resp) {
                 if (resp.status) {
-                        let html = ''
-                        console.log('best selling',resp)
-                        $.each(resp.data, function (index, item) {
-                            if(item.products != null && item.products != ""){
-                                html += `<div class="swiper-slide product-widget-wrap">`
-                                $.each(item.products, function (index, product) {
-                                    let product_img = product.product_img.length > 0 ? '<?= base_url('public/uploads/product_images/') ?>'+product.product_img[0]['src'] : '<?= base_url('public/assets/images/product_demo.png') ?>'
-                                    html += `<div class="product product-widget bb-no">
+                    let html = ''
+                    console.log('best selling', resp)
+                    $.each(resp.data, function (index, item) {
+                        if (item.products != null && item.products != "") {
+                            html += `<div class="swiper-slide product-widget-wrap">`
+                            $.each(item.products, function (index, product) {
+                                let product_img = product.product_img.length > 0 ? '<?= base_url('public/uploads/product_images/') ?>' + product.product_img[0]['src'] : '<?= base_url('public/assets/images/product_demo.png') ?>'
+                                html += `<div class="product product-widget bb-no">
                                                     <figure class="product-media">
-                                                        <a href="<?= base_url('product/details?id=')?>${product.product_id}" onclick="increase_click_count('${product.product_id}')">
+                                                        <a href="<?= base_url('product/details?id=') ?>${product.product_id}" onclick="increase_click_count('${product.product_id}')">
                                                             <img src="${product_img}" alt="Product" width="105" height="118">
                                                         </a>
                                                     </figure>
                                                     <div class="product-details">
                                                         <h4 class="product-name">
-                                                            <a href="<?= base_url('product/details?id=')?>${product.product_id}" onclick="increase_click_count('${product.product_id}')">${product.name}</a>
+                                                            <a href="<?= base_url('product/details?id=') ?>${product.product_id}" onclick="increase_click_count('${product.product_id}')">${product.name}</a>
                                                         </h4>
                                                         <div class="product-price">
-                                                            <ins class="new-price">₹${product.product_prices != "" ? product.product_prices[0].price : ''} - ₹${product.product_prices != "" ? product.product_prices[product.product_prices.length-1].price : ''}</ins>
+                                                            <ins class="new-price">₹${product.product_prices != "" ? product.product_prices[0].price : ''} - ₹${product.product_prices != "" ? product.product_prices[product.product_prices.length - 1].price : ''}</ins>
                                                         </div>
                                                     </div>
                                                 </div>`
-                                })
-                                html += `</div>`
-                            }
+                            })
+                            html += `</div>`
+                        }
 
-                            
-                        })
-                        $('#best_selling').html(html)
-                        var swiperBestSelling = {
+
+                    })
+                    $('#best_selling').html(html)
+                    var swiperBestSelling = {
                         slidesPerView: 1,
                         spaceBetween: 20,
                         navigation: {
@@ -1338,53 +1323,53 @@ function mobileProductSearch() {
                         }
                     };
 
-                    var swiper = new Swiper('.swiper-container-best-selling', swiperBestSelling);    
-                                           
-                                                
-                                            
-                                        
-                                        
-                        // let str = `<div class="swiper-wrapper row cols-lg-1 cols-md-3">`
-                        // // console.log(resp.data.length)
-                        // for (let i = 0; i < resp.data.length; i++) { 
-                        //     // console.log(i)
-                        //     str += `<div class="swiper-slide product-widget-wrap">`
-                        //     let row = "";
-                        //     for (let j = 0; j < 3; j++) { 
-                        //         if(resp.data[i].product_data == null){
-                        //            str += ''
-                        //         } else{
-                        //             str += `<div class="product product-widget bb-no">
-                        //                     <figure class="product-media">
-                        //                         <a href="product-details.html">
-                        //                             <img src="<?= base_url('public/uploads/product_images/') ?>${resp.data[i].product_data.product_img[0].src}">
-                        //                         </a>
-                        //                     </figure>
-                        //                     <div class="product-details">
-                        //                         <h4 class="product-name">
-                        //                             <a href="product-details.html">${resp.data[i].product_data.name}</a>
-                        //                         </h4>
-                        //                         <div class="ratings-container">
-                        //                             <div class="ratings-full">
-                        //                                 <span class="ratings" style="width: 60%;"></span>
-                        //                                 <span class="tooltiptext tooltip-top"></span>
-                        //                             </div>
-                        //                         </div>
-                        //                         <div class="product-price">
-                        //                             <ins class="new-price">$150.60</ins>
-                        //                         </div>
-                        //                     </div>
-                        //                 </div> `
-                        //         }
-                    
-                        //     }
-                        //     str += `</div>`
-                        // }
-                        // str += `</div> <button class="swiper-button-next"></button> <button class="swiper-button-prev"></button>`
-                        // $('#best_selling').html(str)
+                    var swiper = new Swiper('.swiper-container-best-selling', swiperBestSelling);
 
-                        // $('#table-best-selling-list-all-body').html(html)
-                        // $('#table-best-selling-list-all').DataTable();
+
+
+
+
+                    // let str = `<div class="swiper-wrapper row cols-lg-1 cols-md-3">`
+                    // // console.log(resp.data.length)
+                    // for (let i = 0; i < resp.data.length; i++) { 
+                    //     // console.log(i)
+                    //     str += `<div class="swiper-slide product-widget-wrap">`
+                    //     let row = "";
+                    //     for (let j = 0; j < 3; j++) { 
+                    //         if(resp.data[i].product_data == null){
+                    //            str += ''
+                    //         } else{
+                    //             str += `<div class="product product-widget bb-no">
+                    //                     <figure class="product-media">
+                    //                         <a href="product-details.html">
+                    //                             <img src="<?= base_url('public/uploads/product_images/') ?>${resp.data[i].product_data.product_img[0].src}">
+                    //                         </a>
+                    //                     </figure>
+                    //                     <div class="product-details">
+                    //                         <h4 class="product-name">
+                    //                             <a href="product-details.html">${resp.data[i].product_data.name}</a>
+                    //                         </h4>
+                    //                         <div class="ratings-container">
+                    //                             <div class="ratings-full">
+                    //                                 <span class="ratings" style="width: 60%;"></span>
+                    //                                 <span class="tooltiptext tooltip-top"></span>
+                    //                             </div>
+                    //                         </div>
+                    //                         <div class="product-price">
+                    //                             <ins class="new-price">$150.60</ins>
+                    //                         </div>
+                    //                     </div>
+                    //                 </div> `
+                    //         }
+
+                    //     }
+                    //     str += `</div>`
+                    // }
+                    // str += `</div> <button class="swiper-button-next"></button> <button class="swiper-button-prev"></button>`
+                    // $('#best_selling').html(str)
+
+                    // $('#table-best-selling-list-all-body').html(html)
+                    // $('#table-best-selling-list-all').DataTable();
                 } else {
                     $('#table-best-selling-list-all-body').html(`<tr >
                         <td>
@@ -1406,7 +1391,7 @@ function mobileProductSearch() {
             url: "<?= base_url('/api/user/id') ?>",
             type: "GET",
             success: function (resp) {
-                if (resp.status){
+                if (resp.status) {
                     $.ajax({
                         url: "<?= base_url('/api/add/wish-list') ?>",
                         type: "POST",
@@ -1415,7 +1400,7 @@ function mobileProductSearch() {
                             user_id: resp.data,
                         },
                         success: function (resp) {
-                            if (resp.status){
+                            if (resp.status) {
                                 Toastify({
                                     text: resp.message.toUpperCase(),
                                     duration: 3000,
@@ -1430,7 +1415,7 @@ function mobileProductSearch() {
                                     event.preventDefault();
                                     button.toggleClass("added").addClass("load-more-overlay loading");
                                     setTimeout(function () {
-                                    button.removeClass("load-more-overlay loading")
+                                        button.removeClass("load-more-overlay loading")
                                             .toggleClass("w-icon-heart")
                                             .toggleClass("w-icon-heart-full");
                                     }, 500);
@@ -1468,27 +1453,27 @@ function mobileProductSearch() {
             },
         })
 
-        
+
     }
 
-    function load_most_popular_product(){
+    function load_most_popular_product() {
         $.ajax({
             url: "<?= base_url('/api//most-clicked/product') ?>",
             type: "GET",
             success: function (resp) {
-                
+
                 if (resp.status) {
                     console.log(resp)
                     // $('#user_address').empty();
-                        var html =``  
-                        $.each(resp.data, function(index, product) {
-                            if(index < 10){
-                                var truncatedDescription = truncateText(product.description, 100);
-                                let product_img = product.product_img.length > 0 ? '<?= base_url('public/uploads/product_images/') ?>'+product.product_img[0]['src'] : '<?= base_url('public/assets/images/product_demo.png') ?>'
-                                html += `<div class="product-wrap">
+                    var html = ``
+                    $.each(resp.data, function (index, product) {
+                        if (index < 10) {
+                            var truncatedDescription = truncateText(product.description, 100);
+                            let product_img = product.product_img.length > 0 ? '<?= base_url('public/uploads/product_images/') ?>' + product.product_img[0]['src'] : '<?= base_url('public/assets/images/product_demo.png') ?>'
+                            html += `<div class="product-wrap">
                                             <div class="product text-center">
                                                 <figure class="product-media">
-                                                    <a href="<?= base_url('product/details?id=')?>${product.product_id}" onclick="increase_click_count('${product.product_id}')">
+                                                    <a href="<?= base_url('product/details?id=') ?>${product.product_id}" onclick="increase_click_count('${product.product_id}')">
                                                         <img src="${product_img}"
                                                             alt="Product" width="300" height="338">
                                                     </a>
@@ -1500,7 +1485,7 @@ function mobileProductSearch() {
                                                     </div>
                                                 </figure>
                                                 <div class="product-details">
-                                                    <h4 class="product-name"><a href="<?= base_url('product/details?id=')?>${product.product_id}" onclick="increase_click_count('${product.product_id}')">${product.name}
+                                                    <h4 class="product-name"><a href="<?= base_url('product/details?id=') ?>${product.product_id}" onclick="increase_click_count('${product.product_id}')">${product.name}
                                                         </a></h4>
                                                             <!-- Product Description -->
                                                             <p class="product-description" style="font-size: 14px; color: #666;">${truncatedDescription}</p>
@@ -1513,19 +1498,19 @@ function mobileProductSearch() {
                                                     </div> -->
                                                     <div class="product-price">
                                                         <span class="price">
-                                                            ₹${product.product_prices != "" ? product.product_prices[0].price : ''} - ₹${product.product_prices != "" ? product.product_prices[product.product_prices.length-1].price : ''}
+                                                            ₹${product.product_prices != "" ? product.product_prices[0].price : ''} - ₹${product.product_prices != "" ? product.product_prices[product.product_prices.length - 1].price : ''}
                                                         </span>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>`
-                            }
-                        })
-                        $('#most-popular-product').html(html);
+                        }
+                    })
+                    $('#most-popular-product').html(html);
                 } else {
                     console.log("error")
                 }
-                
+
             },
             error: function (err) {
                 console.log(err)
@@ -1541,17 +1526,17 @@ function mobileProductSearch() {
             },
             success: function (resp) {
                 if (resp.status) {
-                        let html = ''
-                        console.log('best selling',resp)
-                        $.each(resp.data, function (index, item) {
-                            if(item.products != null && item.products != ""){
-                                $.each(item.products, function (index, product) {
-                                    var truncatedDescription = truncateText(product.description, 100);
-                                    let product_img = product.product_img.length > 0 ? '<?= base_url('public/uploads/product_images/') ?>'+product.product_img[0]['src'] : '<?= base_url('public/assets/images/product_demo.png') ?>'
-                                    html += `<div class="product-wrap">
+                    let html = ''
+                    console.log('best selling', resp)
+                    $.each(resp.data, function (index, item) {
+                        if (item.products != null && item.products != "") {
+                            $.each(item.products, function (index, product) {
+                                var truncatedDescription = truncateText(product.description, 100);
+                                let product_img = product.product_img.length > 0 ? '<?= base_url('public/uploads/product_images/') ?>' + product.product_img[0]['src'] : '<?= base_url('public/assets/images/product_demo.png') ?>'
+                                html += `<div class="product-wrap">
                                                 <div class="product text-center">
                                                     <figure class="product-media">
-                                                        <a href="<?= base_url('product/details?id=')?>${product.product_id}" onclick="increase_click_count('${product.product_id}')">
+                                                        <a href="<?= base_url('product/details?id=') ?>${product.product_id}" onclick="increase_click_count('${product.product_id}')">
                                                             <img src="${product_img}"
                                                                 alt="Product" width="300" height="338">
                                                             <img src="${product_img}"
@@ -1565,7 +1550,7 @@ function mobileProductSearch() {
                                                         </div>
                                                     </figure>
                                                     <div class="product-details">
-                                                        <h4 class="product-name"><a href="<?= base_url('product/details?id=')?>${product.product_id}" onclick="increase_click_count('${product.product_id}')">${product.name}</a>
+                                                        <h4 class="product-name"><a href="<?= base_url('product/details?id=') ?>${product.product_id}" onclick="increase_click_count('${product.product_id}')">${product.name}</a>
                                                         </h4>
                                                          <!-- Product Description -->
                                                             <p class="product-description" style="font-size: 14px; color: #666;">${truncatedDescription}</p>
@@ -1577,16 +1562,16 @@ function mobileProductSearch() {
                                                             <a href="product-details.html" class="rating-reviews">(8 reviews)</a>
                                                         </div> -->
                                                         <div class="product-price">
-                                                            <ins class="new-price">₹${product.product_prices != "" ? product.product_prices[0].price : ''} - ₹${product.product_prices != "" ? product.product_prices[product.product_prices.length-1].price : ''}</ins>
+                                                            <ins class="new-price">₹${product.product_prices != "" ? product.product_prices[0].price : ''} - ₹${product.product_prices != "" ? product.product_prices[product.product_prices.length - 1].price : ''}</ins>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>`
-                                })
-                            }
-                        })
-                        $('#best_selling_products').html(html)
-                           
+                            })
+                        }
+                    })
+                    $('#best_selling_products').html(html)
+
                 } else {
 
                     $('#best_selling_products').html(`<span>Data Not Found!</span>`)
@@ -1601,6 +1586,6 @@ function mobileProductSearch() {
     }
 
 
-    
+
 
 </script>

@@ -253,7 +253,7 @@ class User_Controller extends Api_Controller
 
     private function get_user()
     {
-        $user_id = !empty($this->is_logedin()) ? $this->is_logedin() : $_SESSION[SES_SELLER_USER_ID];
+        $user_id = !empty($this->is_logedin()) ? $this->is_logedin() : '';
         // echo $user_id;
         $resp = [
             "status" => false,

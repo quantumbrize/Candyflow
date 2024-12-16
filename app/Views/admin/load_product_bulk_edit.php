@@ -141,7 +141,7 @@
                     <h2>Update Stock</h2>
                     <!-- Textarea for CKEditor -->
                     <!-- <textarea id="editor"></textarea> -->
-                        <table class="table" style="width: 300px;">
+                        <table class="table">
                             <thead>
                                 <tr style="text-align: center;">
                                     <th>Size</th>
