@@ -49,6 +49,45 @@
             
 
     }
+
+    function updateStock_by_input(value, product_id) {
+        if(value >= 0 && value != ""){
+            $.ajax({
+                url: "<?= base_url('/api/product/variant/stock/update') ?>",
+                type: "GET",
+                data: {
+                    item_stock_id: product_id,
+                    stock: value
+                },
+                beforeSend: function () {
+                    $(`#btn-stock-add-${product_id}`).attr('disabled', true)
+                    $(`#btn-stock-sub-${product_id}`).attr('disabled', true)
+                },
+                success: function (resp) {
+                    $(`#btn-stock-add-${product_id}`).attr('disabled', false)
+                    $(`#btn-stock-sub-${product_id}`).attr('disabled', false)
+                    if (resp.status) {
+                        $(`#input-stock-${product_id}`).val(stock)
+                        $('#alert').html(`<div class="alert alert-success alert-dismissible alert-label-icon label-arrow fade show material-shadow" role="alert">
+                                                            <i class="ri-checkbox-circle-fill label-icon"></i><strong>${resp.message}</strong>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                        </div>`)
+                    }
+                },
+                error: function (err) {
+                    console.log(err)
+                    $(`#btn-stock-add-${product_id}`).attr('disabled', false)
+                    $(`#btn-stock-sub-${product_id}`).attr('disabled', false)
+                    $('#alert').html(`<div class="alert alert-warning alert-dismissible alert-label-icon label-arrow fade show material-shadow" role="alert">
+                                                        <i class="ri-alert-line label-icon"></i><strong>Warning</strong> - Internal Server Error
+                                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                    </div>`)
+                }
+            })
+        }
+            
+
+    }
    
 
         get_product_data('<?= $_GET['p_id'] ?>');
@@ -64,11 +103,24 @@
                 },
                 beforeSend: function () { },
                 success: function (resp) {
-                    console.log(resp);
+                    console.log('product', resp);
                     if (resp.status) {
                         product = resp.data;
                         let load_sizes = ``
                         let all_price_list = ``
+                        if(product.product_img.length > 0){
+                            product_img = ""
+                            $.each(product.product_img, function (Index, img) {
+                                product_img += `<div class="carousel-item ${Index == 0 ? 'active' : ""}">
+                                                    <img src="<?= base_url()?>public/uploads/product_images/${img.src}" class="d-block w-100 carousel-image" alt="First Slide">
+                                                </div>`
+                            })
+                            $('#product_images').html(product_img);
+                        } else {
+                            $('#product_images').html(`<div class="carousel-item active">
+                                                        <img src="<?= base_url('public/assets/images/product_demo.png') ?>" class="d-block w-100 carousel-image" alt="First Slide">
+                                                    </div>`);
+                        }
                         $.each(product.product_sizes, function (Index, p_size) {
                             load_sizes += `<tr>
                                             <td>${p_size.sizes}</td>
@@ -91,7 +143,8 @@
                                                 class="stock_number btn-number" 
                                                 value="${p_size.stocks}" 
                                                 id="input-stock-${p_size.uid}"
-                                                readonly>
+                                                onkeyup="updateStock_by_input(this.value, '${p_size.uid}')"
+                                                >
                                             <span class="input-group-btn btn-number">
                                                 <button 
                                                     type="button" 
@@ -153,6 +206,16 @@
                                     <tr>
                                         <td>Sold</td>
                                         <td style="text-align: right" class="text-secondary">${product.category}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Status</td>
+                                        <td style="align-item: right" class="text-secondary">
+                                            <select class="form-control" id="product_status"  onclick="event.stopPropagation()" onchange="update_product_status('${product.product_id}', this)" style="width: 50%;">
+                                                <option value="${product.product_status}" selected>${product.product_status}</option>
+                                                <option value="active">active</option>
+                                                <option value="deactive">deactive</option>
+                                            </select>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td style="font-weight:bold;">Min Quantity</td>
@@ -224,7 +287,8 @@
                                                 class="stock_number btn-number" 
                                                 value="${p_size.stocks}" 
                                                 id="input-stock-${p_size.uid}"
-                                                readonly>
+                                                onkeyup="updateStock_by_input(this.value, '${p_size.uid}')"
+                                                >
                                             <span class="input-group-btn btn-number">
                                                 <button 
                                                     type="button" 
@@ -248,9 +312,10 @@
                                         `<img src="<?= base_url('public/uploads/product_images/') ?>${product.product_img[0].src}" alt="" class="product-img">`
                                     }
                                     </td>
-                                    <td >${vItem.price} ₹</td>
+                                    <!-- <td >${vItem.price} ₹</td>
                                     <td >${vItem.discount} %</td>
-                                    <td class="text-success fs-16">${calculateFinalPrice(vItem.price, vItem.discount).toFixed(2)} ₹</td>
+                                    <td class="text-success fs-16">${calculateFinalPrice(vItem.price, vItem.discount).toFixed(2)} ₹
+                                    </td> -->
                                     <td  style="min-width: 110px">
                                         ${load_stocks}
                                     </td>
@@ -376,6 +441,44 @@
             })
         }
 
+    }
+
+    function update_product_status(product_id, selectElement){
+        let status = $(selectElement).val()
+        // alert(status)
+        $.ajax({
+                url: "<?= base_url('/api/update/product-status') ?>",
+                type: "POST",
+                data: {product_id:product_id,
+                    status:status
+                },
+                beforeSend: function () {
+                },
+                success: function (resp) {
+                    let html = ''
+
+                    if (resp.status) {
+                        html += `<div class="alert alert-success alert-dismissible alert-label-icon label-arrow fade show material-shadow" role="alert">
+                                <i class="ri-checkbox-circle-fill label-icon"></i>${resp.message}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>`
+                    } else {
+                        html += `<div class="alert alert-warning alert-dismissible alert-label-icon label-arrow fade show material-shadow" role="alert">
+                                <i class="ri-alert-line label-icon"></i><strong>Warning</strong> - ${resp.message}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>`
+                    }
+
+
+                    $('#alert').html(html)
+                    console.log(resp)
+                },
+                error: function (err) {
+                    console.log(err)
+                },
+                complete: function () {
+                }
+            })
     }
 
 </script>

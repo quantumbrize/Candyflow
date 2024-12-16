@@ -21,7 +21,7 @@
         <!-- end page title -->
 
         <div class="row">
-            <div class="col-xl-4 col-lg-4">
+            <div class="col-xl-6 col-lg-6">
                 <div class="card">
                     <div class="card-header">
                         <div class="d-flex align-items-center">
@@ -61,6 +61,27 @@
                                 </tr>
                             </tbody>
                         </table> -->
+                        <div id="carouselExampleControls" class="carousel slide carousel-containner" data-bs-ride="carousel">
+                            <div class="carousel-inner" id="product_images">
+                                <!-- <div class="carousel-item active">
+                                    <img src="https://via.placeholder.com/800x400?text=First+Slide" class="d-block w-100" alt="First Slide">
+                                </div>
+                                <div class="carousel-item">
+                                    <img src="https://via.placeholder.com/800x400?text=Second+Slide" class="d-block w-100" alt="Second Slide">
+                                </div>
+                                <div class="carousel-item">
+                                    <img src="https://via.placeholder.com/800x400?text=Third+Slide" class="d-block w-100" alt="Third Slide">
+                                </div> -->
+                            </div>
+                            <button class="carousel-control-prev custom-carousel-button" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev" style="color: blue;">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next custom-carousel-button" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
+                        </div>
                         <table class="table">
                             <tbody id="product_details">
                                 <tr>
@@ -99,7 +120,7 @@
             </div>
             <!-- end col -->
 
-            <div class="col-xl-8 col-lg-8">
+            <div class="col-xl-6 col-lg-6">
                 <div>
                     <div class="card">
                         <div class="card-header">
@@ -120,9 +141,9 @@
                                 <thead>
                                     <tr>
                                         <th>Product</th>
-                                        <th>Price</th>
+                                        <!-- <th>Price</th>
                                         <th>discount</th>
-                                        <th>Final Price</th>
+                                        <th>Final Price</th> -->
                                         <!-- <th>Sizes</th> -->
                                         <th>Sizes & Stock</th>
                                         <th>Delete</th>

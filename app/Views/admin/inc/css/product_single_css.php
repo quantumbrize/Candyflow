@@ -33,4 +33,40 @@
         outline: none;
         text-align: center;
     }
+
+    .carousel-containner {
+        border-top-left-radius: 25px;
+        border-top-right-radius: 25px;
+        overflow: hidden; 
+
+        max-height: 50%; 
+        max-width: 100%;
+    }
+
+    .carousel-image{
+        max-height: 50%; 
+        max-width: 100%; 
+        object-fit: cover;
+    }
+
+    .custom-carousel-button {
+        background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+        border: none;
+        width: 50px;
+        height: 50px;
+        /* display: flex; */
+        justify-content: center;
+        align-items: center;
+        border-radius: 50%; /* Makes the button circular */
+        transition: background-color 0.3s ease;
+}
+
+    .custom-carousel-button:hover {
+        background-color: rgba(28, 87, 181, 0.8); /* Darker on hover */
+    }
+
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon {
+        filter: invert(1); /* Makes the default arrow icon white */
+    }
 </style>

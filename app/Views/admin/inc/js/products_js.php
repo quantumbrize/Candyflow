@@ -137,7 +137,7 @@
 
     function update_product_status(product_id, selectElement){
         let status = $(selectElement).val()
-        alert(status)
+        // alert(status)
         $.ajax({
                 url: "<?= base_url('/api/update/product-status') ?>",
                 type: "POST",

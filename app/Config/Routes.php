@@ -166,6 +166,7 @@ $routes->post('/api/increase/product/click-count',  'Api\Product_Controller::POS
 $routes->get('/api/most-clicked/product',           'Api\Product_Controller::GET_most_click_product'); // GET most clicked product
 $routes->get('/api/best-selling/product',           'Api\Product_Controller::GET_best_selling_products'); // GET best selling product
 $routes->get('/api/remove/wishlist',                'Api\Product_Controller::GET_remove_wishlist'); // GET Remove Wishlist Product
+$routes->post('/api/update/product-status',          'Api\Product_Controller::POST_product_status_update'); // GET Remove Wishlist Product
 
 $routes->post('/api/user/update',                   'Api\User_Controller::POST_update_user'); // Update user
 $routes->get('/api/user/orders',                    'Api\Order_Controller::GET_user_orders'); // Get user orders
