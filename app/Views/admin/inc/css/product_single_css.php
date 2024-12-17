@@ -69,4 +69,45 @@
     .carousel-control-next-icon {
         filter: invert(1); /* Makes the default arrow icon white */
     }
+
+    .download-container {
+    text-align: center;
+    margin: 20px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    }
+
+    .download-btn {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    }
+
+    .download-btn:hover {
+    background-color: #0056b3;
+    }
+
+    .description {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #555;
+    }
+
+    .arrow-left {
+    font-size: 24px; /* Adjust size */
+    color:rgb(255, 255, 255); /* Adjust color */
+    cursor: pointer; /* Makes it look clickable */
+}
+
+/* .arrow-left:hover {
+    color: #0056b3; /* Change color on hover */
+} */
+
 </style>

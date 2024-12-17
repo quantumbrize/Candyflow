@@ -1,4 +1,11 @@
 <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const editParam = urlParams.get('edit');
+    if (editParam === '1') {
+        // console.log("Edit parameter exists and is set to 1");
+        $('#back_to_edit').html(`<a href="<?= base_url('/admin/product/bulk/edit') ?>"
+                                class="btn btn-warning"><i class="arrow-left">&#8592;</i>Back to edit</a>`)
+    }
     function calculateFinalPrice(originalPrice, discountPercentage) {
         // Calculate the discount amount
         var discountAmount = (originalPrice * discountPercentage) / 100;

@@ -37,6 +37,7 @@
                         <th>Details</th>
                         <th>Images</th>
                         <th>Stocks</th>
+                        <th>Add Variation</th>
                     </tr>
                 </thead>
                 <tbody id="product-table-body">

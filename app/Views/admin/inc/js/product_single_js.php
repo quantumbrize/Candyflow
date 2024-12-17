@@ -1,4 +1,12 @@
 <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const editParam = urlParams.get('edit');
+    if (editParam === '1') {
+        // console.log("Edit parameter exists and is set to 1");
+        $('#back_to_edit').html(`<a href="<?= base_url('/admin/product/bulk/edit') ?>"
+                                class="btn btn-warning"><i class="arrow-left">&#8592;</i>Back to edit</a>`)
+    }
+
     function calculateFinalPrice(originalPrice, discountPercentage) {
         // Calculate the discount amount
         var discountAmount = (originalPrice * discountPercentage) / 100;
@@ -121,6 +129,22 @@
                                                         <img src="<?= base_url('public/assets/images/product_demo.png') ?>" class="d-block w-100 carousel-image" alt="First Slide">
                                                     </div>`);
                         }
+
+                        if(product.authorization_letter != null){
+                            auth_letter = `<div class="content-box">
+                                                <p>Vendor Authorization Letter.</p>
+                                            </div>
+                                            <a href="<?= base_url()?>public/uploads/product_images/${product.authorization_letter.authorization_img}" class="download-btn" download="filename.pdf">Download</a>
+                                            <p class="description">${product.authorization_letter.authorization_letter}</p>`
+                            
+                            $('#vendor_authorization_letter').html(auth_letter);
+                        } else {
+                            $('#vendor_authorization_letter').html(`<div class="content-box">
+                                                                        <p>Authorization Letter Not Provided.</p>
+                                                                    </div>`);
+                        }
+
+
                         $.each(product.product_sizes, function (Index, p_size) {
                             load_sizes += `<tr>
                                             <td>${p_size.sizes}</td>

@@ -82,6 +82,14 @@
                                 <span class="visually-hidden">Next</span>
                             </button>
                         </div>
+                        <div class="download-container" id="vendor_authorization_letter">
+                            <!-- <div class="content-box">
+                                <p>Vendor Authorization Letter.</p>
+                            </div>
+                            <a href="path/to/your/file.pdf" class="download-btn" download="filename.pdf">Download</a>
+                            <p class="description">This is a description about the content above. Click the download button to get the file.</p> -->
+                        </div>
+
                         <table class="table">
                             <tbody id="product_details">
                                 <tr>
@@ -127,6 +135,10 @@
                             <div class="d-flex  align-items-center">
                                 <div class="flex-grow-1">
                                     <h5 class="fs-16">All Product Variants</h5>
+                                </div>
+                                <div class="flex-shrink-0 p-2" id="back_to_edit">
+                                    <!-- <a href="<?= base_url('/admin/product/bulk/edit') ?>"
+                                        class="btn btn-warning"><i class="arrow-left">&#8592;</i>Back to edit</a> -->
                                 </div>
                                 <div class="flex-shrink-0">
                                     <a href="<?= base_url('/admin/product/variant/add?p_id=' . $_GET['p_id']) ?>"

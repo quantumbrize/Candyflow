@@ -149,7 +149,7 @@
                 if (resp) {
                     let html = '<option value="">Select-a-Vendor</option>';
                     $.each(resp.data, function (key, val) {
-                        html += `<option value="${val.vendor_id}">${val.user_name}</option>`;
+                        html += `<option value="${val.vendor_id}" selected>${val.user_name}</option>`;
                     });
                     $('#vendor_drop_down').html(html);
                     $('#vendor_drop_down').select2({
@@ -165,6 +165,7 @@
 
     let currentRow; // Variable to track which row is currently being edited
     let rowImages = {}; // Object to store image files for each row by row index
+    let rowAuthorization = {}; // Object to store image files for each row by row index
 
     // Open the image upload modal and link it to the current row
     function openImageModal(button) {
@@ -172,9 +173,17 @@
         document.getElementById('imageUploadModal').style.display = 'block'; // Show the modal
     }
 
+    function openAuthorizationLetterModal(button) {
+        currentRow = button.closest('tr'); // Track the closest row to associate with the images
+        document.getElementById('authorizationLetterUploadModal').style.display = 'block'; // Show the modal
+    }
+
     // Close the image modal
     document.getElementById('closeImageModal').onclick = function () {
         document.getElementById('imageUploadModal').style.display = 'none'; // Close the modal
+    }
+    document.getElementById('closeAuthorizationLetterModal').onclick = function () {
+        document.getElementById('authorizationLetterUploadModal').style.display = 'none'; // Close the modal
     }
     document.getElementById('closePriceModal').onclick = function () {
         document.getElementById('priceModel').style.display = 'none'; // Close the modal
@@ -192,6 +201,27 @@
             alert("Please select at least one image.");
         }
     }
+
+    document.getElementById('submitAuthLetter').onclick = function () {
+        const currentRowIndex = currentRow.rowIndex; 
+        const files = document.getElementById('authImage').files;
+        const description = document.getElementById('authDescription').value.trim();
+
+        if (files.length > 0 && description !== "") {
+            rowAuthorization[currentRowIndex] = {
+                files: Array.from(files), // Store the file list as an array
+                description: description
+            };
+
+            // Clear inputs after submission
+            document.getElementById('authImage').value = '';
+            document.getElementById('authDescription').value = '';
+            document.getElementById('authorizationLetterUploadModal').style.display = 'none';
+        } else {
+            alert("Please upload at least one file and provide a description.");
+        }
+        console.log(rowAuthorization)
+    };
 
     function previewImages(input) {
         const previewContainer = document.getElementById('imagePreviewContainer');
@@ -368,6 +398,14 @@
 
         </td>
         <td>
+            <!-- Button to open modal for the current row -->
+            <button type="button" class="btn btn-md btn-primary" onclick="openAuthorizationLetterModal(this)">
+                <i class="ri-file-text-fill"></i>
+            </button>
+            <!-- Modal for uploading images specific to this row -->
+
+        </td>
+        <td>
             <button class="btn btn-md btn-danger" type="button" onclick="removeRow(this)">
                 <i class="ri-delete-bin-7-line"></i>
             </button>
@@ -498,8 +536,11 @@
             // Get description from span
             const description = row.cells[10].querySelector('span') ? row.cells[10].querySelector('span').innerHTML : '';
 
+            const authData = rowAuthorization[row.rowIndex] || { files: [], description: "" };
             // Retrieve images from the rowImages object
             const imagesFiles = rowImages[row.rowIndex] || [];
+            const authorizationFiles = authData.files || []; // Authorization files for the row
+            const authorizationDescription = authData.description || ""; // Description for the row
             let isValid = true
             let html
             if (!productName) {
@@ -579,7 +620,9 @@
                 // qty,
                 tags,
                 description,
-                images: imagesFiles // Add the images linked to this row
+                images: imagesFiles, // Add the images linked to this row
+                authFiles: authorizationFiles,
+                authDescription: authorizationDescription
             });
             // console.log(isValid)
         });
@@ -639,6 +682,13 @@
                 product.images.forEach((imageFile, imgIndex) => {
                     formData.append(`products[${index}][image][${imgIndex}]`, imageFile);
                 });
+
+                product.authFiles.forEach((authFile, authIndex) => {
+                    formData.append(`products[${index}][authFiles][${authIndex}]`, authFile);
+                });
+
+                // Append authorization description
+                formData.append(`products[${index}][authDescription]`, product.authDescription);
             });
 
 
@@ -707,6 +757,14 @@
                             <button type="button" class="btn btn-md btn-primary" onclick="openImageModal(this)">
                                 <i class="ri-upload-2-fill"></i>
                             </button>
+
+                        </td>
+                        <td>
+                            <!-- Button to open modal for the current row -->
+                            <button type="button" class="btn btn-md btn-primary" onclick="openAuthorizationLetterModal(this)">
+                                <i class="ri-file-text-fill"></i>
+                            </button>
+                            <!-- Modal for uploading images specific to this row -->
 
                         </td>
                         <td>
