@@ -23,6 +23,7 @@ use App\Models\VendorWalletHistoryModel;
 use App\Models\VendorWithdrawalHistoryModel;
 use App\Models\WishlistsModel;
 use App\Models\VendorBankModel;
+use App\Models\UserCartModel;
 class User_Controller extends Api_Controller
 {
     public function __construct()
@@ -295,6 +296,11 @@ class User_Controller extends Api_Controller
                 ->getResultArray();
             $Wishlists = !empty($Wishlists) ? $Wishlists : null;
 
+            $UserCartModel = new UserCartModel();
+            $cart = $UserCartModel->where('user_id', $user_id)
+                ->get()
+                ->getResultArray();
+
             $resp = [
                 "status" => true,
                 "message" => "Data fetched",
@@ -304,6 +310,7 @@ class User_Controller extends Api_Controller
                 "user_img" => $ImageData,
                 "all_address" => $AllAddressData,
                 "wishlists" => $Wishlists,
+                "cart" => $cart
             ];
         }
         return $resp;

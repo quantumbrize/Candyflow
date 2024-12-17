@@ -174,7 +174,7 @@
                             <ul id="suggestionBox" class="suggestion-box"></ul>
                         </div>
 
-                       
+
 
                         <a href="javascript:void(0)" class="icon-link  wishlist-mobile" onclick="redirect_cart_page()"
                             style="display: none;">
@@ -280,13 +280,12 @@
                             }
 
                             // Logged in state
-                            html = `
-                                    <a href="<?= base_url('wishlist') ?>" class="icon-link" id="wishlist-link">
+                            html = `<a href="<?= base_url('wishlist') ?>" class="icon-link" id="wishlist-link">
                                         ${resp.wishlists ? `<span id="wishlist_count">${resp.wishlists.length}</span>` : ''}
                                         <i class="fas fa-heart"></i> Wishlist
                                     </a>
                                     <a href="javascript:void(0)" class="icon-link" onclick="redirect_cart_page()" id="cart-link">
-                                        <span id="cart_count" class="cart-count-badge"></span>    
+                                        <span id="cart_count" class="cart-count-badge">${resp.cart.length}</span>    
                                         <i class="fas fa-shopping-cart cart-icon"></i> 
                                         Cart
                                     </a>
@@ -295,11 +294,13 @@
                                     </a>
                                     <a href="javascript:void(0)" class="signup-btn" onclick="logout()" style="text-decoration: none;">Logout</a>`;
 
-                                            // Sticky icons for logged-in user
-                                            htmllF = `
+                            // Sticky icons for logged-in user
+                            htmllF = `
                                     <a id="cart-icon-f" class="sticky-icon cart-icon" onclick="redirect_cart_page()">
                                         <i class="fas fa-shopping-cart"></i>
-                                        <div id="cartCountBx"></div>
+                                        <div id="cartCountBx">
+                                        <span class="badge" id="cart-count">${resp.cart.length}</span>
+                                        </div>
                                     </a>
                                     <a id="wishlist-icon-f" class="sticky-icon wishlist-icon" href="<?= base_url('wishlist') ?>">
                                         <i class="fas fa-heart"></i>
@@ -314,9 +315,15 @@
                             $('#cart-link').removeClass('disabled').css('pointer-events', 'auto');
                             $('#wishlist-icon-f').removeClass('disabled').css('pointer-events', 'auto');
                         } else {
-                            console.log('-------->')
                             // Not logged in state
-                            html = `<a href="<?= base_url('login') ?>" class="icon-link">
+                            html = `<a href="<?= base_url('login') ?>" class="icon-link" id="wishlist-link">
+                                        <i class="fas fa-heart"></i> Wishlist
+                                    </a>
+                                    <a href="<?= base_url('login') ?>" class="icon-link"  id="cart-link">
+                                        <span id="cart_count" class="cart-count-badge"></span>    
+                                        <i class="fas fa-shopping-cart cart-icon"></i> 
+                                        Cart
+                                    </a><a href="<?= base_url('login') ?>" class="icon-link">
                                     <i class="fas fa-user"></i> SignIn
                                 </a>
                                 <a href="<?= base_url('sign-up') ?>" class="signup-btn" style="text-decoration: none;">SignUp</a>`;
@@ -354,7 +361,7 @@
                 // { name: "photo frames", category: "in Photo Frames" },
             ];
 
-            
+
 
             function showSuggestions() {
                 const input = document.getElementById("searchInput").value.toLowerCase();

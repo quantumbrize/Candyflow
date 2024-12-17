@@ -89,15 +89,6 @@
         margin-left: auto;
     }
 
-
-
-    .active-size {
-        /* border: 2px solid #000000 !important; */
-        /* border-radius: 2px !important; */
-        /* color: #666; */
-        color: #fff !important;
-        background-color: #336699 !important;
-    }
 </style>
 <main class="main">
 

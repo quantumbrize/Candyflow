@@ -989,6 +989,8 @@
                                             .toggleClass("w-icon-heart-full");
                                     }, 500);
                                 }
+                                get_user();
+
                             } else {
                                 Toastify({
                                     text: resp.message.toUpperCase(),

@@ -1,24 +1,26 @@
-
-    <!--start back-to-top-->
-    <!-- <button onclick="topFunction()" class="btn btn-info btn-icon" style="bottom: 50px;" id="back-to-top">
+<!--start back-to-top-->
+<!-- <button onclick="topFunction()" class="btn btn-info btn-icon" style="bottom: 50px;" id="back-to-top">
         <i class="ri-arrow-up-line"></i>
     </button> -->
-    <!--end back-to-top-->
+<!--end back-to-top-->
 
-    <style>
+<style>
     .avatar-xs {
         height: 2rem;
         width: 2rem
     }
-    .section{
+
+    .section {
         margin: 80px 0px 100px 0px;
     }
+
     .table {
         width: 100%;
         /* Ensure the table takes up full width */
     }
 
-    .table th, .table td{
+    .table th,
+    .table td {
         white-space: nowrap;
         /* Prevent text from wrapping */
         text-align: left;
@@ -29,10 +31,10 @@
         overflow-x: auto;
         /* Allow horizontal scrolling if needed */
     }
-  </style>
+</style>
 
-  
-    <section class="section">
+
+<!-- <section class="section">
         <div class="container">
             <div class="track-orders">
                 <div class="row justify-content-between gy-4 gy-md-0" id="order_track">
@@ -54,61 +56,76 @@
                     </div>
                 </div>
             </div>
-        </div><!--end container-->
-    </section>
+        </div>
+    </section> -->
 
-    <section class="section pt-0">
-        <div class="container">
-            <div class="card border-dashed">
-                <div class="card-body border-bottom border-bottom-dashed p-4">
-                    <div class="row g-3" id="order_details_bx">
-                        
-                    </div>
+<section class="section pt-0">
+    <div class="container">
+        <div class="card border-dashed">
+            <div class="card-body border-bottom border-bottom-dashed p-4">
+                <div class="row g-3" id="order_details_bx">
+
                 </div>
-                <div class="card-body p-4">
-                    <div class="row g-3">
-                        <div class="col-6" id="address_bx">
-                            
-                        </div>
-                        <div class="col-6" id="return_cancel_bx">
-                           
-                        </div>
+            </div>
+            <div class="card-body p-4">
+                <div class="row g-3">
+                    <div class="col-sm-8">
+
                     </div>
-                </div>
-                <div class="card-body p-4">
-                    <div class="table-responsive">
-                        <table class="table table-borderless text-center table-nowrap align-middle mb-0">
-                            <thead>
-                                <tr class="table-active">
-                                    <th scope="col" style="width: 50px;">#</th>
-                                    <th scope="col">Product Details</th>
-                                    <th scope="col"></th>
-                                    <th scope="col">Rate</th>
-                                    <th scope="col">Quantity</th>
-                                    <th scope="col" class="text-end">Amount</th>
-                                </tr>
-                            </thead>
-                            <tbody id="products-list">
-                                
-                            </tbody>
-                        </table><!--end table-->
-                    </div>
-                    <div class="border-top border-top-dashed mt-2">
-                        <table class="table table-borderless table-nowrap align-middle mb-0 ms-auto" style="width:250px">
-                            <tbody id="order_amount_dtls_bx">
-                               
-                            </tbody>
-                        </table>
-                        <!--end table-->
-                    </div>
-                </div>
-                <div class="card-body p-4">
-                    <div class="text-end mt-4">
-                        <a href="<?=base_url()?>" type="button" class="btn btn-success btn-hover">Continue Shopping <i class="ri-arrow-right-line align-bottom ms-1"></i></a>
+                    <div class="col-sm-4" id="address_bx">
+
                     </div>
                 </div>
             </div>
-        </div><!--end container-->
-    </section>
+            <div class="card-body p-4">
+                <div class="table-responsive">
+                    <table class="table table-borderless text-center table-nowrap align-middle mb-0">
+                        <thead>
+                            <tr class="table-active">
+                                <th scope="col" style="width: 50px;">#</th>
+                                <th scope="col">Product Details</th>
+                                <th scope="col"></th>
+                                <th scope="col">Rate</th>
+                                <th scope="col">Quantity</th>
+                                <th scope="col" class="text-end">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody id="products-list">
 
-   
+                        </tbody>
+                    </table><!--end table-->
+                </div>
+                <div class="border-top border-top-dashed mt-2 row">
+                    <div class="col-sm-8">
+
+                    </div>
+                    <div class="col-sm-4">
+                        <table class="table table-borderless table-nowrap align-middle mb-0 ms-auto"
+                            style="width:250px">
+                            <tbody id="order_amount_dtls_bx">
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <!--end table-->
+                </div>
+            </div>
+            <div class="card-body p-4">
+
+                <div class="text-end mt-4 row">
+                    <div class="col-sm-8">
+
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="text-end mb-2" id="return_cancel_bx">
+
+                        </div>
+
+                        <a href="<?= base_url() ?>" type="button" class="btn btn-success btn-hover">Continue Shopping <i
+                                class="ri-arrow-right-line align-bottom ms-1"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!--end container-->
+</section>

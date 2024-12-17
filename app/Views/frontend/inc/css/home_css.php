@@ -129,38 +129,68 @@
         color: #555;
     }
 
-    .w-icon-heart-full{
+    .w-icon-heart-full {
         color: #336699;
-        
+
     }
 
-    .product-wrap{
-        /* border: 1px solid #336699; */
-        margin: 0px 10px 10px 10px;
+    .product-wrap {
         padding: 10px !important;
-        box-shadow: rgba(0, 0, 0, 0.2) 0px 7px 29px 0px;
+        /* box-shadow: rgba(0, 0, 0, 0.2) 0px 7px 29px 0px; */
         transition: 100ms;
         /* border-radius: 5px; */
     }
 
-    .product-wrap:hover{
-        scale: 1.05 ;
+    .product-wrap:hover {
+        scale: 1.05;
+        outline: 1px solid #336699;
+        padding: 0px !important;
     }
-    #latest_arriva{
+
+    
+
+    #latest_arriva,
+    #best_selling_products,
+    #most-popular-product {
         padding: 20px;
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
     }
-    .product-name{
+
+    #fashion_category, #accessories_category, #home_garden_category, #smart_phones_category{
+        padding: 20px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+    .product-name {
         font-size: 20px;
         color: #336699;
     }
-    .product-name a{
+
+    .product-name a {
+        text-decoration: none;
+
+    }
+
+   
+    .product-action-vertical a {
         text-decoration: none;
     }
+
+    .product-wrap .product-media a{
+        display: flex;
+        height: 150px;
+        width: 100%;
+    }
     .product-media img{
-        /* height: 100%; */
-        /* width: 400px; */
+        background-color: #000;
+        object-fit: contain !important; 
+    }
+    .btn-product-icon{
+        height: 35px !important;
+        width: 35px !important;
     }
 </style>

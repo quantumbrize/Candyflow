@@ -1325,51 +1325,6 @@
 
                     var swiper = new Swiper('.swiper-container-best-selling', swiperBestSelling);
 
-
-
-
-
-                    // let str = `<div class="swiper-wrapper row cols-lg-1 cols-md-3">`
-                    // // console.log(resp.data.length)
-                    // for (let i = 0; i < resp.data.length; i++) { 
-                    //     // console.log(i)
-                    //     str += `<div class="swiper-slide product-widget-wrap">`
-                    //     let row = "";
-                    //     for (let j = 0; j < 3; j++) { 
-                    //         if(resp.data[i].product_data == null){
-                    //            str += ''
-                    //         } else{
-                    //             str += `<div class="product product-widget bb-no">
-                    //                     <figure class="product-media">
-                    //                         <a href="product-details.html">
-                    //                             <img src="<?= base_url('public/uploads/product_images/') ?>${resp.data[i].product_data.product_img[0].src}">
-                    //                         </a>
-                    //                     </figure>
-                    //                     <div class="product-details">
-                    //                         <h4 class="product-name">
-                    //                             <a href="product-details.html">${resp.data[i].product_data.name}</a>
-                    //                         </h4>
-                    //                         <div class="ratings-container">
-                    //                             <div class="ratings-full">
-                    //                                 <span class="ratings" style="width: 60%;"></span>
-                    //                                 <span class="tooltiptext tooltip-top"></span>
-                    //                             </div>
-                    //                         </div>
-                    //                         <div class="product-price">
-                    //                             <ins class="new-price">$150.60</ins>
-                    //                         </div>
-                    //                     </div>
-                    //                 </div> `
-                    //         }
-
-                    //     }
-                    //     str += `</div>`
-                    // }
-                    // str += `</div> <button class="swiper-button-next"></button> <button class="swiper-button-prev"></button>`
-                    // $('#best_selling').html(str)
-
-                    // $('#table-best-selling-list-all-body').html(html)
-                    // $('#table-best-selling-list-all').DataTable();
                 } else {
                     $('#table-best-selling-list-all-body').html(`<tr >
                         <td>
@@ -1420,6 +1375,7 @@
                                             .toggleClass("w-icon-heart-full");
                                     }, 500);
                                 }
+                                get_user();
                             } else {
                                 Toastify({
                                     text: resp.message.toUpperCase(),
@@ -1531,8 +1487,6 @@
                                                 <div class="product text-center">
                                                     <figure class="product-media">
                                                         <a href="<?= base_url('product/details?id=') ?>${product.product_id}" onclick="increase_click_count('${product.product_id}')">
-                                                            <img src="${product_img}"
-                                                                alt="Product" width="300" height="338">
                                                             <img src="${product_img}"
                                                                 alt="Product" width="300" height="338">
                                                         </a>

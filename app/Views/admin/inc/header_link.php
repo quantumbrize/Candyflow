@@ -24,7 +24,8 @@
     <link href="<?= base_url() ?>public/assets_admin/css/custom.min.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="https://cdn.datatables.net/2.0.2/css/dataTables.dataTables.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-ROBdErehxIu+Y/Bgy5ZsEgGQJ14gwYpS7YCS4xGOEl0x2TRccKoE+LYhCFOShXsO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+        integrity="sha384-ROBdErehxIu+Y/Bgy5ZsEgGQJ14gwYpS7YCS4xGOEl0x2TRccKoE+LYhCFOShXsO" crossorigin="anonymous">
     <!-- Font Awesome CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -38,11 +39,11 @@
             success: function (resp) {
                 // console.log(resp)
                 if (resp.status) {
-                let newLogoSrc = `<?=base_url()?>public/uploads/logo/${resp.data.logo}`;
-                $('#daltonus_logo_meta').attr('href', newLogoSrc);
+                    let newLogoSrc = `<?= base_url() ?>public/uploads/logo/${resp.data.logo}`;
+                    $('#daltonus_logo_meta').attr('href', newLogoSrc);
 
 
-                }else{
+                } else {
                     console.log(resp)
                 }
             },
@@ -62,16 +63,16 @@
 
     if (!empty($header_link)) {
         foreach ($header_link as $link) {
-            require_once ('css/' . $link);
+            require_once('css/' . $link);
         }
     }
     ?>
-     
+
     <style>
         #alert {
             position: fixed;
             top: 80px;
-            z-index: 10000;
+            z-index: 10000000000000;
             width: 100%;
             display: flex;
             align-items: center;
@@ -142,7 +143,7 @@
             display: none;
         }
     </style>
-  
+
 </head>
 
 <body>

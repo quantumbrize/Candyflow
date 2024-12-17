@@ -26,18 +26,6 @@
     #sticky-product-img {
         object-fit: contain;
     }
-
-    .active-size {
-        /* border: 2px solid #000000 !important; */
-        /* border-radius: 2px !important; */
-        /* color: #666; */
-        color: #fff !important;
-        background-color: #336699 !important;
-    }
-
-    /* .active-size:hover {
-        border: 2px solid #000000 !important;
-    } */
      .quantity {
         background-color: transparent !important;
      }

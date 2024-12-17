@@ -86,4 +86,12 @@
     .star-rating label:hover~label {
         color: #f5b301;
     }
+
+
+    .product-media img{
+        height: 150px;
+        object-fit: contain !important;
+        background-color: #000;
+
+    }
 </style>

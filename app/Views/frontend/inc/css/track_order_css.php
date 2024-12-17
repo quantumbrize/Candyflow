@@ -28,5 +28,10 @@
         width: fit-content !important;
         color: #fff !important;
     }
-
+    .avatar-title img{
+        height: 100px;
+        width: 100px;
+        object-fit: contain;
+        margin-right: 10px;
+    }
 </style>

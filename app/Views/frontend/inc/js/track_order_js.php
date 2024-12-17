@@ -63,7 +63,7 @@
                         </div>
                         <div class="col-lg-3 col-6">
                             <p class="text-muted mb-2 text-uppercase fw-medium fs-12">Payment Status</p>
-                            <span class="bg-warning-subtle text-warning  fs-11 status" id="payment-status">${order.payment.status}</span>
+                            <span class="bg-warning-subtle fw-100 text-success">PAID</span>
                         </div>
                         <div class="col-lg-3 col-6">
                             <p class="text-muted mb-2 text-uppercase fw-medium fs-12">Total Amount</p>
@@ -98,7 +98,7 @@
                                                 </div>
                                             </div>
                                             <div class="flex-grow-1">
-                                                <h6>${item.product_details.name.substring(0, 25) + "..."}</h6>
+                                                <h6>${item.product_details.name.length > 45 ? item.product_details.name.substring(0, 45) + "..." : item.product_details.name}</h6>
                                                 <p class="text-muted mb-0">${item.product_details.category}</p>
                                             </div>
                                         </div>
@@ -111,7 +111,7 @@
                                 total_discount += parseInt(item.product_details.base_discount, 10);
                     })
                     $('#products-list').html(product_html)
-                    $('#order_amount_dtls_bx').html(` <tr>
+                    $('#order_amount_dtls_bx').html(`<tr>
                                                         <td>Sub Total</td>
                                                         <td class="text-end"> ₹ ${order.sub_total}</td>
                                                     </tr>
@@ -130,12 +130,10 @@
                                                     </tr>`)
                     $('#address_bx').html(` <h6 class="text-muted text-uppercase fs-12 mb-3">Billing Address</h6>
                                             <ul class="list-unstyled vstack gap-2 fs-13 mb-0">
-                                                <li class="fw-medium fs-14">${order.user_name}</li>
-                                                <li>${order.phone_number}</li>
-                                                <li>${order.address.locality}</li>
-                                                <li>${order.address.city}, ${order.address.district}</li>
-                                                <li>${order.address.state} , ${order.address.country}</li>
-                                                <li>PIN - ${order.address.zipcode}</li>
+                                                <li class="fw-medium fs-14"><b>Name : </b>${order.user_name}</li>
+                                                <li><b>Phone : </b>${order.phone_number}</li>
+                                                <li><b>Address : </b>${order.address.locality},  ${order.address.city}, ${order.address.district}, ${order.address.state} , ${order.address.country}</li>
+                                                <li><b>PIN : </b>${order.address.zipcode}</li>
                                             </ul>`)
                     $('#order_track').html(`<div class="col-md-2 order-tracking text-start text-md-center ps-4 ps-md-0 ${
                                                 order.order_status == 'placed' || 

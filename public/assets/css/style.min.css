@@ -11050,6 +11050,16 @@ body .product-popup {
   color: #fff;
   background-color: #336699;
 }
+.active-size{
+  background-color: #17a2b8 !important;
+  color: #fff !important;
+
+}
+.active-size.active{
+  background-color: #336699 !important;
+  color: #fff !important;
+
+}
 .product-single .product-image-swatch {
   margin-bottom: 2rem;
 }
