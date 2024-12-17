@@ -121,7 +121,7 @@
 
                         </div>
 
-                        <a href="<?= base_url() ?>" type="button" class="btn btn-success btn-hover">Continue Shopping <i
+                        <a id="con_btn" href="<?= base_url() ?>" type="button" class="btn btn-success btn-hover">Continue Shopping <i
                                 class="ri-arrow-right-line align-bottom ms-1"></i></a>
                     </div>
                 </div>

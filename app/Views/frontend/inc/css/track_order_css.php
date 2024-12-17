@@ -34,4 +34,10 @@
         object-fit: contain;
         margin-right: 10px;
     }
+    #con_btn{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: fit-content;
+    }
 </style>
