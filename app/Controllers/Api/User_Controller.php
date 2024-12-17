@@ -955,11 +955,11 @@ class User_Controller extends Api_Controller
 
             if (count($vendors) > 0) {
 
-                $VendorAuthorizationModel = new VendorAuthorizationModel();
-                foreach ($vendors as $key => $vendor) {
-                    // $this->prd($vendor['user_id']);
-                    $vendors[$key]['authorization_data'] = $VendorAuthorizationModel->where('user_id', $vendor['user_id'])->first();
-                }
+                // $VendorAuthorizationModel = new VendorAuthorizationModel();
+                // foreach ($vendors as $key => $vendor) {
+                //     // $this->prd($vendor['user_id']);
+                //     $vendors[$key]['authorization_data'] = $VendorAuthorizationModel->where('user_id', $vendor['user_id'])->first();
+                // }
 
                 $resp['status'] = true;
                 $resp['message'] = "All vendors data retrieved";

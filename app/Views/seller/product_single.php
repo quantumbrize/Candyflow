@@ -107,6 +107,10 @@
                                 <div class="flex-grow-1">
                                     <h5 class="fs-16">All Product Variants</h5>
                                 </div>
+                                <div class="flex-shrink-0 p-2" id="back_to_edit">
+                                    <!-- <a href="<?= base_url('/admin/product/bulk/edit') ?>"
+                                        class="btn btn-warning"><i class="arrow-left">&#8592;</i>Back to edit</a> -->
+                                </div>
                                 <div class="flex-shrink-0">
                                     <a href="<?= base_url('/seller/product/variant/add?p_id=' . $_GET['p_id']) ?>"
                                         class="btn btn-success">Add Variant</a>

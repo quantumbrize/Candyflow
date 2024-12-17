@@ -847,6 +847,11 @@
                                 <button type="button" class="btn btn-md btn-warning" onclick="updateStockModal('${product.product_id}')">
                                     Stock
                                 </button>
+                            </td>
+                            <td>
+                                <a href="<?= base_url('/admin/product?p_id=') ?>${product.product_id}&edit=1" type="button" class="btn btn-md btn-primary">
+                                    Variation
+                                </a>
                             </td>`;
 
                             tableBody.appendChild(newRow);

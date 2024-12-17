@@ -22,6 +22,7 @@ use App\Models\ExpartReviewModel;
 use App\Models\ReviewModel;
 use App\Models\WishlistsModel;
 use App\Models\BestSellingVendorModel;
+use App\Models\VendorAuthorizationModel;
 
 
 class Product_Controller extends Api_Controller
@@ -246,6 +247,20 @@ class Product_Controller extends Api_Controller
                             'src' => $file_src
                         ];
                         $ProductImagesModel->insert($product_image_data);
+                    }
+                }
+
+                $VendorAuthorizationModel = new VendorAuthorizationModel();
+                if (!empty($uploadedFiles['products'][$index]['authFiles'])) {
+                    foreach ($uploadedFiles['products'][$index]['authFiles'] as $file) {
+                        $file_src = $this->single_upload($file, PATH_PRODUCT_IMG);
+                        $product_auth_data = [
+                            'uid' => $this->generate_uid('VENAUTH'),
+                            'product_id' => $product_data[$index]['uid'],
+                            'authorization_img' => $file_src,
+                            'authorization_letter' => $product['authDescription']
+                        ];
+                        $VendorAuthorizationModel->insert($product_auth_data);
                     }
                 }
             }
@@ -609,7 +624,7 @@ class Product_Controller extends Api_Controller
         // $sql .= " GROUP BY product.uid;";
         // $this->prd($data['user_type']);
         if((isset($data['user_type']) && ($data['user_type'] == 'admin' || $data['user_type'] == 'seller')) || !empty($data['p_id'])){
-            
+            // $this->prd($data['v_id']);
             $sql = "SELECT
                 product.uid AS product_id,
                 product.name AS name,
@@ -687,6 +702,7 @@ class Product_Controller extends Api_Controller
 
             $products = $CommonModel->customQuery($sql);
         } else {
+            // $this->prd($data['v_id']);
             $sql = "SELECT
                 product.uid AS product_id,
                 product.name AS name,
@@ -786,6 +802,11 @@ class Product_Controller extends Api_Controller
             $ProductPricesModel = new ProductPricesModel();
             foreach ($products as $key => $product) {
                 $products[$key]->product_prices = $ProductPricesModel->where('product_id', $product->product_id)->orderBy('min_qty', 'ASC')->findAll();
+            }
+
+            $VendorAuthorizationModel = new VendorAuthorizationModel();
+            foreach ($products as $key => $product) {
+                $products[$key]->authorization_letter  = $VendorAuthorizationModel->where('product_id', $product->product_id)->first();
             }
 
             $user_id = $this->is_logedin();

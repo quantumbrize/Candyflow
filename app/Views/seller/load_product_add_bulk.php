@@ -34,6 +34,7 @@
                         <th>Price</th>
                         <th>Details</th>
                         <th>Images</th>
+                        <th>Authorization Letter</th>
                         <th>Delete</th>
                     </tr>
                 </thead>
@@ -95,6 +96,14 @@
 
                         </td>
                         <td>
+                            <!-- Button to open modal for the current row -->
+                            <button type="button" class="btn btn-md btn-primary" onclick="openAuthorizationLetterModal(this)">
+                                <i class="ri-file-text-fill"></i>
+                            </button>
+                            <!-- Modal for uploading images specific to this row -->
+
+                        </td>
+                        <td>
                             <button class="btn btn-md btn-danger" type="button" onclick="removeRow(this)">
                                 <i class="ri-delete-bin-7-line"></i>
                             </button>
@@ -127,6 +136,29 @@
                     <input type="file" id="imageInput" accept="image/*" multiple onchange="previewImages(this)">
                     <div id="imagePreviewContainer"></div>
                     <button id="submitImages" class="btn btn-success btn-lg">Submit Images</button>
+                </div>
+            </div>
+
+            <div id="authorizationLetterUploadModal" class="modal" style="display:none;">
+                <div class="modal-content">
+                    <span class="close-button" id="closeAuthorizationLetterModal" style="cursor:pointer;">&times;</span>
+                    <h4>Upload Authorization Letter <small>*</small></h4>
+                    <div class="mb-3">
+                        <label for="authImage" class="form-label">Upload
+                            Document</label>
+                        <input type="file" class="form-control"
+                            id="authImage" multiple
+                            required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="authDescription"
+                            class="form-label">Description</label>
+                        <textarea class="form-control"
+                            id="authDescription" rows="3"
+                            placeholder="Enter your description here"></textarea>
+                    </div>
+                    <!-- <div id="imagePreviewContainer"></div> -->
+                    <button id="submitAuthLetter" class="btn btn-success btn-lg">Submit Letter</button>
                 </div>
             </div>
 

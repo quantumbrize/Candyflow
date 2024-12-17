@@ -769,7 +769,10 @@
         $.ajax({
             url: "<?= base_url('/api/product') ?>",
             type: "GET",
-            data: {v_id:user_id},
+            data: {v_id:user_id,
+                user_type:'seller'
+
+            },
             beforeSend: function () {
                     // $('#product-table-body').html(`<tr >
                     //         <td colspan="9"  style="text-align:center;">
@@ -849,6 +852,11 @@
                                 <button type="button" class="btn btn-md btn-warning" onclick="updateStockModal('${product.product_id}')">
                                     Stock
                                 </button>
+                            </td>
+                            <td>
+                                <a href="<?= base_url('/admin/product?p_id=') ?>${product.product_id}&edit=1" type="button" class="btn btn-md btn-primary">
+                                    Variation
+                                </a>
                             </td>`;
 
                             tableBody.appendChild(newRow);
