@@ -184,8 +184,12 @@
         display: flex;
         height: 150px;
         width: 100%;
+        justify-content: center;
+        align-items: center;
     }
     .product-media img{
+        height: 150px;
+        width: 150px;
         background-color: #000;
         object-fit: contain !important; 
     }

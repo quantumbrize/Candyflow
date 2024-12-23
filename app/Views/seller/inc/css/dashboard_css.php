@@ -152,4 +152,30 @@
         /* Adjust for larger modals if needed */
         margin: 1.75rem auto;
     }
+
+    .marquee-container {
+        background-color: #f8d7da;
+        border: 1px solid #f5c6cb;
+        color: #721c24;
+        padding: 10px;
+        overflow: hidden;
+        position: relative;
+        width: 100%;
+    }
+
+    .marquee {
+        display: inline-block;
+        white-space: nowrap;
+        animation: marquee 10s linear infinite;
+    }
+
+    @keyframes marquee {
+        from {
+            transform: translateX(100%);
+        }
+
+        to {
+            transform: translateX(-100%);
+        }
+    }
 </style>

@@ -34,6 +34,7 @@
 
     .product-media img {
         height: 150px;
+        width: 150px;
         object-fit: contain !important;
         background-color: #000;
 

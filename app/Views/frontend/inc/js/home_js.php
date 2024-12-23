@@ -602,7 +602,7 @@
                     if (resp.data.length > 0) {
                         console.log('phone', resp)
                         let html = ''
-                        let str = ` <div class="swiper-wrapper row cols-xl-4 cols-lg-3 cols-2">`
+                        let str = ` <div class="swiper-wrapper row cols-xl-3 cols-lg-3 cols-2">`
                         // console.log(resp.data.length)
                         for (let i = 0; i < resp.data.length; i += 2) {
                             // console.log(i)
@@ -646,24 +646,24 @@
                             }
                             str += `</div>`
                         }
-                        str += `<div class="swiper-pagination"></div>`
+                        // str += `<div class="swiper-pagination"></div>`
                         $('#fashion_category').html(str)
-                        new Swiper('#fashion_category', {
-                            spaceBetween: 20,
-                            slidesPerView: 2,
-                            pagination: {
-                                el: '.swiper-pagination',
-                                clickable: true
-                            },
-                            breakpoints: {
-                                992: {
-                                    slidesPerView: 3
-                                },
-                                1200: {
-                                    slidesPerView: 4
-                                }
-                            }
-                        });
+                        // new Swiper('#fashion_category', {
+                        //     spaceBetween: 20,
+                        //     slidesPerView: 2,
+                        //     pagination: {
+                        //         el: '.swiper-pagination',
+                        //         clickable: true
+                        //     },
+                        //     breakpoints: {
+                        //         992: {
+                        //             slidesPerView: 3
+                        //         },
+                        //         1200: {
+                        //             slidesPerView: 4
+                        //         }
+                        //     }
+                        // });
 
                         // $('#table-best-selling-list-all-body').html(html)
 
@@ -746,22 +746,22 @@
                         }
                         str += `<div class="swiper-pagination"></div>`
                         $('#home_garden_category').html(str)
-                        new Swiper('#home_garden_category', {
-                            spaceBetween: 20,
-                            slidesPerView: 2,
-                            pagination: {
-                                el: '.swiper-pagination',
-                                clickable: true
-                            },
-                            breakpoints: {
-                                992: {
-                                    slidesPerView: 3
-                                },
-                                1200: {
-                                    slidesPerView: 4
-                                }
-                            }
-                        });
+                        // new Swiper('#home_garden_category', {
+                        //     spaceBetween: 20,
+                        //     slidesPerView: 2,
+                        //     pagination: {
+                        //         el: '.swiper-pagination',
+                        //         clickable: true
+                        //     },
+                        //     breakpoints: {
+                        //         992: {
+                        //             slidesPerView: 3
+                        //         },
+                        //         1200: {
+                        //             slidesPerView: 4
+                        //         }
+                        //     }
+                        // });
 
                         // $('#table-best-selling-list-all-body').html(html)
 
@@ -844,22 +844,22 @@
                         }
                         str += `<div class="swiper-pagination"></div>`
                         $('#smart_phones_category').html(str)
-                        new Swiper('#smart_phones_category', {
-                            spaceBetween: 20,
-                            slidesPerView: 2,
-                            pagination: {
-                                el: '.swiper-pagination',
-                                clickable: true
-                            },
-                            breakpoints: {
-                                992: {
-                                    slidesPerView: 3
-                                },
-                                1200: {
-                                    slidesPerView: 4
-                                }
-                            }
-                        });
+                        // new Swiper('#smart_phones_category', {
+                        //     spaceBetween: 20,
+                        //     slidesPerView: 2,
+                        //     pagination: {
+                        //         el: '.swiper-pagination',
+                        //         clickable: true
+                        //     },
+                        //     breakpoints: {
+                        //         992: {
+                        //             slidesPerView: 3
+                        //         },
+                        //         1200: {
+                        //             slidesPerView: 4
+                        //         }
+                        //     }
+                        // });
 
                         // $('#table-best-selling-list-all-body').html(html)
 
@@ -942,22 +942,22 @@
                         }
                         str += `<div class="swiper-pagination"></div>`
                         $('#accessories_category').html(str)
-                        new Swiper('#accessories_category', {
-                            spaceBetween: 20,
-                            slidesPerView: 2,
-                            pagination: {
-                                el: '.swiper-pagination',
-                                clickable: true
-                            },
-                            breakpoints: {
-                                992: {
-                                    slidesPerView: 3
-                                },
-                                1200: {
-                                    slidesPerView: 4
-                                }
-                            }
-                        });
+                        // new Swiper('#accessories_category', {
+                        //     spaceBetween: 20,
+                        //     slidesPerView: 2,
+                        //     pagination: {
+                        //         el: '.swiper-pagination',
+                        //         clickable: true
+                        //     },
+                        //     breakpoints: {
+                        //         992: {
+                        //             slidesPerView: 3
+                        //         },
+                        //         1200: {
+                        //             slidesPerView: 4
+                        //         }
+                        //     }
+                        // });
 
                         // $('#table-best-selling-list-all-body').html(html)
 

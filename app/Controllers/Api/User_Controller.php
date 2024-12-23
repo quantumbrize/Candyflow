@@ -254,8 +254,12 @@ class User_Controller extends Api_Controller
 
     private function get_user()
     {
-        $user_id = !empty($this->is_logedin()) ? $this->is_logedin() : '';
-        // echo $user_id;
+        $logged_in_user = $this->is_logedin();
+        $logged_in_seller = $this->is_seller_logedin();
+        $user_id = !empty($logged_in_user) || !empty($logged_in_seller) ? ($logged_in_user ?: $logged_in_seller) : '';
+
+        $user_id = !empty($logged_in_seller) ? $this->get_user_id_by_seller_id($user_id) : '';
+        // $this->prd($user_id);
         $resp = [
             "status" => false,
             "message" => "Data Not Found",
@@ -1060,6 +1064,8 @@ class User_Controller extends Api_Controller
             "data" => []
         ];
 
+        // $this->prd($data);  
+
         try {
             $uploadedFiles = $this->request->getFiles();
             if (empty($data['user_name'])) {
@@ -1096,7 +1102,11 @@ class User_Controller extends Api_Controller
                 $vendor_data = [
                     "uid" => $this->generate_uid(UID_VENDOR),
                     "user_id" => $user_data['uid'],
-                    "status" => 'active'
+                    "status" => 'active',
+                    "gst_no" => $data['gst'],
+                    "trade_no" => $data['trade'],
+                    "pan_no" => $data['pan'],
+                    "aadhar_no" => $data['aadhar']
                 ];
                 $wallet_data = [
                     "uid" => $this->generate_uid('VW'),
@@ -1518,6 +1528,12 @@ class User_Controller extends Api_Controller
         }
 
         return $resp;
+    }
+
+    private function get_user_id_by_seller_id($seller_id){
+        $VendorModel = new VendorModel();
+        $user = $VendorModel->where('uid', $seller_id)->first();
+        return $user['user_id'];
     }
 
     private function update_social($data)
@@ -2091,7 +2107,7 @@ class User_Controller extends Api_Controller
                 return [
                     "status" => false,
                     "message" => '',
-                    "data" => $response 
+                    "data" => $response
                 ];
             }
         } catch (\Exception $e) {

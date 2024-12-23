@@ -1,6 +1,33 @@
 <script>
+    isAuthSeller();
+    function isAuthSeller() {
 
 
+        $.ajax({
+            url: "<?= base_url('/api/user') ?>",
+            type: "GET",
+            success: function (resp) {
+                // console.log(resp)
+                if (resp.status) {
+                    console.log(resp)
+                    if (resp.user_data.is_auth == 'true') {
+                        $('#is_auth').show()
+                        // is_auth = true
+                    } else {
+                        $('#is_auth').hide()
+                        // is_auth = false
+
+                    }
+
+                } else {
+                    console.log(resp)
+                }
+            },
+            error: function (err) {
+                console.log(err)
+            },
+        })
+    }
     $(document).ready(function () {
         total_product()
         total_order()
@@ -351,9 +378,9 @@
             const ifsc = $('#ifsc_val').val();
             const account_number = $('#acc_val').val();
             const formData = new FormData();
-            $.each($('#authImage')[0].files, function (index, file) {
-                formData.append('authImage[]', file);
-            });
+            // $.each($('#authImage')[0].files, function (index, file) {
+            //     formData.append('authImage[]', file);
+            // });
 
             formData.append('authDescription', $('#authDescription').val());
             formData.append('user_id', user_id);
@@ -373,18 +400,18 @@
             }
 
             // Validate inputs for authorization letter
-            if (!$('#authImage').val()) {
-                Toastify({
-                    text: 'Please upload an authorization image.'.toUpperCase(),
-                    duration: 2000,
-                    position: "center",
-                    stopOnFocus: true,
-                    style: {
-                        background: 'red',
-                    },
-                }).showToast();
-                return;
-            }
+            // if (!$('#authImage').val()) {
+            //     Toastify({
+            //         text: 'Please upload an authorization image.'.toUpperCase(),
+            //         duration: 2000,
+            //         position: "center",
+            //         stopOnFocus: true,
+            //         style: {
+            //             background: 'red',
+            //         },
+            //     }).showToast();
+            //     return;
+            // }
 
             // Step 1: Update Bank Details
             $.ajax({
@@ -402,41 +429,19 @@
                 success: function (resp) {
                     if (resp.status) {
                         console.log("Bank details updated successfully!");
-
-                        // Step 2: Upload Authorization Letter
-                        $.ajax({
-                            url: "<?= base_url('/api/add/vendor-authorization') ?>",
-                            type: "POST",
-                            data: formData,
-                            contentType: false,
-                            processData: false,
-                            beforeSend: function () {
-                                $('#finishProcess').text('Uploading Authorization Letter...');
+                        Toastify({
+                            text: 'Process completed successfully!'.toUpperCase(),
+                            duration: 2000,
+                            position: "center",
+                            stopOnFocus: true,
+                            style: {
+                                background: 'green',
                             },
-                            success: function (resp) {
-                                if (resp.status) {
-                                    Toastify({
-                                        text: 'Process completed successfully!'.toUpperCase(),
-                                        duration: 2000,
-                                        position: "center",
-                                        stopOnFocus: true,
-                                        style: {
-                                            background: 'green',
-                                        },
-                                    }).showToast();
-                                    // Reset the form and steps
-                                    resetForm();
-                                    $('#authorizationLetterModal').modal('hide');
-                                    isAuthSeller();
-                                } else {
-                                    alert(`Failed to upload authorization letter: ${resp.message}`);
-                                }
-                            },
-                            error: function (err) {
-                                console.error("Error uploading authorization letter:", err);
-                                alert("An error occurred while uploading the authorization letter.");
-                            }
-                        });
+                        }).showToast();
+                        // Reset the form and steps
+                        resetForm();
+                        $('#authorizationLetterModal').modal('hide');
+                        isAuthSeller();
                     } else {
                         alert(`Failed to update bank details: ${resp.message}`);
                     }

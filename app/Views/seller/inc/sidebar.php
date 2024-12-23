@@ -19,8 +19,8 @@
         },
     })
     isAuthSeller();
-
     function isAuthSeller() {
+
 
         $.ajax({
             url: "<?= base_url('/api/user') ?>",
@@ -31,8 +31,11 @@
                     console.log(resp)
                     if (resp.user_data.is_auth == 'true') {
                         $('.auth').show()
+                        // is_auth = true
                     } else {
                         $('.auth').hide()
+                        // is_auth = false
+
                     }
 
                 } else {
@@ -122,7 +125,6 @@
     </div>
     <div id="scrollbar">
         <div class="container-fluid">
-
 
             <div id="two-column-menu">
             </div>

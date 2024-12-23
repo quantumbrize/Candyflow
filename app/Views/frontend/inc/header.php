@@ -80,6 +80,14 @@
         z-index: 99;
         color: black;
     }
+
+    ul.megamenu {
+        display: none;
+    }
+
+    .right-angle-icon.rotated {
+        transform: rotate(90deg);
+    }
 </style>
 
 
@@ -437,85 +445,73 @@
             }
 
 
-
+            
 
             function catalog() {
                 $.ajax({
                     url: "<?= base_url('api/categories/all') ?>",
                     type: "GET",
                     success: function (resp) {
-
                         if (resp.status) {
                             console.log('catalog', resp.data);
-                            let subCatIndex = 0;
 
                             $.each(resp.data, function (index1, parent) {
-                                // Construct main category HTML for both desktop and mobile
-                                var main_html = `
-                            <li id="catalog_subCategory${index1}" class="right-angle-parent">
-                                <a href="<?= base_url('product/category?c_id=') ?>${parent.uid}">
-                                    <img class="cat-img-size" src="<?= base_url('public/uploads/category_images/') ?>${parent.img_path}" alt=""><b> ${parent.name}</b>
-                                </a>
-                            </li>`;
+                                var main_html = `<li id="catalog_subCategory${index1}" class="right-angle-parent">
+                                                <a href="<?= base_url('product/category?c_id=') ?>${parent.uid}">
+                                                    <img class="cat-img-size" src="<?= base_url('public/uploads/category_images/') ?>${parent.img_path}" alt="">
+                                                    <b>${parent.name}</b>
+                                                </a>
+                                            </li>`;
 
-                                var main_html_mob = `
-                            <li id="catalog_subCategory_mob${index1}" class="right-angle-parent">
-                                <a>
-                                    <img class="cat-img-size" src="<?= base_url('public/uploads/category_images/') ?>${parent.img_path}" alt=""> ${parent.name}
-                                </a>
-                            </li>`;
+                                var main_html_mob = `<li id="catalog_subCategory_mob${index1}" class="right-angle-parent">
+                                                    <a href="<?= base_url('product/category?c_id=') ?>${parent.uid}">
+                                                        <img class="cat-img-size" src="<?= base_url('public/uploads/category_images/') ?>${parent.img_path}" alt=""> 
+                                                        ${parent.name}
+                                                    </a>
+                                                </li>`;
 
                                 $('#catalog_category').append(main_html);
                                 $('#catalog_category_mob').append(main_html_mob);
 
-                                // Check for subcategories
+                                // Subcategories
                                 if (Array.isArray(parent.subCategories) && parent.subCategories.length > 0) {
-                                    let html = `<i class="fas fa-chevron-right right-angle-icon"></i>
-                                        <ul class="megamenu" id="html_sub_cat_${index1}">
-                                        </ul>`;
+                                    let subcat_html = `<i class="fas fa-chevron-right right-angle-icon"></i>
+                                                    <ul class="megamenu" id="html_sub_cat_${index1}" style="display: none;">
+                                                    </ul>`;
 
-                                    let html_mob = `<i class="fas fa-chevron-right right-angle-icon"></i>
-                                            <ul id="html_sub_cat_mob_${index1}">
-                                            </ul>`;
+                                    let subcat_html_mob = `<i class="fas fa-chevron-right right-angle-icon"></i>
+                                                    <ul id="html_sub_cat_mob_${index1}" style="display: none;">
+                                                    </ul>`;
 
-                                    $('#catalog_subCategory' + index1).append(html);
-                                    $('#catalog_subCategory_mob' + index1).append(html_mob);
+                                    $('#catalog_subCategory' + index1).append(subcat_html);
+                                    $('#catalog_subCategory_mob' + index1).append(subcat_html_mob);
 
                                     $.each(parent.subCategories, function (index2, subCat) {
-                                        // Subcategory structure for desktop
                                         var html_sub = `
-                                    <li>
-                                        <a href="<?= base_url('product/category?c_id=') ?>${subCat.uid}">
-                                            <h4 class="menu-title">${subCat.name}</h4>
-                                        </a>
-                                        <hr class="divider">
-                                        <ul id="child_sub_cat_${index1}_${index2}"></ul>
-                                    </li>`;
+                                            <li>
+                                                <a href="<?= base_url('product/category?c_id=') ?>${subCat.uid}">
+                                                    <h4 class="menu-title">${subCat.name}</h4>
+                                                </a>
+                                            </li>`;
 
-                                        // Subcategory structure for mobile
-                                        var html_sub_mob = `
-                                    <li>
-                                        <a href="#">${subCat.name}</a>
-                                        <ul id="child_sub_cat_mob_${index1}_${index2}"></ul>
-                                    </li>`;
+                                                        var html_sub_mob = `
+                                            <li>
+                                                <a href="<?= base_url('product/category?c_id=') ?>${subCat.uid}">${subCat.name}</a>
+                                            </li>`;
 
                                         $('#html_sub_cat_' + index1).append(html_sub);
                                         $('#html_sub_cat_mob_' + index1).append(html_sub_mob);
-
-                                        // Check for child subcategories
-                                        if (Array.isArray(subCat.subCategories) && subCat.subCategories.length > 0) {
-                                            let html2 = '';
-                                            let html2_mob = '';
-
-                                            $.each(subCat.subCategories, function (index3, childSubCat) {
-                                                html2 += `<li><a href="<?= base_url('product/category?c_id=') ?>${childSubCat.uid}">${childSubCat.name}</a></li>`;
-                                                html2_mob += `<li><a href="<?= base_url('product/category?c_id=') ?>${childSubCat.uid}">${childSubCat.name}</a></li>`;
-                                            });
-
-                                            $('#child_sub_cat_' + index1 + '_' + index2).html(html2);
-                                            $('#child_sub_cat_mob_' + index1 + '_' + index2).html(html2_mob);
-                                        }
                                     });
+                                }
+                            });
+
+                            // Event delegation for showing/hiding subcategories
+                            $(document).on('click', '.right-angle-parent > a', function (e) {
+                                e.preventDefault();
+                                const subMenu = $(this).siblings('ul');
+                                if (subMenu.length) {
+                                    subMenu.slideToggle(); // Toggle visibility
+                                    $(this).find('.right-angle-icon').toggleClass('rotated'); // Add rotation for icon if needed
                                 }
                             });
                         } else {
@@ -527,6 +523,7 @@
                     }
                 });
             }
+
 
             function redirect_cart_page() {
                 // alert(user_id)
