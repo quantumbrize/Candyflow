@@ -53,7 +53,7 @@ class Order_Controller extends Main_Controller
                 $orderData = [
                     "uid" => $this->generate_uid(UID_ORDERS),
                     "user_id" => $data['user_data']['user']['uid'],
-                    "shipping_address_id" => $data['user_data']['address']['uid'],
+                    "shipping_address_id" => $data['address_id'],
                     "shipping_method" => "free",
                     "user_name" => $data['user_data']['name'],
                     "phone_number" => $data['user_data']['number'],
@@ -63,6 +63,7 @@ class Order_Controller extends Main_Controller
                     "sub_total" => $data['user_cart']['subTotal'],
                     "total" => $data['user_cart']['total'],
                     "payment_type" => 'cod',
+                    "payment_status" => 'paid',
                     "created_at" => date('Y-m-d H:i:s'),
                 ];
                 $OrdersIsSaved = $OrdersModel->insert($orderData);
@@ -71,7 +72,8 @@ class Order_Controller extends Main_Controller
                 $paymentData = [
                     "uid" => $this->generate_uid(UID_PAYMENTS),
                     "order_id" => $orderData['uid'],
-                    "type" => $data['payment_data']['method']
+                    "type" => $data['payment_data']['method'],
+                    "status" => "paid"
                 ];
                 $PaymentsIsSaved = $PaymentsModel->insert($paymentData);
 
@@ -256,6 +258,7 @@ class Order_Controller extends Main_Controller
             $sql = "SELECT
                         orders.uid AS order_id,
                         orders.user_id,
+                        orders.shipping_address_id,
                         orders.shipping_method,
                         orders.user_name,
                         orders.phone_number,
@@ -285,7 +288,7 @@ class Order_Controller extends Main_Controller
             $order['payment'] = !empty($order['payment']) ? $order['payment'][0] : null;
 
             $AddressModel = new AddressModel();
-            $order['address'] = $AddressModel->where('user_id', $order['user_id'])->find();
+            $order['address'] = $AddressModel->where('uid', $order['shipping_address_id'])->find();
             $order['address'] = !empty($order['address']) ? $order['address'][0] : null;
 
             $OrderItemsModel = new OrderItemsModel();

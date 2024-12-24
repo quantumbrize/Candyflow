@@ -56,13 +56,25 @@
                                     </div>
                                 </li>`)
 
-                    $('#user_addr_bx').html(`<ul class="list-unstyled vstack gap-2 fs-13 mb-0">
-                                                <li class="fw-medium fs-14">${order.user_name}</li>
-                                                <li>${order.address.locality}</li>
-                                                <li>${order.address.city}, ${order.address.district}</li>
-                                                <li>${order.address.state} , ${order.address.country}</li>
-                                                <li>PIN - ${order.address.zipcode}</li>
-                                            </ul>`)
+                    if (order.address.type == 'primary') {
+                        $('#user_addr_bx').html(`<ul class="list-unstyled vstack gap-2 fs-13 mb-0">
+                            <li class="fw-medium fs-14">${order.user_name}</li>
+                            <li>Phone - ${order.phone_number}</li>
+                            <li>Landmark - ${order.address.locality}</li>
+                            <li>City - ${order.address.city}, Street Address - ${order.address.district}</li>
+                            <li>State - ${order.address.state} , Country - ${order.address.country}</li>
+                            <li>Postal Code - ${order.address.zipcode}</li>
+                        </ul>`)
+                    } else {
+                        $('#user_addr_bx').html(`<ul class="list-unstyled vstack gap-2 fs-13 mb-0">
+                            <li class="fw-medium fs-14">User Name  - ${order.address.business_good_name}</li>
+                            <li class="fw-medium fs-14">Business Name - ${order.address.business_name}</li>
+                            <li>Phone - ${order.phone_number}</li>
+                            <li>email - ${order.address.business_email}</li>
+                            <li>address - ${order.address.business_address}</li>
+                            <li>Postal Code - ${order.address.zipcode}</li>
+                        </ul>`)
+                    }
 
 
                     $('#order_id').html(order.order_id)
@@ -74,20 +86,20 @@
 
                         if (vendor_id == item.product_details.vendor_id) {
                             let actual_price = ''
-                        $.each(item.product_details.product_prices, function(index, prices) {
-                            // console.log(prices)
-                            if(parseInt(item.qty)>= parseInt(prices.min_qty) && parseInt(item.qty) <= parseInt(prices.max_qty)){
-                                actual_price = prices.price
-                            }
-                            
-                        })
-                        let qty = item.qty; // Quantity of the product
-                        let base_discount = parseInt(item.product_details.base_discount); // Discount percentage
-                        let tax = parseInt(item.product_details.tax); // Tax percentage
-                        let discounted_price = actual_price * qty - ((actual_price * qty) * base_discount / 100);
-                        let tax_amount = discounted_price * tax / 100;
-                        let final_price = discounted_price + tax_amount;
-                        delivery_charge += parseInt(item.product_details.delivery_charge)
+                            $.each(item.product_details.product_prices, function (index, prices) {
+                                // console.log(prices)
+                                if (parseInt(item.qty) >= parseInt(prices.min_qty) && parseInt(item.qty) <= parseInt(prices.max_qty)) {
+                                    actual_price = prices.price
+                                }
+
+                            })
+                            let qty = item.qty; // Quantity of the product
+                            let base_discount = parseInt(item.product_details.base_discount); // Discount percentage
+                            let tax = parseInt(item.product_details.tax); // Tax percentage
+                            let discounted_price = actual_price * qty - ((actual_price * qty) * base_discount / 100);
+                            let tax_amount = discounted_price * tax / 100;
+                            let final_price = discounted_price + tax_amount;
+                            delivery_charge += parseInt(item.product_details.delivery_charge)
                             html += `    <tr>
                                             <td>
                                                 <div class="d-flex">
@@ -111,12 +123,12 @@
                                             <td>${item.product_details.tax}%</td>
                                             <td>
                                                 <select class="form-select form-select-sm" onChange="change_order_item_status('${item.uid}')" id="status_slc_${item.uid}">
-                                                    <option value="placed" ${item.status == 'placed' ? 'selected' : '' }>Placed</option>
-                                                    <option value="confirmed" ${item.status == 'confirmed' ? 'selected' : '' }>Confirmed</option>
-                                                    <option value="shipped" ${item.status == 'shipped' ? 'selected' : '' }>Shipped</option>
-                                                    <option value="cancelled" ${item.status == 'cancelled' ? 'selected' : '' }>Cancelled</option>
-                                                    <option value="delivered" ${item.status == 'delivered' ? 'selected' : '' }>Delivered</option>
-                                                    <option value="returned" ${item.status == 'returned' ? 'selected' : '' }>Returned</option>
+                                                    <option value="placed" ${item.status == 'placed' ? 'selected' : ''}>Placed</option>
+                                                    <option value="confirmed" ${item.status == 'confirmed' ? 'selected' : ''}>Confirmed</option>
+                                                    <option value="shipped" ${item.status == 'shipped' ? 'selected' : ''}>Shipped</option>
+                                                    <option value="cancelled" ${item.status == 'cancelled' ? 'selected' : ''}>Cancelled</option>
+                                                    <option value="delivered" ${item.status == 'delivered' ? 'selected' : ''}>Delivered</option>
+                                                    <option value="returned" ${item.status == 'returned' ? 'selected' : ''}>Returned</option>
                                                 </select>
                                             </td>
                                             <td class="fw-medium text-end">
@@ -160,25 +172,25 @@
 
     }
 
-    function change_order_item_status(order_item_id){
+    function change_order_item_status(order_item_id) {
 
 
         $.ajax({
-            url: "<?= base_url('/api/order/item/status/update')?>",
+            url: "<?= base_url('/api/order/item/status/update') ?>",
             type: "GET",
             data: {
                 order_item_id: order_item_id,
-                status : $(`#status_slc_${order_item_id}`).val()
+                status: $(`#status_slc_${order_item_id}`).val()
             },
-            beforeSend: function(){},
-            success: function(resp){
+            beforeSend: function () { },
+            success: function (resp) {
                 html = ''
-                if(resp.status){
+                if (resp.status) {
                     html += `<div class="alert alert-success alert-dismissible alert-label-icon label-arrow fade show material-shadow" role="alert">
                                 <i class="ri-checkbox-circle-fill label-icon"></i>${resp.message}
                                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                             </div>`
-                }else{
+                } else {
                     html += `<div class="alert alert-warning alert-dismissible alert-label-icon label-arrow fade show material-shadow" role="alert">
                                 <i class="ri-alert-line label-icon"></i><strong>Warning</strong> - ${resp.message}
                                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -186,7 +198,7 @@
                 }
                 $('#alert').html(html)
             },
-            error: function(err){
+            error: function (err) {
                 console.error(err)
             }
         })

@@ -18,49 +18,43 @@
                                     <td>${item.email}</td>
                                     <td>${item.number}</td>
                                     <td>
-                                        <a href="<?= base_url('public/uploads/user_images/')?>${item.user_img}" download>
+                                        <a href="<?= base_url('public/uploads/user_images/') ?>${item.user_img}" download>
                                             <i style="cursor: pointer;" class="ri-download-line text-primary d-inline-block download-item-btn fs-16"></i>
                                         </a>
-                                        <img src="<?= base_url('public/uploads/user_images/')?>${item.user_img}" class="user_documents" alt="Image not found">
+                                        <img src="<?= base_url('public/uploads/user_images/') ?>${item.user_img}" class="user_documents" alt="Image not found">
                                     </td>
 
                                     <td>
-                                        <a href="<?= base_url('public/uploads/user_documents/')?>${item.signature_img}" download>
+                                        <a href="<?= base_url('public/uploads/user_documents/') ?>${item.signature_img}" download>
                                             <i style="cursor: pointer;" class="ri-download-line text-primary d-inline-block download-item-btn fs-16"></i>
                                         </a>
-                                        <img src="<?= base_url('public/uploads/user_documents/')?>${item.signature_img}" class="user_documents" alt="Signature not found">
+                                        <img src="<?= base_url('public/uploads/user_documents/') ?>${item.signature_img}" class="user_documents" alt="Signature not found">
                                     </td>
                                     <td>
-                                        <a href="<?= base_url('public/uploads/user_documents/')?>${item.pan_img}" download>
+                                        <a href="<?= base_url('public/uploads/user_documents/') ?>${item.pan_img}" download>
                                             <i style="cursor: pointer;" class="ri-download-line text-primary d-inline-block download-item-btn fs-16"></i>
                                         </a>
-                                        <img src="<?= base_url('public/uploads/user_documents/')?>${item.pan_img}" class="user_documents" alt="Pan card not found">
+                                        <img src="<?= base_url('public/uploads/user_documents/') ?>${item.pan_img}" class="user_documents" alt="Pan card not found">
                                     </td>
                                     <td>
-                                        <a href="<?= base_url('public/uploads/user_documents/')?>${item.aadhar_img}" download>
+                                        <a href="<?= base_url('public/uploads/user_documents/') ?>${item.aadhar_img}" download>
                                             <i style="margin-left: 10px;cursor: pointer;" class="ri-download-line text-primary d-inline-block download-item-btn fs-16"></i>
                                         </a>
-                                        <img src="<?= base_url('public/uploads/user_documents/')?>${item.aadhar_img}" class="user_documents" alt="Aadhar card not found">
+                                        <img src="<?= base_url('public/uploads/user_documents/') ?>${item.aadhar_img}" class="user_documents" alt="Aadhar card not found">
                                     </td>
                                     <td>
-                                        <a href="<?= base_url('public/uploads/user_documents/')?>${item.gst}" download>
+                                        <a href="<?= base_url('public/uploads/user_documents/') ?>${item.gst}" download>
                                             <i style="margin-left: 10px;cursor: pointer;" class="ri-download-line text-primary d-inline-block download-item-btn fs-16"></i>
                                         </a>
-                                        <img src="<?= base_url('public/uploads/user_documents/')?>${item.gst}" class="user_documents" alt="Aadhar card not found">
+                                        <img src="<?= base_url('public/uploads/user_documents/') ?>${item.gst}" class="user_documents" alt="Aadhar card not found">
                                     </td>
                                     <td>
-                                        <a href="<?= base_url('public/uploads/user_documents/')?>${item.tread_licence}" download>
+                                        <a href="<?= base_url('public/uploads/user_documents/') ?>${item.tread_licence}" download>
                                             <i style="margin-left: 10px;cursor: pointer;" class="ri-download-line text-primary d-inline-block download-item-btn fs-16"></i>
                                         </a>
-                                        <img src="<?= base_url('public/uploads/user_documents/')?>${item.tread_licence}" class="user_documents" alt="Aadhar card not found">
+                                        <img src="<?= base_url('public/uploads/user_documents/') ?>${item.tread_licence}" class="user_documents" alt="Aadhar card not found">
                                     </td>
-                                     <td>
-                                       <select class="form-control" id="user_status_${item.user_id}" onchange="update_status('${item.user_id}')">
-                                            <option value="${item.status}">${item.status}</option>
-                                            <option value="active">active</option>
-                                            <option value="inactive">inactive</option>
-                                       </select>
-                                    </td>
+                                    
 
                                     <td>
                                        ${item.gst_no}
@@ -74,7 +68,28 @@
                                     <td>
                                        ${item.pan_no}   
                                     </td>
-
+                                     <td>
+                                       ${item.bank ? item.bank.user_name : ''}   
+                                    </td>
+                                     <td>
+                                       ${item.bank ? item.bank.account_number : ''}   
+                                    </td>
+                                     <td>
+                                       ${item.bank ? item.bank.ifsc : ''}   
+                                    </td>
+                                     <td>
+                                        ${item.bank ? `<a href="<?= base_url('public/uploads/user_documents/') ?>${item.bank ? item.bank.bank_img : ''}" download>
+                                            <i style="margin-left: 10px;cursor: pointer;" class="ri-download-line text-primary d-inline-block download-item-btn fs-16"></i>
+                                        </a>
+                                        <img src="<?= base_url('public/uploads/user_documents/') ?>${item.bank ? item.bank.bank_img : ''}" class="user_documents" alt="Aadhar card not found">` : ''}
+                                    </td>
+                                    <td>
+                                       <select class="form-control" id="user_status_${item.user_id}" onchange="update_status('${item.user_id}')">
+                                            <option value="${item.status}">${item.status}</option>
+                                            <option value="active">active</option>
+                                            <option value="inactive">inactive</option>
+                                       </select>
+                                    </td>
                                     <td>
                                         <i 
                                             style="margin-right: 20px; cursor: pointer;"
@@ -101,40 +116,40 @@
 
     }
 
-    function update_status(user_id){
-        let user_status = $('#user_status_'+user_id).val()
+    function update_status(user_id) {
+        let user_status = $('#user_status_' + user_id).val()
         $.ajax({
-                url: "<?= base_url('/api/update/user/status') ?>",
-                type: 'POST',
-                data: {
-                    user_id: user_id,
-                    user_status: user_status,
-                },
-                beforeSend: function () { },
-                success: function (resp) {
-                    console.log(resp);
-                        let html = ''
-                    if (resp.status) {
-                        html = `<div class="alert alert-success alert-dismissible alert-label-icon label-arrow fade show material-shadow" role="alert">
+            url: "<?= base_url('/api/update/user/status') ?>",
+            type: 'POST',
+            data: {
+                user_id: user_id,
+                user_status: user_status,
+            },
+            beforeSend: function () { },
+            success: function (resp) {
+                console.log(resp);
+                let html = ''
+                if (resp.status) {
+                    html = `<div class="alert alert-success alert-dismissible alert-label-icon label-arrow fade show material-shadow" role="alert">
                                     <i class="ri-checkbox-circle-fill label-icon"></i>${resp.message}
                                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                 </div>`
-                        $('#alert').html(html)
-                        load_vendors();
-                    } else {
-                        html = `<div class="alert alert-warning alert-dismissible alert-label-icon label-arrow fade show material-shadow" role="alert">
+                    $('#alert').html(html)
+                    load_vendors();
+                } else {
+                    html = `<div class="alert alert-warning alert-dismissible alert-label-icon label-arrow fade show material-shadow" role="alert">
                                 <i class="ri-alert-line label-icon"></i><strong>Warning</strong> - ${resp.message}
                                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                             </div>`
-                        $('#alert').html(html)
-                    }
-                    
-                },
-                error: function (err) {
-                    console.log(err)
+                    $('#alert').html(html)
                 }
 
-            })
+            },
+            error: function (err) {
+                console.log(err)
+            }
+
+        })
 
     }
 
@@ -152,7 +167,7 @@
         formData.append('number', $('#number').val());
         formData.append('email', $('#email').val());
         formData.append('password', $('#password').val());
-        
+
 
         $.each($('#file-input1')[0].files, function (index, file) {
             formData.append('user_img[]', file);
@@ -209,27 +224,27 @@
 
     })
 
-    function open_staff(staff_id){
+    function open_staff(staff_id) {
         // alert(staff_id)
         $.ajax({
             url: "<?= base_url('/api/seller') ?>",
             type: "GET",
-            data:{user_id:staff_id},
+            data: { user_id: staff_id },
             beforeSend: function () { },
             success: function (resp) {
-                
+
                 if (resp) {
                     console.log(resp)
                     $('#modal_vendor_update').modal('show')
                     $('#user_name_update').val(resp.data.user_name)
                     $('#number_update').val(resp.data.number)
                     $('#email_update').val(resp.data.email)
-                    $('#update_images1').html(`<img src="<?= base_url('public/uploads/user_images/')?>${resp.data.user_img}" alt="Image not found">`)
-                    $('#update_images2').html(`<img src="<?= base_url('public/uploads/user_documents/')?>${resp.data.signature_img}" alt="Image not found">`)
-                    $('#update_images3').html(`<img src="<?= base_url('public/uploads/user_documents/')?>${resp.data.pan_img}" alt="Image not found">`)
-                    $('#update_images4').html(`<img src="<?= base_url('public/uploads/user_documents/')?>${resp.data.aadhar_img}" alt="Image not found">`)
-                    $('#update_images5').html(`<img src="<?= base_url('public/uploads/user_documents/')?>${resp.data.gst}" alt="Image not found">`)
-                    $('#update_images6').html(`<img src="<?= base_url('public/uploads/user_documents/')?>${resp.data.tread_licence}" alt="Image not found">`)
+                    $('#update_images1').html(`<img src="<?= base_url('public/uploads/user_images/') ?>${resp.data.user_img}" alt="Image not found">`)
+                    $('#update_images2').html(`<img src="<?= base_url('public/uploads/user_documents/') ?>${resp.data.signature_img}" alt="Image not found">`)
+                    $('#update_images3').html(`<img src="<?= base_url('public/uploads/user_documents/') ?>${resp.data.pan_img}" alt="Image not found">`)
+                    $('#update_images4').html(`<img src="<?= base_url('public/uploads/user_documents/') ?>${resp.data.aadhar_img}" alt="Image not found">`)
+                    $('#update_images5').html(`<img src="<?= base_url('public/uploads/user_documents/') ?>${resp.data.gst}" alt="Image not found">`)
+                    $('#update_images6').html(`<img src="<?= base_url('public/uploads/user_documents/') ?>${resp.data.tread_licence}" alt="Image not found">`)
                     $('#user_id').val(resp.data.user_id)
 
 
@@ -306,7 +321,7 @@
     })
 
     var seller_id = ""
-    function delete_staff(user_id){
+    function delete_staff(user_id) {
         seller_id = user_id
         $('#modal_vendor_delete').modal('show')
     }
@@ -321,7 +336,7 @@
         $.ajax({
             url: "<?= base_url('/api/delete/seller') ?>",
             type: "GET",
-            data:{user_id:seller_id},
+            data: { user_id: seller_id },
             beforeSend: function () { },
             success: function (resp) {
                 let html = ''

@@ -3,7 +3,7 @@
         // alert("hello")
         get_user_data();
 
-        $('.edit-address').click(function(e) {
+        $('.edit-address').click(function (e) {
             e.preventDefault();
             $('.account-address-bar').removeClass('active');
             $('#account-addresses').removeClass('active');
@@ -214,16 +214,20 @@
 
         })
     })
+    let user_id = '<?= isset($_SESSION['USER_user_id']) ? $_SESSION['USER_user_id'] : '' ?>'
 
     function get_user_data() {
         $.ajax({
             url: "<?= base_url('api/user') ?>",
             type: "GET",
+            data: {
+                user_id: user_id
+            },
             success: function (resp) {
                 // resp = JSON.parse(resp)
                 console.log(resp.user_data)
                 if (resp.status == true) {
-                    console.log('usr',resp)
+                    console.log('usr', resp)
 
 
 

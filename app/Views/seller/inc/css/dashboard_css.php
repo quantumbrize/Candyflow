@@ -178,4 +178,7 @@
             transform: translateX(-100%);
         }
     }
+    .modal{
+        margin-top: -100px;
+    }
 </style>

@@ -1,20 +1,27 @@
 <script>
-    isAuthSeller();
+     $('#is_auth').hide()
+     $('#banks').hide()
     function isAuthSeller() {
 
 
         $.ajax({
             url: "<?= base_url('/api/user') ?>",
             type: "GET",
+            data: {
+                user_id: '<?= !empty($_SESSION['SELLER_user_id']) ? $_SESSION['SELLER_user_id'] : '' ?>'
+            },
             success: function (resp) {
                 // console.log(resp)
                 if (resp.status) {
                     console.log(resp)
                     if (resp.user_data.is_auth == 'true') {
                         $('#is_auth').show()
+                        $('#banks').hide()
                         // is_auth = true
                     } else {
                         $('#is_auth').hide()
+                        $('#banks').show()
+
                         // is_auth = false
 
                     }
@@ -35,6 +42,7 @@
         // total_customer()
         best_selling()
         revenue()
+        isAuthSeller();
 
     });
 
@@ -377,13 +385,30 @@
             const name = $('#name_val').val();
             const ifsc = $('#ifsc_val').val();
             const account_number = $('#acc_val').val();
+            const fileInput = $('#acc_check')[0].files[0]; // Get the uploaded file
             const formData = new FormData();
-            // $.each($('#authImage')[0].files, function (index, file) {
-            //     formData.append('authImage[]', file);
-            // });
 
-            formData.append('authDescription', $('#authDescription').val());
+            // Append form fields to FormData
             formData.append('user_id', user_id);
+            formData.append('user_name', name);
+            formData.append('ifsc', ifsc);
+            formData.append('account_number', account_number);
+
+            // Append the file if uploaded
+            if (fileInput) {
+                formData.append('acc_check', fileInput);
+            } else {
+                Toastify({
+                    text: 'Please upload the required blank check/passbook page.'.toUpperCase(),
+                    duration: 2000,
+                    position: "center",
+                    stopOnFocus: true,
+                    style: {
+                        background: 'red',
+                    },
+                }).showToast();
+                return;
+            }
 
             // Validate inputs for bank details
             if (!name || !ifsc || !account_number) {
@@ -399,30 +424,13 @@
                 return;
             }
 
-            // Validate inputs for authorization letter
-            // if (!$('#authImage').val()) {
-            //     Toastify({
-            //         text: 'Please upload an authorization image.'.toUpperCase(),
-            //         duration: 2000,
-            //         position: "center",
-            //         stopOnFocus: true,
-            //         style: {
-            //             background: 'red',
-            //         },
-            //     }).showToast();
-            //     return;
-            // }
-
-            // Step 1: Update Bank Details
+            // Send the AJAX request with FormData
             $.ajax({
                 url: "<?= base_url('api/seller/bank/update') ?>",
                 type: "POST",
-                data: {
-                    user_id: user_id,
-                    user_name: name,
-                    ifsc: ifsc,
-                    account_number: account_number
-                },
+                data: formData,
+                contentType: false, // Important for FormData
+                processData: false, // Prevent automatic processing of FormData
                 beforeSend: function () {
                     $('#finishProcess').text('Updating Bank Details...').attr('disabled', true);
                 },
@@ -438,7 +446,6 @@
                                 background: 'green',
                             },
                         }).showToast();
-                        // Reset the form and steps
                         resetForm();
                         $('#authorizationLetterModal').modal('hide');
                         isAuthSeller();
@@ -455,6 +462,7 @@
                 }
             });
         });
+
     });
 
 

@@ -277,6 +277,9 @@
                 $.ajax({
                     url: "<?= base_url('api/user') ?>",
                     type: "GET",
+                    data: {
+                        user_id: user_id
+                    },
                     success: function (resp) {
                         let html = '';
                         let htmllF = '';

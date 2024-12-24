@@ -6,14 +6,14 @@
         <div class="row">
             <div class="col">
                 <div class="h-100">
-                    <div class="row mb-3 pb-1">
+                    <div class="row mb-3 pb-1" id="banks">
                         <div class="col-12">
                             <div class="">
                                 <div class="mt-3 mt-lg-0">
                                     <form action="javascript:void(0);">
-                                        <div class="row g-3 mb-0 align-items-center">
+                                        <div class="row g-3 mb-0 align-items-center" >
                                             <!-- Button to trigger modal -->
-                                             
+
                                             <div class="col-12 container mt-3">
                                                 <div class="alert marquee-container">
                                                     <div class="marquee">
@@ -49,29 +49,30 @@
                                                                     <div class="row">
                                                                         <div class="col-lg-6">
                                                                             <div class="mb-3">
-                                                                                <label for="firstnameInput"
-                                                                                    class="form-label">Registered Bank
-                                                                                    Name</label>
+                                                                                <label for="firstnameInput" class="form-label">Registered Bank Name <b>*</b></label>
                                                                                 <input type="text" class="form-control"
                                                                                     id="name_val" required>
                                                                             </div>
                                                                         </div>
                                                                         <div class="col-lg-6">
                                                                             <div class="mb-3">
-                                                                                <label for="ifscInput"
-                                                                                    class="form-label">IFSC Code</label>
+                                                                                <label for="ifscInput" class="form-label">IFSC Code <b>*</b></label>
                                                                                 <input type="text" class="form-control"
                                                                                     id="ifsc_val" required>
                                                                             </div>
                                                                         </div>
                                                                         <div class="col-lg-6">
                                                                             <div class="mb-3">
-                                                                                <label for="accountInput"
-                                                                                    class="form-label">Account
-                                                                                    Number</label>
+                                                                                <label for="accountInput" class="form-label">Account Number <b>*</b></label>
                                                                                 <input type="number"
                                                                                     class="form-control" id="acc_val"
                                                                                     required>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-lg-6">
+                                                                            <div class="mb-3">
+                                                                                <label for="accountInput" class="form-label">Blank Check / Pass Book Front Page <b>*</b></label>
+                                                                                <input type="file" class="form-control" id="acc_check" required>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -399,9 +400,7 @@
 
                                                 </p>
                                             </div>
-                                            <!-- <div class="flex-shrink-0">
-                            <h5 class="text-muted fs-14 mb-0">+0.00 %</h5>
-                        </div> -->
+                                            
                                         </div>
                                         <div class="d-flex align-items-end justify-content-between mt-4">
                                             <div>
@@ -457,8 +456,6 @@
                                 </div>
                                 <!-- end card -->
                             </div>
-
-
                             <!-- end col -->
                         </div>
                         <!-- end row-->
@@ -546,7 +543,7 @@
 
                         </div>
 
-                        <div class="row">
+                        <!-- <div class="row">
                             <div class="col-xl-12">
                                 <div class="card">
                                     <div class="card-header align-items-center d-flex">
@@ -555,7 +552,6 @@
                                         </h4>
 
                                     </div>
-                                    <!-- end card header -->
 
                                     <div class="card-body" style="overflow-x: scroll;">
 
@@ -579,8 +575,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- .col-->
-                        </div>
+                        </div> -->
                     </div>
 
                     <!-- end row-->

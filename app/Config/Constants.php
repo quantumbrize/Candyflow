@@ -316,5 +316,8 @@ define('RAZORPAY_KEY_TEST_ID',  'rzp_test_fvYaPiSdx5VN7m');
 define('RAZORPAY_KEY_LIVE_SECRET', '9tYtuuk0JRrlHMZWlzyRgjKe');
 define('RAZORPAY_KEY_LIVE_ID', 'rzp_live_FrwbdylCaxyqYb');
 
+// define('RAZORPAY_KEY_LIVE_SECRET', 'cDjbuATF7DIycO2L3hH6rwxy');
+// define('RAZORPAY_KEY_LIVE_ID', 'rzp_test_fvYaPiSdx5VN7m');
+
 
 ?>

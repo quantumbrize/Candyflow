@@ -25,11 +25,8 @@
                     <div class="card-header">
                         <div class="d-flex align-items-center">
                             <h5 class="card-title flex-grow-1 mb-0">Id - <span id="order_id"></span></h5>
-                            <div class="flex-shrink-0 row">
-                                <!-- <a href="apps-invoices-details.html" class="btn btn-success btn-sm">
-                                    <i class="ri-download-2-fill align-middle me-1"></i>
-                                    Invoice
-                                </a> -->
+                            <!-- <div class="flex-shrink-0 row">
+                                
                                 <label for="">Order Status</label>
                                 <select class="form-select form-select-md" id="order_status_select_bx">
                                     <option value="placed">Order Process</option>
@@ -39,7 +36,7 @@
                                     <option value="delivered">Delivered</option>
                                     <option value="returned">Returned</option>
                                 </select>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                     <div class="card-body">

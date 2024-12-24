@@ -57,25 +57,34 @@
                                 </li>
                                 <li><i class="ri-mail-line me-2 align-middle text-muted fs-16"></i>${order.user.email}</li>
                                 <li><i class="ri-phone-line me-2 align-middle text-muted fs-16"></i>${order.user.number}</li>`)
+                    if (order.address.type == 'primary') {
 
-                    $('#user_addr_bx').html(`<ul class="list-unstyled vstack gap-2 fs-13 mb-0">
-                                                <li class="fw-medium fs-14">${order.user_name}</li>
-                                                <li>Phone - ${order.phone_number}</li>
-                                                <li>Landmark - ${order.address.locality}</li>
-                                                <li>City - ${order.address.city}, Street Address - ${order.address.district}</li>
-                                                <li>State - ${order.address.state} , Country - ${order.address.country}</li>
-                                                <li>Postal Code - ${order.address.zipcode}</li>
-                                            </ul>`)
+                        $('#user_addr_bx').html(`<ul class="list-unstyled vstack gap-2 fs-13 mb-0">
+                                                    <li class="fw-medium fs-14">${order.user_name}</li>
+                                                    <li>Phone - ${order.phone_number}</li>
+                                                    <li>Landmark - ${order.address.locality}</li>
+                                                    <li>City - ${order.address.city}, Street Address - ${order.address.district}</li>
+                                                    <li>State - ${order.address.state} , Country - ${order.address.country}</li>
+                                                    <li>Postal Code - ${order.address.zipcode}</li>
+                                                </ul>`)
+                    } else {
+                        $('#user_addr_bx').html(`<ul class="list-unstyled vstack gap-2 fs-13 mb-0">
+                                                    <li class="fw-medium fs-14">User Name  - ${order.address.business_good_name}</li>
+                                                    <li class="fw-medium fs-14">Business Name - ${order.address.business_name}</li>
+                                                    <li>Phone - ${order.phone_number}</li>
+                                                    <li>email - ${order.address.business_email}</li>
+                                                    <li>address - ${order.address.business_address}</li>
+                                                    <li>Postal Code - ${order.address.zipcode}</li>
+                                                </ul>`)
+                    }
+
                     $('#user_pay_bx').html(`
                         <div class="d-flex align-items-center mb-2">
                             <div class="flex-shrink-0">
-                                <p class="text-muted mb-0">Update:</p>
+                                <p class="text-muted mb-0">Status :</p>
                             </div>
                             <div class="flex-grow-1 ms-2">
-                                <select class="form-select form-select-md" id="${order.payment.uid}" onChange="update_order_payment('${order.payment.uid}')">
-                                    <option value="pending" ${order.payment.status == 'pending' ? 'selected' : ''}>pending</option>
-                                    <option value="paid" ${order.payment.status == 'paid' ? 'selected' : ''}>paid</option>
-                                </select>
+                                <h3 class="p-status">${order.payment.status}</h3>
                             </div>
                             
                         </div>
@@ -120,13 +129,13 @@
                     let delivery_charge = 0
                     $.each(order.products, function (index, item) {
                         let actual_price = ''
-                        $.each(item.product_details.product_prices, function(index, prices) {
+                        $.each(item.product_details.product_prices, function (index, prices) {
                             // console.log(prices)
-                            if(parseInt(item.qty)>= parseInt(prices.min_qty) && parseInt(item.qty) <= parseInt(prices.max_qty)){
+                            if (parseInt(item.qty) >= parseInt(prices.min_qty) && parseInt(item.qty) <= parseInt(prices.max_qty)) {
                                 actual_price = prices.price
                                 // subTotal += parseInt(actual_price) * parseInt(item.qty)
                             }
-                            
+
                         })
                         // let actual_price = item.product_details.base_price; // Base price of the product
                         let qty = item.qty; // Quantity of the product
@@ -136,7 +145,7 @@
                         let tax_amount = discounted_price * tax / 100;
                         let final_price = discounted_price + tax_amount;
                         delivery_charge += parseInt(item.product_details.delivery_charge)
-                         let img_link = item.product_config_id ? '/public/uploads/variant_images/' : '/public/uploads/product_images/'
+                        let img_link = item.product_config_id ? '/public/uploads/variant_images/' : '/public/uploads/product_images/'
                         html += `    <tr>
                                         <td>
                                             <div class="d-flex">
@@ -166,10 +175,10 @@
                                         </td>
                                     </tr>`
 
-                                    total_discount += parseInt(item.product_details.base_discount, 10);
+                        total_discount += parseInt(item.product_details.base_discount, 10);
                     })
                     html += `<tr class="border-top border-top-dashed">
-                                <td colspan="3"></td>
+                                <td colspan="5"></td>
                                 <td colspan="2" class="fw-medium p-0">
                                     <table class="table table-borderless mb-0">
                                         <tbody>
@@ -281,18 +290,18 @@
     }
 
 
-    function update_order_payment(pay_id){
+    function update_order_payment(pay_id) {
 
         $.ajax({
-            url: "<?=base_url('api/order/payment/status/update')?>",
+            url: "<?= base_url('api/order/payment/status/update') ?>",
             type: "GET",
-            data:{
+            data: {
                 pay_id: pay_id,
                 status: $(`#${pay_id}`).val()
             },
-            beforeSend: function(){},
-            success: function(resp){console.log(resp)},
-            error: function(err){console.error(err)}
+            beforeSend: function () { },
+            success: function (resp) { console.log(resp) },
+            error: function (err) { console.error(err) }
         })
     }
 

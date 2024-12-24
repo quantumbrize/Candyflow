@@ -76,4 +76,13 @@
         max-height:200px;
         object-fit: cover;
     }
+    .dt-column-title{
+        display: block;
+        width: max-content !important;
+    }
+    th{
+        /* width: fit-content; */
+        /* display: inline; */
+
+    }
 </style>

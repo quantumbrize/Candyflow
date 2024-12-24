@@ -9706,8 +9706,8 @@ body .product-popup {
 .product-media img:first-child {
   position: relative;
   opacity: 1;
-  width: 150px !important;
-  height: 150px !important;
+  width: 80px !important;
+  height: 80px !important;
 }
 .product-media:hover img:last-child {
   opacity: 1;

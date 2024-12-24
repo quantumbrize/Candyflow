@@ -175,7 +175,7 @@
                                             <div class="mb-3">
                                                 <div class="card">
                                                     <div class="card-body">
-                                                        <label class="form-label" for="product-image-input">GST</label>
+                                                        <label class="form-label" for="product-image-input">GST *</label>
                                                         <input type="text" class="form-control  mb-1" id="gst"
                                                             placeholder="Enter your gst number">
                                                         <input type="file" id="file-input5" multiple>
@@ -193,8 +193,7 @@
                                             <div class="mb-3">
                                                 <div class="card">
                                                     <div class="card-body">
-                                                        <label class="form-label" for="product-image-input">Tread
-                                                            Licence</label>
+                                                        <label class="form-label" for="product-image-input">Tread Licence *</label>
                                                         <input type="text" class="form-control  mb-1" id="trade"
                                                             placeholder="Enter your trade Licence number">
                                                         <input type="file" id="file-input6" multiple>
@@ -212,8 +211,7 @@
                                             <div class="mb-3">
                                                 <div class="card">
                                                     <div class="card-body">
-                                                        <label class="form-label" for="product-image-input">User
-                                                            Image</label>
+                                                        <label class="form-label" for="product-image-input">User Image *</label>
                                                         <input type="file" id="file-input1" multiple>
                                                         <label for="file-input1" id="btn_upload1"
                                                             class="btn btn-success">
@@ -230,7 +228,7 @@
                                                 <div class="card">
                                                     <div class="card-body">
                                                         <label class="form-label"
-                                                            for="product-image-input">Signature</label>
+                                                            for="product-image-input">Signature *</label>
                                                         <input type="file" id="file-input2" multiple>
                                                         <label for="file-input2" id="btn_upload1"
                                                             class="btn btn-success">
@@ -246,8 +244,7 @@
                                             <div class="mb-3">
                                                 <div class="card">
                                                     <div class="card-body">
-                                                        <label class="form-label" for="product-image-input">Pan Card
-                                                            Image</label>
+                                                        <label class="form-label" for="product-image-input">Pan Card Image *</label>
                                                         <input type="text" class="form-control  mb-1" id="pan"
                                                             placeholder="Enter your Pan number" >
 
@@ -267,7 +264,7 @@
                                                 <div class="card">
                                                     <div class="card-body">
                                                         <label class="form-label"
-                                                            for="product-image-input">Aadhar</label>
+                                                            for="product-image-input">Aadhar *</label>
                                                         <input type="text" class="form-control  mb-1" id="aadhar"
                                                             placeholder="Enter your Aadhar number" >
 

@@ -254,22 +254,17 @@ class User_Controller extends Api_Controller
 
     private function get_user()
     {
-        $logged_in_user = $this->is_logedin();
-        $logged_in_seller = $this->is_seller_logedin();
-        $user_id = !empty($logged_in_user) || !empty($logged_in_seller) ? ($logged_in_user ?: $logged_in_seller) : '';
-
-        if (!empty($this->is_logedin())) {
-            $user_id = $this->is_logedin();
-        } else {
-
-            $user_id = !empty($logged_in_seller) ? $this->get_user_id_by_seller_id($user_id) : '';
-        }
         $resp = [
             "status" => false,
             "message" => "Data Not Found",
             "user_data" => ""
         ];
+        $user_id = $this->request->getGet('user_id');
+
+        // $this->prd($user_id);
+
         if (!empty($user_id)) {
+
             $UsersModel = new UsersModel();
             $UsersData = $UsersModel
                 ->where('uid', $user_id)
@@ -277,49 +272,61 @@ class User_Controller extends Api_Controller
                 ->getResultArray();
             $UsersData = !empty($UsersData[0]) ? $UsersData[0] : null;
 
-            $UserAddressModel = new AddressModel();
-            $AddressData = $UserAddressModel
-                ->where('user_id', $user_id)
-                ->get()
-                ->getResultArray();
-            $AddressData = !empty($AddressData[0]) ? $AddressData[0] : null;
+            if ($UsersData['type'] == 'user') {
 
-            $AllAddressData = $UserAddressModel
-                ->where('user_id', $user_id)
-                ->get()
-                ->getResultArray();
-            $AllAddressData = !empty($AllAddressData) ? $AllAddressData : null;
+                $UserAddressModel = new AddressModel();
+                $AddressData = $UserAddressModel
+                    ->where('user_id', $user_id)
+                    ->get()
+                    ->getResultArray();
+                $AddressData = !empty($AddressData[0]) ? $AddressData[0] : null;
 
-            $UserImageModel = new UserImageModel();
-            $ImageData = $UserImageModel
-                ->where('user_id', $user_id)
-                ->get()
-                ->getResultArray();
-            $ImageData = !empty($ImageData[0]) ? $ImageData[0] : null;
+                $AllAddressData = $UserAddressModel
+                    ->where('user_id', $user_id)
+                    ->get()
+                    ->getResultArray();
+                $AllAddressData = !empty($AllAddressData) ? $AllAddressData : null;
 
-            $WishlistsModel = new WishlistsModel();
+                $UserImageModel = new UserImageModel();
+                $ImageData = $UserImageModel
+                    ->where('user_id', $user_id)
+                    ->get()
+                    ->getResultArray();
+                $ImageData = !empty($ImageData[0]) ? $ImageData[0] : null;
 
-            $Wishlists = $WishlistsModel->where('user_id', $user_id)
-                ->get()
-                ->getResultArray();
-            $Wishlists = !empty($Wishlists) ? $Wishlists : null;
+                $WishlistsModel = new WishlistsModel();
 
-            $UserCartModel = new UserCartModel();
-            $cart = $UserCartModel->where('user_id', $user_id)
-                ->get()
-                ->getResultArray();
+                $Wishlists = $WishlistsModel->where('user_id', $user_id)
+                    ->get()
+                    ->getResultArray();
+                $Wishlists = !empty($Wishlists) ? $Wishlists : null;
 
-            $resp = [
-                "status" => true,
-                "message" => "Data fetched",
-                "user_id" => $user_id,
-                "user_data" => $UsersData,
-                "address" => $AddressData,
-                "user_img" => $ImageData,
-                "all_address" => $AllAddressData,
-                "wishlists" => $Wishlists,
-                "cart" => $cart
-            ];
+                $UserCartModel = new UserCartModel();
+                $cart = $UserCartModel->where('user_id', $user_id)
+                    ->get()
+                    ->getResultArray();
+
+                $resp = [
+                    "status" => true,
+                    "message" => "Data fetched",
+                    "user_id" => $user_id,
+                    "user_data" => $UsersData,
+                    "address" => $AddressData,
+                    "user_img" => $ImageData,
+                    "all_address" => $AllAddressData,
+                    "wishlists" => $Wishlists,
+                    "cart" => $cart
+                ];
+
+            } else if ($UsersData['type'] == 'seller') {
+                $resp = [
+                    "status" => true,
+                    "message" => "Data fetched",
+                    "user_id" => $user_id,
+                    "user_data" => $UsersData,
+                ];
+            }
+
         }
         return $resp;
     }
@@ -965,13 +972,13 @@ class User_Controller extends Api_Controller
             $vendors = $CommonModel->customQuery($sql);
             $vendors = json_decode(json_encode($vendors), true);
 
+            $VendorBankModel = new VendorBankModel();
             if (count($vendors) > 0) {
 
-                // $VendorAuthorizationModel = new VendorAuthorizationModel();
-                // foreach ($vendors as $key => $vendor) {
-                //     // $this->prd($vendor['user_id']);
-                //     $vendors[$key]['authorization_data'] = $VendorAuthorizationModel->where('user_id', $vendor['user_id'])->first();
-                // }
+                foreach ($vendors as $key => $vendor) {
+                    // $this->prd($vendor['user_id']);
+                    $vendors[$key]['bank'] = $VendorBankModel->where('user_id', $vendor['user_id'])->first();
+                }
 
                 $resp['status'] = true;
                 $resp['message'] = "All vendors data retrieved";
@@ -1926,54 +1933,62 @@ class User_Controller extends Api_Controller
 
     private function seller_bank_update($data)
     {
-
         $resp = [
             'status' => false,
-            'message' => 'Failed to update bank details',
+            'message' => 'Failed to update or insert bank details',
             'data' => []
         ];
 
         try {
-            // $this->prd($data);
-
             $VendorBankModel = new VendorBankModel();
             $UsersModel = new UsersModel();
+            $uploadedFiles = $this->request->getFiles();
 
-            // Check if the bank record exists for the given user ID
-            $existingBank = $VendorBankModel->where('user_id', $data['user_id'])->first();
-
-            if (!$existingBank) {
-                throw new \Exception("Bank details not found for the given user ID: " . $data['user_id']);
-            }
-
-            // Prepare the update data
+            // Prepare the data for bank details
             $updateData = [
+                'user_id' => $data['user_id'],
                 'user_name' => $data['user_name'],
                 'ifsc' => $data['ifsc'],
                 'account_number' => $data['account_number']
             ];
 
-            $userUpdateData = [
-                'is_auth' => 'true'
-            ];
+            // Handle file upload
+            if (!empty($uploadedFiles['acc_check']) && $uploadedFiles['acc_check']->isValid()) {
+                $file_src = $this->single_upload($uploadedFiles['acc_check'], PATH_USER_DOC);
+                $updateData['bank_img'] = $file_src;
+            } else {
+                throw new \Exception("Invalid or no file uploaded for 'acc_check'.");
+            }
 
+            // Check if the bank record exists for the given user ID
+            $existingBank = $VendorBankModel->where('user_id', $data['user_id'])->first();
 
+            if ($existingBank) {
+                // Update the existing record
+                $VendorBankModel->where('user_id', $data['user_id'])->update(null, $updateData);
+            } else {
+                $updateData['uid'] = $this->generate_uid('VB');
+                // Insert a new record
+                $VendorBankModel->insert($updateData);
+            }
+
+            // Update user data to mark as authenticated
+            $userUpdateData = ['is_auth' => 'true'];
             $UsersModel->where('uid', $data['user_id'])->update(null, $userUpdateData);
-            $VendorBankModel->where('user_id', $data['user_id'])->update(null, $updateData);
 
+            // Check if the operation affected rows in either table
             if ($VendorBankModel->db->affectedRows() > 0) {
                 $resp['status'] = true;
-                $resp['message'] = 'Bank details updated successfully';
-            } else {
-                $resp['message'] = 'No changes were made to the bank details';
+                $resp['message'] = 'Bank details processed successfully';
             }
         } catch (\Exception $e) {
             $resp['message'] = $e->getMessage();
         }
 
-        return $resp;
 
+        return $resp;
     }
+
 
     private function seller_withdrawal_send($data)
     {

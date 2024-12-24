@@ -25,6 +25,9 @@
         $.ajax({
             url: "<?= base_url('/api/user') ?>",
             type: "GET",
+            data: {
+                user_id: '<?= !empty($_SESSION['SELLER_user_id']) ? $_SESSION['SELLER_user_id'] : '' ?>'
+            },
             success: function (resp) {
                 // console.log(resp)
                 if (resp.status) {

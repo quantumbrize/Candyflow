@@ -46,15 +46,19 @@
                                 <th>Number</th>
                                 <th>User Image</th>
                                 <th>Signature</th>
-                                <th>Pan Card</th>
-                                <th>Aadhar Card</th>
-                                <th>GST</th>
-                                <th>Tread Licence</th>
-                                <th>Status</th>
+                                <th>Pan Image</th>
+                                <th>Aadhar Image</th>
+                                <th>GST Image</th>
+                                <th>Tread Image</th>
                                 <th>GST No</th>
                                 <th>Tread No</th>
-                                <th>Pan No</th>
                                 <th>Aadhar No</th>
+                                <th>Pan No</th>
+                                <th>account holder name</th>
+                                <th>Bank Ac number</th>
+                                <th>ifsc Code</th>
+                                <th>Pass book Img</th>
+                                <th>Status</th>
                                 <th>action</th>
                             </tr>
                         </thead>

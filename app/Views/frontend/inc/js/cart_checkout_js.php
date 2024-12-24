@@ -561,11 +561,16 @@
         })
     }
 
+    let p_address_id = ''
+    let b_address_id = ''
 
     function get_user() {
         $.ajax({
             url: '<?= base_url('/api/user') ?>',
             type: "GET",
+            data: {
+                user_id: user_id
+            },
             beforeSend: function () {
 
             },
@@ -576,7 +581,9 @@
                     user_data.allAddress = resp.all_address
                     user_data.user = resp.user_data
                     user_data.user_img = resp.user_img
-
+                    let baddress = user_data.allAddress.find(
+                        (item) => item.type === 'business'
+                    );
                     // user
                     $('#billinginfo-name').val(resp.user_data.user_name)
                     $('#billinginfo-email').val(resp.user_data.email)
@@ -588,18 +595,20 @@
                     $('#billinginfo-city').val(resp.address.city)
                     $('#billinginfo-locality').val(resp.address.locality)
                     $('#billinginfo-zip').val(resp.address.zipcode)
-                    // shipping
-                    // $('#addr_name').html(resp.user_data.user_name)
-                    // $('#addr_locality').html(resp.address.locality)
-                    // $('#addr_city').html(resp.address.city)
-                    // $('#addr_dist').html(resp.address.district)
-                    // $('#addr_state').html(resp.address.state)
-                    // $('#addr_contry').html(resp.address.country)
-                    // $('#addr_phone').html(resp.user_data.number)
-                    // $('#update_button').html(`<button type="button" class="btn btn-success right ms-auto "
-                    //                        id="update_profile">
-                    //                         Update Address
-                    //                     </button>`)
+                    p_address_id = resp.address.uid
+                    if (baddress) {
+                        $('#businessinfo-name').val(baddress.business_name)
+                        $('#businessinfo-email').val(baddress.business_email)
+                        $('#businessinfo-phone').val(baddress.business_phone)
+                        $('#businessinfo-address').val(baddress.business_address)
+                        $('#businessinfo-zip').val(baddress.zipcode)
+                        $('#businessinfo-landmark').val(baddress.locality)
+                        $('#businessinfo-goodsname').val(baddress.business_good_name)
+                        b_address_id = baddress.uid
+
+
+                    }
+
                 }
             },
             error: function (err) {
@@ -611,17 +620,16 @@
     $("#place_order_btn").click(function () {
         console.log(1)
         var amount = user_cart.total;
-       
+        var selectedAddressId = $('#addressTabs .nav-link.active').attr('id') === 'billing-tab' ? p_address_id : b_address_id;
 
         var options = {
-            "key": "<?=RAZORPAY_KEY_LIVE_ID?>", // Enter the Key ID generated from the Dashboard
+            "key": "<?= RAZORPAY_KEY_LIVE_ID ?>", // Enter the Key ID generated from the Dashboard
             "amount": parseInt(amount * 100), // Amount is in currency subunits. Default currency is INR. Hence, 10 refers to 1000 paise
             "name": "Candy-Flow",
             "description": 'Candy flow payment',
-            "image": "<?= base_url('public/assets/images/logo.png')?>",
+            "image": "<?= base_url('public/assets/images/logo.png') ?>",
             "handler": function (response) {
                 var paymentid = response.razorpay_payment_id;
-                // var paymentid = 'PYMNTD45GT4D5F2X5C88';
 
                 user_data.name = $('#billinginfo-name').val()
                 user_data.email = $('#billinginfo-email').val()
@@ -633,7 +641,8 @@
                     data: JSON.stringify({
                         user_data: user_data,
                         user_cart: user_cart,
-                        payment_data: payment_data
+                        payment_data: payment_data,
+                        address_id: selectedAddressId
                     }),
                     beforeSend: function () {
                         $('#place_order_btn').prop('disabled', true);
