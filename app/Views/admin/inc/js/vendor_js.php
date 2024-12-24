@@ -61,16 +61,18 @@
                                             <option value="inactive">inactive</option>
                                        </select>
                                     </td>
-                                    <td>
-                                        <!-- If there is an image, show it. Otherwise, show a placeholder image or text. -->
-                                        ${item.authorization_data
-                                            ? `<img src="<?= base_url('public/uploads/user_documents/') ?>${item.authorization_data.authorization_img}" alt="Authorization Image" style="max-width: 100px;">` 
-                                            : `<span>No Image</span>`
-                                        }
-                                    </td>
 
                                     <td>
-                                        ${item.authorization_data !=null ? item.authorization_data.authorization_letter : '<span>No letter</span>'}
+                                       ${item.gst_no}
+                                    </td>
+                                    <td>
+                                       ${item.trade_no}
+                                    </td>
+                                    <td>
+                                       ${item.aadhar_no}
+                                    </td>
+                                    <td>
+                                       ${item.pan_no}   
                                     </td>
 
                                     <td>

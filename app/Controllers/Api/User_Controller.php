@@ -258,8 +258,12 @@ class User_Controller extends Api_Controller
         $logged_in_seller = $this->is_seller_logedin();
         $user_id = !empty($logged_in_user) || !empty($logged_in_seller) ? ($logged_in_user ?: $logged_in_seller) : '';
 
-        $user_id = !empty($logged_in_seller) ? $this->get_user_id_by_seller_id($user_id) : '';
-        // $this->prd($user_id);
+        if (!empty($this->is_logedin())) {
+            $user_id = $this->is_logedin();
+        } else {
+
+            $user_id = !empty($logged_in_seller) ? $this->get_user_id_by_seller_id($user_id) : '';
+        }
         $resp = [
             "status" => false,
             "message" => "Data Not Found",
@@ -932,6 +936,10 @@ class User_Controller extends Api_Controller
                         vendor.aadhar_img,
                         vendor.gst,
                         vendor.tread_licence,
+                        vendor.gst_no,
+                        vendor.trade_no,
+                        vendor.pan_no,
+                        vendor.aadhar_no,
                         users.uid AS user_id,
                         users.user_name,
                         users.number,
@@ -1530,7 +1538,8 @@ class User_Controller extends Api_Controller
         return $resp;
     }
 
-    private function get_user_id_by_seller_id($seller_id){
+    private function get_user_id_by_seller_id($seller_id)
+    {
         $VendorModel = new VendorModel();
         $user = $VendorModel->where('uid', $seller_id)->first();
         return $user['user_id'];
@@ -2119,7 +2128,79 @@ class User_Controller extends Api_Controller
         }
     }
 
+    private function update_business_address($data)
+    {
+        $resp = [
+            'status' => false,
+            'message' => 'Failed to update business details',
+            'data' => []
+        ];
 
+        try {
+            $user_id = $this->is_logedin();
+            $commonModel = new CommonModel();
+            $AddressModel = new AddressModel();
+            $is_address = $AddressModel
+                ->where('user_id', $user_id)
+                ->where('type', 'business')
+                ->first();
+
+            if (empty($is_address)) {
+                $Address_data = [
+                    'uid' => $this->generate_uid('ADDR'),
+                    'user_id' => $user_id,
+                    'type' => 'business',
+                    'business_address' => $data['address'],
+                    'business_phone' => $data['number'],
+                    'business_name' => $data['name'],
+                    'business_good_name' => $data['goodsname'],
+                    'zipcode' => $data['zip'],
+                    'locality' => $data['landmark'],
+                    'business_email' => $data['email'],
+                ];
+
+                // Return the raw insert query
+                $query = $AddressModel->builder()->set($Address_data)->getCompiledInsert();
+                $commonModel->customQuery($query);
+                $resp['status'] = true;
+                $resp['message'] = 'Generated Insert Query';
+                // $resp['data'] = $query;
+            } else {
+                $updateData = [
+                    'business_address' => $data['address'],
+                    'business_phone' => $data['number'],
+                    'business_name' => $data['name'],
+                    'business_good_name' => $data['goodsname'],
+                    'zipcode' => $data['zip'],
+                    'locality' => $data['landmark'],
+                    'business_email' => $data['email'],
+                ];
+
+                // Return the raw update query
+                $query = $AddressModel->builder()
+                    ->set($updateData)
+                    ->where('user_id', $user_id)
+                    ->where('type', 'business')
+                    ->getCompiledUpdate();
+                $commonModel->customQuery($query);
+                $resp['status'] = true;
+                $resp['message'] = 'Generated Update Query';
+                // $resp['data'] = $query;
+            }
+        } catch (\Exception $e) {
+            $resp['message'] = $e->getMessage();
+        }
+
+        return $resp;
+    }
+
+
+    public function POST_update_business()
+    {
+        $data = $this->request->getPost();
+        $resp = $this->update_business_address($data);
+        return $this->response->setJSON($resp);
+    }
 
 
     public function POST_seller_withdrawal_send()

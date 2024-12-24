@@ -138,6 +138,110 @@
         }
     });
 
+    $("#update_bussness_address").click(function () {
+        var name = $("#businessinfo-name").val()
+        var number = $("#businessinfo-phone").val()
+        var email = $("#businessinfo-email").val()
+        var address = $("#businessinfo-address").val()
+        var zip = $("#businessinfo-zip").val()
+        var landmark = $("#businessinfo-landmark").val()
+        var goodsname = $("#businessinfo-goodsname").val()
+
+        if (name == "") {
+            $("#business_name_val").text("Please enter business name!")
+        } else {
+            $("#business_name_val").text("")
+        }
+        if (email == "") {
+            $("#business_email_val").text("Please enter business email!")
+        } else {
+            $("#business_email_val").text("")
+        }
+        if (number == "") {
+            $("#business_phone_val").text("Please enter business phone!")
+        } else {
+            $("#business_phone_val").text("")
+        }
+        if (address == "") {
+            $("#business_address_val").text("Please enter business address!")
+        } else {
+            $("#business_address_val").text("")
+        }
+        if (zip == "") {
+            $("#business_zip_val").text("Please enter postal code!")
+        } else {
+            $("#business_zip_val").text("")
+        }
+        if (landmark == "") {
+            $("#business_landmark_val").text("Please enter landmark!")
+        } else {
+            $("#business_landmark_val").text("")
+        }
+        if (goodsname == "") {
+            $("#business_goodsname_val").text("Please enter goods name!")
+        } else {
+            $("#business_goodsname_val").text("")
+        }
+
+        if (name != "" && number != "" && email != "" && address != "" && zip != "" && landmark != "" && goodsname != "") {
+            var formData = new FormData();
+
+            formData.append('name', name);
+            formData.append('number', number);
+            formData.append('email', email);
+            formData.append('address', address);
+            formData.append('zip', zip);
+            formData.append('landmark', landmark);
+            formData.append('goodsname', goodsname);
+            formData.append('user_id', user_id);
+
+            $.ajax({
+                url: "<?= base_url('/api/business/update') ?>",
+                type: "POST",
+                data: formData,
+                contentType: false,
+                processData: false,
+                beforeSend: function () {
+                    $('#update_bussness_address').html(`<div class="spinner-border" role="status"></div>`)
+                    $('#update_bussness_address').attr('disabled', true)
+                },
+                success: function (resp) {
+                    console.log(resp)
+
+                    if (resp.status) {
+                        Toastify({
+                            text: resp.message.toUpperCase(),
+                            duration: 3000,
+                            position: "center",
+                            stopOnFocus: true,
+                            style: {
+                                background: resp.status ? 'darkgreen' : 'darkred',
+                            },
+                        }).showToast();
+                        get_user();
+                    } else {
+                        Toastify({
+                            text: resp.message.toUpperCase(),
+                            duration: 3000,
+                            position: "center",
+                            stopOnFocus: true,
+                            style: {
+                                background: resp.status ? 'darkgreen' : 'darkred',
+                            },
+                        }).showToast();
+                    }
+                },
+                error: function (err) {
+                    console.log(err)
+                },
+                complete: function () {
+                    $('#update_bussness_address').html(`Update`)
+                    $('#update_bussness_address').attr('disabled', false)
+                }
+            })
+        }
+    });
+
     let user_data = {};
     let user_cart = {};
     let payment_data = { method: 'cod' }

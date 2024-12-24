@@ -51,9 +51,11 @@
                                 <th>GST</th>
                                 <th>Tread Licence</th>
                                 <th>Status</th>
-                                <th>Authrization Image</th>
-                                <th>Authorization Letter</th>
-                                <th></th>
+                                <th>GST No</th>
+                                <th>Tread No</th>
+                                <th>Pan No</th>
+                                <th>Aadhar No</th>
+                                <th>action</th>
                             </tr>
                         </thead>
                         <tbody class="list form-check-all" id="vendor_table_data">

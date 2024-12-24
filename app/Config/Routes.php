@@ -174,6 +174,7 @@ $routes->post('/api/change/password',               'Api\User_Controller::POST_c
 $routes->post('/api/message',                       'Api\User_Controller::POST_message'); // Send message
 $routes->get('/api/all/messages',                   'Api\User_Controller::GET_message_all');  // GET all messages
 $routes->get('/api/user',                           'Api\User_Controller::GET_get_user'); // Get user
+$routes->post('/api/business/update',               'Api\User_Controller::POST_update_business'); // Update business
 $routes->get('/api/total/customer',                 'Api\User_Controller::GET_total_customer'); // Get total customer
 $routes->get('/api/user/staff/',                    'Api\User_Controller::GET_staff'); // Get All Staff
 $routes->get('/api/user/staff/access',              'Api\User_Controller::GET_staff_access'); // Get all access OR staff access
